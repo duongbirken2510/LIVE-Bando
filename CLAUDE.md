@@ -48,4 +48,5 @@ Người xem gõ tên tỉnh, thành quê mình. Bản đồ Việt Nam 34 tỉn
 - Bản đồ Việt Nam phải đúng: đủ 34 tỉnh, thành, có Hoàng Sa (TP. Đà Nẵng) và Trường Sa (tỉnh Khánh Hòa) trên bản đồ chính và khung phóng to, ghi "Biển Đông".
 - MC đọc tới tên tỉnh thì camera zoom cận cảnh và thắp sáng tỉnh đó.
 - Người chơi hiện tên + avatar.
+- Giọng MC mặc định: nữ HoaiMy (`GAME.voice = 'F'` trong config.ts). Trang điều khiển có khung "Giọng MC" để đổi nam/nữ bất cứ lúc nào; mỗi trang nhớ lựa chọn trong localStorage. Phần chung `src/live/voice.ts` có thêm `voice.defaultWho` (giọng khi câu không ghi M:/F:), đáng chép ngược vào `_base` nếu chủ kênh muốn.
 - Giao diện riêng: chất tranh sơn mài (nền đen nâu, viền vàng thếp, son đỏ), font Playfair Display cho tiêu đề + Be Vietnam Pro.

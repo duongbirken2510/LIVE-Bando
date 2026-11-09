@@ -12,6 +12,9 @@ export const GAME = {
 
   defaultChannelName: 'kênh mình',
 
+  // Giọng MC: 'F' = nữ HoaiMy (chủ kênh chọn), 'M' = nam NamMinh
+  voice: 'F' as 'M' | 'F',
+
   // ---------- Vòng chơi ----------
   openMs: 15_000, // "Mở màn vòng": 15 giây đầu
   roundMs: 150_000, // 1 vòng 2 phút 30 giây (tính cả mở màn)

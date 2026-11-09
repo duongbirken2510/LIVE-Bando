@@ -35,6 +35,8 @@ class Voice {
   private fetched = new Set<string>();
   rate = 1;
   volume = 1;
+  /** Giọng khi câu không ghi M:/F: ('M' nam NamMinh, 'F' nữ HoaiMy). Game đổi trong config.ts */
+  defaultWho: Who = 'M';
   enabled = IS_STAGE;
 
   /** Server báo trang stage này có phải trang được phát tiếng không (trang mở sau cùng) */
@@ -93,7 +95,7 @@ class Voice {
   }
 
   private parts(text: string): Part[] {
-    let who: Who = 'M';
+    let who: Who = this.defaultWho;
     const out: Part[] = [];
     for (let raw of text.split('|')) {
       raw = raw.trim();

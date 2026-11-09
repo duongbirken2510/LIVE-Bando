@@ -29,7 +29,12 @@ export default function App() {
           <GameStage game={game} />
         </StageFrame>
       }
-      extra={<GameControls />}
+      extra={
+        <>
+          <VoicePicker who={game.voiceWho} />
+          <GameControls />
+        </>
+      }
     />
   );
 }
@@ -45,6 +50,33 @@ const provComment = () => {
   const p = any(PROVINCES);
   return any([p.name, `quê mình ${any(p.aliases)} nè`, `${p.name} ơi`, any(p.aliases).toUpperCase()]);
 };
+
+function VoicePicker({ who }: { who: 'M' | 'F' }) {
+  const opt = (v: 'M' | 'F', label: string) => (
+    <button
+      onClick={() => sendControl('custom', `voice:${v}`)}
+      className={`rounded-lg px-4 py-2 text-sm font-medium ${who === v ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700'}`}
+    >
+      {label}
+    </button>
+  );
+  return (
+    <section className="rounded-2xl bg-slate-900 p-4 ring-1 ring-slate-800">
+      <h2 className="mb-3 font-semibold">Giọng MC</h2>
+      <div className="flex flex-wrap items-center gap-2">
+        {opt('F', '👩 Giọng nữ (Hoài My)')}
+        {opt('M', '👨 Giọng nam (Nam Minh)')}
+        <button
+          className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium hover:bg-slate-700"
+          onClick={() => sendControl('speak', 'Chào cả nhà! Gõ tên tỉnh, thành quê mình để bản đồ ghé thăm nha.')}
+        >
+          🔊 Nghe thử trên stage
+        </button>
+      </div>
+      <p className="mt-2 text-xs text-slate-500">Đổi giọng có tác dụng ngay, kể cả đang live. Câu đang đọc dở vẫn giữ giọng cũ.</p>
+    </section>
+  );
+}
 
 function GameControls() {
   const btn = 'rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium hover:bg-slate-700';

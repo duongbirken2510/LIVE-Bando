@@ -10,6 +10,19 @@ import { GAME } from './config';
 import { findProvince, PROVINCE_BY_ID } from './provinces';
 
 const pick = makePicker();
+
+// Giọng MC chọn ở trang điều khiển, mỗi trang nhớ trong localStorage; chưa chọn thì theo config
+const VOICE_KEY = 'vndnto:voice';
+function savedVoice(): 'M' | 'F' {
+  try {
+    const v = localStorage.getItem(VOICE_KEY);
+    if (v === 'M' || v === 'F') return v;
+  } catch {
+    // bị chặn: dùng mặc định
+  }
+  return GAME.voice;
+}
+voice.defaultWho = savedVoice();
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export interface Person {
@@ -107,6 +120,7 @@ export function useGame() {
   const [status, setStatus] = useState<LiveStatus | null>(null);
   const [channelName, setChannelName] = useState(GAME.defaultChannelName);
   const [, setVersion] = useState(0);
+  const [voiceWho, setVoiceWho] = useState(voice.defaultWho);
 
   const [g] = useState(() => ({
     kenh: GAME.defaultChannelName,
@@ -307,6 +321,16 @@ export function useGame() {
       if (c.action === 'setName' && c.text) setChannelName(c.text);
       // 2 lệnh này chạy ở mọi trang để trang điều khiển và stage giống nhau
       if (c.action === 'custom' && c.text === 'skip') skipPhase();
+      if (c.action === 'custom' && (c.text === 'voice:M' || c.text === 'voice:F')) {
+        const who = c.text === 'voice:F' ? 'F' : 'M';
+        voice.defaultWho = who;
+        setVoiceWho(who);
+        try {
+          localStorage.setItem(VOICE_KEY, who);
+        } catch {
+          // bỏ qua
+        }
+      }
       if (c.action === 'custom' && c.text === 'resetFans') {
         g.fans.clear();
         try {
@@ -420,6 +444,7 @@ export function useGame() {
   return {
     status,
     channelName,
+    voiceWho,
     round: g.round,
     phase: g.phase,
     top: rank.slice(0, 3),
