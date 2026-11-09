@@ -1,0 +1,672 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+/* ===== Việt Nam đất nước ta ơi: chất tranh sơn mài ===== */
+:root {
+  --lacquer: #1a0f0a; /* sơn then */
+  --lacquer-2: #2a1610;
+  --land: #2e1d14; /* tỉnh chưa sáng */
+  --cinnabar: #b3261e; /* son đỏ */
+  --gold: #e0b452; /* vàng thếp */
+  --gold-dim: #8f6c33;
+  --pearl: #dfe8e3; /* vỏ trai */
+  --copper: #c9773a;
+  --ink: #f3e9d2;
+  --muted: #b8a58a;
+  --display: 'Playfair Display', Georgia, serif;
+}
+
+.stage-bg {
+  background:
+    radial-gradient(circle at 30% 18%, rgba(224, 180, 82, 0.1) 0 2px, transparent 3px) 0 0 / 46px 46px,
+    radial-gradient(120% 80% at 40% 40%, var(--lacquer-2) 0%, var(--lacquer) 70%);
+}
+
+.stage {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+/* ---- Tiêu đề ---- */
+.stage-head {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 170px;
+  padding: 18px 40px 0;
+  border-bottom: 3px solid var(--gold-dim);
+  background: linear-gradient(180deg, #7d1812, var(--cinnabar) 70%, #8e1d16);
+  box-shadow: inset 0 -8px 0 -5px var(--gold);
+}
+.stage-head h1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 22px;
+  font-family: var(--display);
+  line-height: 1;
+}
+.stage-head .t1 {
+  font-size: 96px;
+  font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 4px 0 #4a0c08;
+}
+.stage-head .t2 {
+  font-size: 58px;
+  font-style: italic;
+  font-weight: 700;
+  color: #fff3dc;
+}
+.stage-head p {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  color: #ffe3b8;
+}
+
+/* ---- Thanh vòng + đang ghé ---- */
+.bar {
+  position: absolute;
+  top: 182px;
+  left: 30px;
+  right: 90px;
+  display: flex;
+  gap: 12px;
+}
+.chip {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-radius: 28px;
+  border: 2px solid var(--gold-dim);
+  background: rgba(26, 15, 10, 0.88);
+  font-size: 26px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.chip.clock {
+  font-size: 36px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  min-width: 150px;
+  justify-content: center;
+  color: #fff3dc;
+}
+.chip.clock.hot {
+  color: #ffb3a6;
+  border-color: var(--cinnabar);
+  animation: beat 1s ease-in-out infinite;
+}
+.chip.phase {
+  background: var(--cinnabar);
+  border-color: var(--gold);
+  color: #fff;
+}
+.chip.lit {
+  margin-left: auto;
+}
+.chip b {
+  color: var(--gold);
+  margin: 0 6px;
+  font-size: 32px;
+}
+@keyframes beat {
+  50% {
+    transform: scale(1.07);
+  }
+}
+
+.visiting {
+  position: absolute;
+  top: 248px;
+  left: 30px;
+  right: 90px;
+  height: 58px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 0 6px;
+}
+.v-label {
+  font-size: 24px;
+  color: var(--muted);
+}
+.v-name {
+  font-family: var(--display);
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--gold);
+}
+.v-fans {
+  margin-left: auto;
+  font-size: 24px;
+  color: var(--pearl);
+}
+.v-fans b {
+  color: var(--gold);
+  font-size: 30px;
+}
+
+/* ---- Bản đồ ---- */
+.map-box {
+  position: absolute;
+  top: 310px;
+  left: 0;
+  width: 1080px;
+  height: 1020px;
+  overflow: hidden; /* zoom gần không được tràn lên tiêu đề / xuống bục */
+}
+.vn-map {
+  position: absolute;
+  inset: 0;
+}
+.prov {
+  fill: var(--land);
+  stroke: rgba(224, 180, 82, 0.5);
+  stroke-width: 1.1px;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  transition: fill 0.8s ease;
+}
+.prov.on {
+  stroke: #ffe6a8;
+}
+.prov.visit {
+  stroke: #fff6dc;
+  stroke-width: 3.5px;
+  animation: edge 1.2s ease-in-out infinite;
+}
+@keyframes edge {
+  50% {
+    stroke: var(--gold);
+    stroke-width: 6px;
+  }
+}
+.prov-lbl {
+  font-size: calc(17px / var(--k));
+  font-weight: 800;
+  fill: #fff8e6;
+  stroke: var(--lacquer);
+  stroke-width: calc(4px / var(--k));
+  paint-order: stroke;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+.sea-lbl {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: calc(34px / var(--k));
+  fill: rgba(224, 180, 82, 0.42);
+  text-anchor: middle;
+}
+.sea-lbl.sm {
+  font-size: calc(20px / var(--k));
+}
+/* Hoàng Sa, Trường Sa trên bản đồ chính: sáng cùng Đà Nẵng, Khánh Hòa */
+.isl-main path {
+  fill: var(--land);
+  stroke: rgba(224, 180, 82, 0.8);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+  transition: fill 0.8s;
+}
+.isl-main circle {
+  fill: rgba(223, 232, 227, 0.6);
+  transition: fill 0.8s;
+}
+.isl-main.on path,
+.isl-main.on circle {
+  fill: var(--gold);
+}
+.isl-lbl {
+  font-size: calc(18px / var(--k));
+  font-weight: 800;
+  fill: var(--pearl);
+  stroke: var(--lacquer);
+  stroke-width: calc(4px / var(--k));
+  paint-order: stroke;
+  text-anchor: end;
+}
+.isl-main.on .isl-lbl {
+  fill: var(--gold);
+}
+.isl-name {
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--pearl);
+  stroke: var(--lacquer);
+  stroke-width: 3px;
+  paint-order: stroke;
+}
+.burst {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 4px;
+  vector-effect: non-scaling-stroke;
+  r: calc(120px / var(--k));
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: burst 1.3s ease-out forwards;
+}
+@keyframes burst {
+  from {
+    transform: scale(0.08);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ghim người chơi */
+.pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.pin-prov {
+  font-family: var(--display);
+  font-size: 66px;
+  font-weight: 900;
+  color: var(--gold);
+  white-space: nowrap;
+  text-shadow:
+    0 3px 0 var(--lacquer),
+    0 0 4px var(--lacquer),
+    0 0 4px var(--lacquer);
+  margin-bottom: 10px;
+}
+.pin-av {
+  border: 6px solid var(--pearl);
+  outline: 4px solid var(--gold);
+}
+.pin-name {
+  margin-top: 12px;
+  max-width: 460px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 6px 22px;
+  border-radius: 14px;
+  background: var(--pearl);
+  color: var(--lacquer);
+  font-size: 32px;
+  font-weight: 800;
+}
+.pin-gift,
+.pin-more {
+  margin-top: 8px;
+  padding: 4px 18px;
+  border-radius: 12px;
+  font-size: 26px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.pin-gift {
+  background: var(--cinnabar);
+  color: #fff;
+}
+.pin-more {
+  background: rgba(26, 15, 10, 0.85);
+  color: var(--gold);
+}
+.pin-stem {
+  width: 6px;
+  height: 46px;
+  background: linear-gradient(var(--gold), transparent);
+}
+
+/* ---- Khung tranh ---- */
+.panel {
+  position: absolute;
+  border-radius: 18px;
+  border: 2px solid var(--gold-dim);
+  background: rgba(26, 15, 10, 0.9);
+  box-shadow:
+    inset 0 0 0 6px rgba(26, 15, 10, 0.9),
+    inset 0 0 0 7px rgba(224, 180, 82, 0.28);
+}
+.panel h3 {
+  padding: 16px 20px 6px;
+  font-size: 25px;
+  font-weight: 800;
+  color: var(--gold);
+}
+.empty {
+  padding: 18px 22px;
+  font-size: 23px;
+  color: var(--muted);
+}
+
+.called {
+  left: 700px;
+  top: 322px;
+  width: 290px;
+  height: 252px;
+  text-align: center;
+}
+.called-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.called-av {
+  border: 4px solid var(--gold);
+  margin-top: 2px;
+}
+.c-name {
+  margin-top: 8px;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 28px;
+  font-weight: 800;
+}
+.c-sub {
+  font-size: 22px;
+  color: var(--pearl);
+}
+.c-sub b {
+  color: var(--gold);
+}
+
+.island {
+  left: 700px;
+  width: 290px;
+  transition:
+    border-color 0.4s,
+    transform 0.4s;
+}
+.inset-hs {
+  top: 280px;
+}
+.inset-ts {
+  top: 806px;
+}
+.island-title {
+  padding: 12px 16px 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.island-title span {
+  font-weight: 600;
+  color: var(--muted);
+}
+.island svg {
+  display: block;
+  margin: 0 auto 4px;
+}
+.island path {
+  fill: var(--land);
+  stroke: rgba(224, 180, 82, 0.7);
+  stroke-width: 1px;
+  transition: fill 0.8s;
+}
+.island circle {
+  fill: rgba(223, 232, 227, 0.55);
+  transition: fill 0.8s;
+}
+.island.on path,
+.island.on circle {
+  fill: var(--gold);
+}
+.island.visit {
+  border-color: var(--gold);
+  transform: scale(1.04);
+}
+
+.gifts {
+  left: 700px;
+  top: 790px;
+  width: 290px;
+  padding-bottom: 10px;
+}
+.g-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px;
+  padding: 2px 0;
+  font-size: 21px;
+  line-height: 1.35;
+  font-weight: 600;
+  border-bottom: 1px dashed rgba(224, 180, 82, 0.22);
+}
+.g-row:last-child {
+  border: 0;
+}
+.g-row b {
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.ticker {
+  position: absolute;
+  left: 30px;
+  top: 440px;
+  width: 330px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.tk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 16px 5px 5px;
+  border-radius: 28px;
+  background: rgba(26, 15, 10, 0.82);
+  border: 1px solid rgba(224, 180, 82, 0.25);
+  font-size: 21px;
+}
+.tk span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tk b {
+  color: var(--pearl);
+}
+.tk.gift b {
+  color: var(--gold);
+}
+
+/* ---- Dưới cùng: bục + người giữ lửa ---- */
+.bottom {
+  position: absolute;
+  top: 1345px;
+  left: 30px;
+  right: 90px;
+  height: 320px;
+}
+.podium {
+  left: 0;
+  top: 0;
+  width: 640px;
+  height: 320px;
+}
+.podium .cols {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 262px;
+  padding: 0 18px;
+}
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.p-name {
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.1;
+}
+.p-pts {
+  margin: 2px 0 6px;
+  font-size: 21px;
+  color: var(--muted);
+  min-height: 26px;
+}
+.p-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+  border-radius: 14px 14px 4px 4px;
+  font-family: var(--display);
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--lacquer);
+  transition: height 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.r1 .p-bar {
+  background: linear-gradient(#f2cf7a, var(--gold) 45%, #a77c2c);
+}
+.r2 .p-bar {
+  background: linear-gradient(#ffffff, var(--pearl) 45%, #9fb3ab);
+}
+.r3 .p-bar {
+  background: linear-gradient(#e9a26b, var(--copper) 45%, #8a4b1f);
+}
+.champ {
+  right: 0;
+  top: 0;
+  width: 290px;
+  height: 320px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.champ-av {
+  border: 4px solid var(--copper);
+  margin-top: 6px;
+}
+
+/* ---- Màn mở vòng / tổng kết ---- */
+.banner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 7, 4, 0.62);
+  padding-bottom: 260px;
+}
+.banner-box {
+  width: 860px;
+  padding: 44px 46px 48px;
+  border-radius: 36px;
+  border: 3px solid var(--gold);
+  background: linear-gradient(180deg, #34190f, var(--lacquer));
+  text-align: center;
+}
+.banner-box h2 {
+  font-family: var(--display);
+  font-size: 84px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1.05;
+}
+.banner-box p {
+  margin-top: 10px;
+  font-size: 30px;
+  color: #ffe3b8;
+}
+.banner-box .rows {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.banner-box .row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 26px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 38px;
+  font-weight: 800;
+}
+.banner-box .rk {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lacquer);
+  font-family: var(--display);
+}
+.banner-box .rp {
+  margin-left: auto;
+  color: var(--gold);
+}
+.banner-box .mvp {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  font-size: 28px;
+  text-align: left;
+}
+.banner-box .mvp b {
+  color: var(--gold);
+}
+
+.avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  color: #fff;
+  font-weight: 900;
+  background: #3a261b;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prov.visit,
+  .chip.clock.hot,
+  .burst {
+    animation: none;
+  }
+}
