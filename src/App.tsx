@@ -134,6 +134,7 @@ function TextAndSound({ game }: { game: GameState }) {
         <Switch on={game.soundOn} onChange={(on) => setPrefs({ soundOn: on ? '1' : '0' })} label="Âm thanh toàn bộ" />
         <Switch on={game.music.on} onChange={(on) => setPrefs({ musicOn: on ? '1' : '0' })} label="Nhạc nền" />
         <Switch on={game.giftFx} onChange={(on) => setPrefs({ giftFx: on ? '1' : '0' })} label="Hiệu ứng quà" />
+        <Switch on={game.giftTable} onChange={(on) => setPrefs({ giftTable: on ? '1' : '0' })} label={`Khung "${game.labels.gifts}"`} />
         <label className="flex items-center gap-2">
           Âm lượng nhạc
           <input

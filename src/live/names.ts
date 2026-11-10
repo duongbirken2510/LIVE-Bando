@@ -1,4 +1,4 @@
-import { containsBanned } from './bannedWords';
+import { isRudeName } from './bannedWords';
 
 /**
  * Tên TikTok -> tên cho giọng đọc (lấy từ Đi Chùa Online, đã chạy thật trên live).
@@ -41,7 +41,7 @@ export function speakableName(nickname: string): string {
     .normalize('NFC')
     .replace(/\s+/g, ' ')
     .trim();
-  if (!clean || containsBanned(clean)) return 'bạn';
+  if (!clean || isRudeName(clean) || isRudeName(nickname)) return 'bạn';
 
   clean = clean
     .replace(/(\p{Ll})(\p{Lu})/gu, '$1 $2') // MinhTuan -> Minh Tuan

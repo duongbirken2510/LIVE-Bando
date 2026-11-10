@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLiveEvents } from '../live/useLiveEvents';
 import type { LiveStatus } from '../live/types';
 import { voice, speakableName } from '../live/voice';
-import { containsBanned, maskBanned } from '../live/bannedWords';
+import { containsBanned, isRudeName, maskBanned } from '../live/bannedWords';
 import { NameBatcher } from '../live/scoreboard';
 import { detectWish, GiftThanker, makePicker, OncePerPerson, RecentPeople, WishLimiter } from '../live/chatter';
 import { IS_STAGE } from '../live/page';
@@ -164,7 +164,8 @@ export function useGame() {
     }, 120);
   };
 
-  const safeName = (nickname: string, username: string) => (containsBanned(nickname) ? username : nickname);
+  // tên bậy (kể cả viết lách: l0n, đ.ị.t, djt) thì hiện username; username cũng bậy thì hiện "Người xem"
+  const safeName = (nickname: string, username: string) => (!isRudeName(nickname) ? nickname : !isRudeName(username) ? username : 'Người xem');
 
   const player = (e: { username: string; avatar: string }, name: string) => {
     let p = g.players.get(e.username);
@@ -253,7 +254,7 @@ export function useGame() {
       talk.recent.note(e.username, speakableName(name));
       pushFeed({ name, avatar: e.avatar, text: maskBanned(e.comment).slice(0, 60), gift: false });
 
-      const topic = containsBanned(e.comment) ? null : detectWish(e.comment);
+      const topic = containsBanned(e.comment) || isRudeName(e.comment) ? null : detectWish(e.comment);
       const reply = topic && pick(GAME.wishReplies[topic] ?? []);
       if (reply && talk.wishes.allow(e.username)) voice.say(reply(speakableName(name)));
 
@@ -473,6 +474,7 @@ export function useGame() {
     voiceRate: rateOf(prefs),
     soundOn: prefs.soundOn !== '0', // công tắc "Âm thanh toàn bộ"
     giftFx: prefs.giftFx !== '0', // công tắc "Hiệu ứng quà"
+    giftTable: prefs.giftTable === '1', // công tắc khung "Quà gửi về quê" (bảng điểm quà), mặc định tắt
     music: {
       on: prefs.musicOn ? prefs.musicOn === '1' : GAME.musicOn,
       volume: Math.min(100, Math.max(0, Number(prefs.musicVolume ?? GAME.musicVolume) || 0)),

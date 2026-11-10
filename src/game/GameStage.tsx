@@ -115,10 +115,20 @@ export function GameStage({ game }: { game: GameState }) {
         </AnimatePresence>
       </div>
 
+      {/* luật bản đồ: 2 quần đảo vẽ thu gọn gần bờ, ranh giới tỉnh từ dữ liệu cộng đồng -> ghi rõ là hình mô phỏng */}
+      {/* chỉ hiện lúc nhìn cả nước; zoom vào tỉnh thì nhường chỗ cho ghim người chơi */}
+      <div className="map-note" style={{ opacity: visitingId ? 0 : 1 }}>
+        Hình ảnh mô phỏng,
+        <br />
+        vẽ thu nhỏ,
+        <br />
+        không theo tỷ lệ
+      </div>
+
       <div className="side">
         <Upcoming names={game.upcoming} />
         <Ticker game={game} />
-        <GiftStrip title={L.gifts} />
+        {game.giftTable && <GiftStrip title={L.gifts} />}
         <Podium top={game.top} title={L.podium} />
         <div className="panel champ">
           <h3>{L.champ}</h3>

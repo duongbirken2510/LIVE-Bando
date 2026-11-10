@@ -1,4 +1,5 @@
 import { IS_STAGE } from './page';
+import { containsBanned } from './bannedWords';
 
 /**
  * Hàng đợi giọng đọc. Chỉ phát trên trang stage (và chỉ trang stage mở sau cùng).
@@ -47,6 +48,7 @@ class Voice {
 
   say(text: string, priority = false) {
     if (!this.enabled || !text.trim()) return;
+    if (containsBanned(text)) return; // lớp chặn cuối: lọt từ tục vào câu đọc thì bỏ cả câu, thà im còn hơn đọc bậy
     const q = priority ? this.priority : this.normal;
     q.push({ text: text.trim(), at: Date.now() });
     if (q.length > MAX_QUEUE) q.shift();
