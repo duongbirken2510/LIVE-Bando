@@ -79,8 +79,7 @@ export function GameStage({ game }: { game: GameState }) {
               <Avatar user={game.champion} size={104} className="champ-av" />
               <div className="c-name">{game.champion.name}</div>
               <div className="c-sub">
-                {game.champion.home && <>quê {game.champion.home}, </>}
-                {game.champion.pts.toLocaleString('vi-VN')} điểm
+                góp {game.champion.pts.toLocaleString('vi-VN')} điểm
               </div>
             </>
           ) : (
@@ -213,7 +212,7 @@ function RoundBanner({ game }: { game: GameState }) {
                     <div>
                       Người giữ lửa quê: <b>{s.champion.name}</b>
                       <br />
-                      {s.champion.pts.toLocaleString('vi-VN')} điểm{s.champion.home ? ` cho ${s.champion.home}` : ''}
+                      góp {s.champion.pts.toLocaleString('vi-VN')} điểm cho quê
                     </div>
                   </div>
                 )}
