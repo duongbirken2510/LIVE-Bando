@@ -1,17 +1,118 @@
 # Việt Nam đất nước ta ơi
 
-Game TikTok LIVE: người xem gõ tên tỉnh, thành quê mình, bản đồ Việt Nam bay tới tỉnh đó, MC đọc tên, tỉnh sáng lên kèm avatar người gọi.
+Game cho buổi TikTok LIVE. Người xem gõ tên tỉnh, thành quê mình vào comment, bản đồ Việt Nam bay tới tỉnh đó, tỉnh sáng lên kèm tên và avatar người gọi, MC đọc tên bạn ấy và nhắc một hai món ngon, danh thắng của quê đó.
 
-## Chạy
+Bản đồ 34 tỉnh, thành mới từ 2025, có Hoàng Sa, Trường Sa và các đảo. Gõ tên tỉnh cũ trước sáp nhập, tên thành phố (Hạ Long, Nha Trang, Đà Lạt...) hay tên đảo (Phú Quốc, Côn Đảo, Lý Sơn...) đều nhận đúng tỉnh.
 
-1. Cài [Node.js](https://nodejs.org) bản LTS (một lần).
-2. Bấm đúp `BAT-LIVE.bat`. Lần đầu tự cài thư viện 1–2 phút, xong tự mở trang điều khiển `http://localhost:3000`.
-3. TikTok LIVE Studio → thêm nguồn **Link**: `http://lvh.me:3000/?view=stage`, kích thước 1080 × 1920.
-4. Bắt đầu live, nhập username vào trang điều khiển, bấm Kết nối.
+## Cần có
 
-Chưa live mà muốn thử: dùng các nút trong khung **Thử game Việt Nam đất nước ta ơi** ở trang điều khiển.
+- Máy tính Windows 10 hoặc 11. Mac/Linux xem cuối trang.
+- Mạng internet: giọng MC được tạo qua mạng, không có mạng thì MC im.
+- Node.js (miễn phí, cài một lần, hướng dẫn ở bước 2).
 
-Giữ cửa sổ `BAT-LIVE.bat` mở suốt buổi live. Chỉ trang stage phát tiếng; đừng mở link `?view=stage` ở chỗ khác khi đang live (sẽ bị 2 giọng).
+## Cài đặt lần đầu
+
+### Bước 1: Tải game về
+
+1. Trên trang GitHub này, bấm nút xanh **Code** rồi chọn **Download ZIP**.
+2. Mở thư mục Downloads, chuột phải vào file `viet-nam-dat-nuoc-ta-oi-master.zip`, chọn **Extract All...** (Giải nén tất cả), bấm **Extract**.
+3. Chép thư mục vừa giải nén ra chỗ dễ tìm, ví dụ `D:\Game\viet-nam-dat-nuoc-ta-oi`.
+
+Phải giải nén ra hẳn. Bấm đúp mở thẳng trong file zip thì game không chạy.
+
+Biết dùng git thì gõ:
+
+```bash
+git clone https://github.com/workaipvlinh-byte/viet-nam-dat-nuoc-ta-oi.git
+```
+
+### Bước 2: Cài Node.js
+
+1. Vào https://nodejs.org, tải bản có chữ **LTS**.
+2. Mở file vừa tải, bấm **Next** liên tục rồi **Install**, để nguyên các lựa chọn mặc định.
+3. Cài xong thì khởi động lại máy cho chắc.
+
+### Bước 3: Chạy game
+
+1. Mở thư mục game, bấm đúp file `BAT-LIVE.bat`.
+2. Nếu Windows hiện bảng xanh "Windows protected your PC", bấm **More info** rồi **Run anyway**. Bảng này hiện vì file tải từ mạng về, không phải lỗi.
+3. Lần đầu game tự cài thư viện, mất khoảng 1–2 phút, cửa sổ đen chạy nhiều chữ là bình thường.
+4. Xong thì trình duyệt tự mở **trang điều khiển** (`http://localhost:3000`). Trong cửa sổ đen có dòng `Link LIVE Studio`, đó là link cho bước 4.
+
+Từ lần sau chỉ cần bấm đúp `BAT-LIVE.bat` là chạy ngay.
+
+**Giữ cửa sổ đen mở suốt buổi live.** Đóng nó là game tắt.
+
+### Bước 4: Đưa màn hình game vào TikTok LIVE Studio
+
+1. Trong TikTok LIVE Studio, thêm nguồn **Link** (nguồn trang web).
+2. Dán link: `http://lvh.me:3000/?view=stage`
+3. Đặt kích thước **1080 × 1920** (màn hình dọc).
+
+Nếu cửa sổ đen báo "cổng 3000 đang bận nên dùng cổng 3001" thì link phải đổi số theo, ví dụ `http://lvh.me:3001/?view=stage`. Lấy đúng link in trong cửa sổ đen.
+
+### Bước 5: Kết nối với buổi live
+
+1. Bấm bắt đầu live trên TikTok trước.
+2. Ở trang điều khiển, khung **Kết nối TikTok LIVE**, gõ username TikTok của kênh (không cần chữ @), bấm **Kết nối**.
+3. Thấy báo đã kết nối là xong. Người xem comment tên quê là bản đồ chạy.
+
+## Chỉnh game trên trang điều khiển
+
+Mọi thứ dưới đây chỉnh bằng chuột, không cần đụng code. Chỉnh xong được lưu lại, lần sau bật vẫn giữ.
+
+- **Chọn giao diện** (ngay dưới khung Kết nối): 20 bộ màu như Sơn mài, Lụa đỏ, Biển đêm, Hoa sen, Tím Huế, Neon Sài Gòn. Bấm vào là ô xem trước đổi theo.
+- **Giọng đọc trên stage**: chọn MC nữ (Hoài My) hoặc nam (Nam Minh), bấm Nghe thử. Ô đổi tên kênh: tên MC xưng khi chào, cảm ơn. Ô gõ câu bất kỳ để MC đọc ngay.
+- **Chữ trên màn hình & âm thanh**:
+  - Sửa chữ: tên game (2 dòng), dòng hướng dẫn, tên các bảng "Vừa gọi tên quê", "Quà gửi về quê", "Người giữ lửa quê", "Bục quê nhà", "Đang ghé thăm", "Đồng hương các buổi live". Để trống ô nào thì ô đó dùng chữ mặc định.
+  - Công tắc: Âm thanh toàn bộ, Nhạc nền, Hiệu ứng quà.
+  - Thanh kéo âm lượng nhạc nền.
+  - Thanh kéo tốc độ giọng đọc, từ 0.7 (chậm) tới 1.5 (nhanh).
+
+## Thử trước khi live
+
+Chưa live vẫn thử được, ở trang điều khiển:
+
+- Khung **Thử game Việt Nam đất nước ta ơi**: nút mô phỏng một lượt gọi tên, 5 nút thử hiệu ứng quà theo mức xu.
+- Khung **Giả lập**: thêm người vào, comment, tặng quà, thả tim từng cái một. Mục **Live tự động** cho 10, 50 hoặc 100 người giả chơi trọn một vòng.
+
+Muốn nghe tiếng khi thử thì mở link `?view=stage` trong trình duyệt và bấm vào trang một lần (trình duyệt chặn tự phát tiếng khi chưa bấm). Thử xong nhớ đóng tab đó trước khi live thật.
+
+## Luật chơi
+
+- Gõ tên tỉnh, thành (có dấu, không dấu, viết tắt HN, SG, HCM đều được): +1 điểm cho quê, mỗi người tối đa 1 điểm mỗi 10 giây cho 1 tỉnh.
+- Thả tim: 15 tim = +1 điểm.
+- Tặng quà: 1–4 xu +3, 5–29 xu +30, 30–99 xu +100, 100–999 xu +500, từ 1.000 xu +3.000. Quà càng to hiệu ứng càng lớn. Tặng khi chưa gõ quê thì gõ quê lúc nào được cộng bù lúc đó.
+- Mỗi vòng 2 phút 30 giây, tổng kết 15 giây: ba quê nhiều điểm nhất lên bục, người góp nhiều nhất là "Người giữ lửa quê". Sang vòng mới điểm về 0.
+
+## Gặp lỗi
+
+- **Bấm `BAT-LIVE.bat` báo "npm is not recognized"**: chưa cài Node.js, hoặc cài rồi mà chưa khởi động lại máy.
+- **Nghe 2 giọng MC hoặc 2 lớp nhạc**: đang mở trang `?view=stage` ở 2 chỗ. Chỉ để lại trang trong LIVE Studio, đóng các tab khác.
+- **MC không nói**: kiểm tra mạng, công tắc Âm thanh toàn bộ, và link trong LIVE Studio có đúng cổng in trong cửa sổ đen không.
+- **Không kết nối được**: phải đang live rồi mới kết nối, username gõ đúng và không có @.
+- **Màn hình trong LIVE Studio trắng**: cửa sổ đen đã bị đóng, bấm lại `BAT-LIVE.bat`.
+
+## Mac / Linux
+
+Cài Node.js bản LTS, mở Terminal trong thư mục game rồi gõ:
+
+```bash
+npm install
+```
+
+```bash
+LIVE_MODE=1 npm run dev
+```
+
+Sau đó làm tiếp từ bước 4. Trang điều khiển ở `http://localhost:3000`.
+
+## Chỉnh sâu hơn (cần sửa code)
+
+- `src/game/config.ts`: mọi câu MC đọc, điểm từng mức quà, thời gian vòng.
+- `src/game/provinceTalk.ts`: món ngon, danh thắng, lời khen của từng tỉnh.
+- `src/game/provinces.ts`: cách gọi tỉnh, tên đảo, thành phố.
+- `src/game/themes.ts`: 20 giao diện màu.
 
 ## Nguồn bản đồ
 
