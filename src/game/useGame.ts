@@ -74,22 +74,33 @@ interface PlayerState extends Person {
 
 // ---------- Đồng hồ vòng ----------
 // Tính theo giờ máy nên trang điều khiển và trang stage luôn cùng giai đoạn.
-const CYCLE = GAME.roundMs + GAME.summaryMs;
+// Thời gian 1 vòng chủ kênh chọn (prefs.roundSec, tính cả 15 giây mở màn); mọi trang nhận cùng lệnh nên vẫn cùng nhịp
+let roundMs = GAME.roundMs;
+let CYCLE = roundMs + GAME.summaryMs;
 let clockOffset = 0;
 export function roundClock(now = Date.now()) {
   const t = (((now + clockOffset) % CYCLE) + CYCLE) % CYCLE;
-  const phase: Phase = t < GAME.openMs ? 'open' : t < GAME.roundMs ? 'play' : 'summary';
-  return { phase, remainMs: phase === 'summary' ? 0 : GAME.roundMs - t };
+  const phase: Phase = t < GAME.openMs ? 'open' : t < roundMs ? 'play' : 'summary';
+  return { phase, remainMs: phase === 'summary' ? 0 : roundMs - t };
 }
+/** Đổi thời gian 1 vòng. restart: đang chơi mà đổi thì bắt đầu vòng mới cho khỏi nhảy giờ giữa chừng */
+function setRoundMs(ms: number, restart: boolean) {
+  if (ms === roundMs) return;
+  roundMs = ms;
+  CYCLE = roundMs + GAME.summaryMs;
+  if (restart) newRound();
+}
+export const roundSecOf = (prefs: Record<string, string>) => Math.min(1200, Math.max(60, Number(prefs.roundSec) || GAME.roundMs / 1000));
+/** Trọn 1 vòng (mở màn + gặp gỡ + tổng kết), cho live tự động */
+export const roundCycleMs = () => CYCLE;
 /** Nhảy về đầu 1 vòng mới (live tự động dùng để chạy trọn 1 vòng) */
 function newRound() {
   const t = (((Date.now() + clockOffset) % CYCLE) + CYCLE) % CYCLE;
   clockOffset += CYCLE - t;
 }
-export const ROUND_CYCLE_MS = CYCLE;
 function skipPhase() {
   const t = (((Date.now() + clockOffset) % CYCLE) + CYCLE) % CYCLE;
-  const next = t < GAME.openMs ? GAME.openMs : t < GAME.roundMs ? GAME.roundMs : CYCLE;
+  const next = t < GAME.openMs ? GAME.openMs : t < roundMs ? roundMs : CYCLE;
   clockOffset += next - t + 1;
 }
 
@@ -137,6 +148,7 @@ export function useGame() {
     called: null as Visit | null,
     feed: [] as FeedItem[],
     prefs: {} as Record<string, string>,
+    prefsLoaded: false,
     summary: null as Summary | null,
     fans: loadFans(),
     saveTimer: 0,
@@ -342,6 +354,10 @@ export function useGame() {
       if (c.action === 'setPrefs' && c.text) {
         try {
           const p = JSON.parse(c.text) as Record<string, string>;
+          const first = !g.prefsLoaded; // lần đầu nối vào: chỉ nhận cài đặt, không bắt đầu lại vòng
+          g.prefsLoaded = true;
+          setRoundMs(roundSecOf(p) * 1000, !first);
+          if (first) g.phase = roundClock().phase; // đổi lúc đang chơi thì để vòng lặp vòng chơi tự sang vòng mới (cộng số vòng, xoá điểm)
           g.prefs = p;
           setPrefs(p);
           if (IS_STAGE && p.voiceRate) voice.rate = rateOf(p); // tốc độ đã chọn, server nhớ qua lần bật lại
@@ -475,6 +491,7 @@ export function useGame() {
     soundOn: prefs.soundOn !== '0', // công tắc "Âm thanh toàn bộ"
     giftFx: prefs.giftFx !== '0', // công tắc "Hiệu ứng quà"
     giftTable: prefs.giftTable === '1', // công tắc khung "Quà gửi về quê" (bảng điểm quà), mặc định tắt
+    roundSec: roundSecOf(prefs),
     music: {
       on: prefs.musicOn ? prefs.musicOn === '1' : GAME.musicOn,
       volume: Math.min(100, Math.max(0, Number(prefs.musicVolume ?? GAME.musicVolume) || 0)),

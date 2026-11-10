@@ -1,7 +1,7 @@
 import { IS_STAGE, emitTest, sendControl } from './live/page';
 import { StageFrame } from './live/StageFrame';
 import { Dashboard } from './live/Dashboard';
-import { useGame, ROUND_CYCLE_MS } from './game/useGame';
+import { useGame, roundCycleMs } from './game/useGame';
 import { GameStage } from './game/GameStage';
 import { PROVINCES } from './game/provinces';
 import { THEMES, themeById } from './game/themes';
@@ -44,7 +44,7 @@ export default function App() {
       }
       extra={<GameControls />}
       autoLive={{
-        durationMs: ROUND_CYCLE_MS, // trọn 1 vòng: mở màn, gặp gỡ, tổng kết
+        durationMs: roundCycleMs(), // trọn 1 vòng: mở màn, gặp gỡ, tổng kết (theo thời gian vòng đã chọn)
         comment: () => provComment(),
         onStart: () => sendControl('custom', 'newRound'),
       }}
@@ -134,6 +134,21 @@ function TextAndSound({ game }: { game: GameState }) {
         <Switch on={game.soundOn} onChange={(on) => setPrefs({ soundOn: on ? '1' : '0' })} label="Âm thanh toàn bộ" />
         <Switch on={game.music.on} onChange={(on) => setPrefs({ musicOn: on ? '1' : '0' })} label="Nhạc nền" />
         <Switch on={game.giftFx} onChange={(on) => setPrefs({ giftFx: on ? '1' : '0' })} label="Hiệu ứng quà" />
+        <label className="flex items-center gap-2">
+          Thời gian 1 vòng
+          <select
+            value={game.roundSec}
+            onChange={(e) => setPrefs({ roundSec: e.target.value })}
+            className="rounded-lg bg-slate-900 px-2 py-1"
+          >
+            {[60, 90, 120, 150, 180, 240, 300, 420, 600].map((s) => (
+              <option key={s} value={s}>
+                {s % 60 ? `${Math.floor(s / 60)} phút ${s % 60} giây` : `${s / 60} phút`}
+                {s === GAME.roundMs / 1000 ? ' (mặc định)' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
         <Switch on={game.giftTable} onChange={(on) => setPrefs({ giftTable: on ? '1' : '0' })} label={`Khung "${game.labels.gifts}"`} />
         <label className="flex items-center gap-2">
           Âm lượng nhạc

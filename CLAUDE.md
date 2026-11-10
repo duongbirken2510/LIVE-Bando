@@ -68,5 +68,6 @@ Người xem gõ tên tỉnh, thành quê mình. Bản đồ Việt Nam 34 tỉn
 - Thẻ "Hình ảnh mô phỏng, vẽ thu nhỏ, không theo tỷ lệ" trên bản đồ (vịnh Bắc Bộ), chữ 26px, ẩn khi zoom vào tỉnh. Lý do: 2 quần đảo vẽ thu gọn gần bờ, ranh giới tỉnh lấy từ dữ liệu cộng đồng (luật đo đạc bản đồ).
 - Chặn tục: tên người chơi qua `isRudeName` (bỏ dấu, l0n, đ.ị.t, djt, vcl...) -> MC đọc "bạn", màn hình hiện username (username cũng bậy thì "Người xem"). Lớp chặn cuối trong `voice.say`: câu có từ cấm thì bỏ cả câu. Comment trên dòng chạy che ***. Đã thử 41 tên + 387 câu MC soạn sẵn: không lọt, không chặn nhầm.
 - Khung "Quà gửi về quê" (bảng điểm quà) mặc định TẮT, bật ở công tắc trong khung "Chữ trên màn hình & âm thanh" (prefs.giftTable). Quà vẫn cộng điểm.
+- Thời gian 1 vòng chọn được trong khung "Chữ trên màn hình & âm thanh": 1 tới 10 phút (tính cả 15 giây mở màn), mặc định 2 phút 30 (prefs.roundSec). Đổi lúc đang chơi thì sang vòng mới ngay. Live tự động chạy theo thời gian đã chọn.
 - Live tự động (khung Giả lập, phần chung): 10 / 50 / 100 người chạy trọn 1 vòng 2:45, tự nhảy về đầu vòng mới (`custom: newRound`), comment là tên tỉnh.
 - Giao diện riêng: chất tranh sơn mài (nền đen nâu, viền vàng thếp, son đỏ), font Playfair Display cho tiêu đề + Be Vietnam Pro.
