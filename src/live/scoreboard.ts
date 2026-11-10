@@ -43,16 +43,17 @@ export function topPlayers(players: Players, n = 10): Player[] {
  *   g.add('an123', 'An');
  * - Mỗi người chỉ được chào 1 lần trong buổi (ra vào lại không chào nữa). reset() để chào lại từ đầu.
  * - `isBusy`: giọng còn nhiều câu chờ thì để lượt sau, tên vẫn giữ.
- * - Đông quá thì chỉ giữ `maxWaiting` người mới nhất.
+ * - Đông (chờ nhiều hơn 1 lượt): đọc `perBatch` tên mới nhất + "và N bạn nữa" (flush nhận N ở tham số 2), rồi xoá hàng chờ.
  */
 export class NameBatcher {
   private names: { key: string; name: string }[] = [];
+  private dropped = 0; // người bị đẩy khỏi hàng chờ khi đông, vẫn đếm vào "và N bạn nữa"
   private seen = new Set<string>();
   private timer: ReturnType<typeof setInterval> | null = null;
   constructor(
     private everyMs: number,
     private perBatch: number,
-    private flush: (names: string[]) => void,
+    private flush: (names: string[], more: number) => void,
     private isBusy: () => boolean = () => false,
     private maxWaiting = 30,
   ) {}
@@ -61,17 +62,26 @@ export class NameBatcher {
     if (this.seen.has(key)) return;
     this.seen.add(key);
     this.names.push({ key, name });
-    if (this.names.length > this.maxWaiting) this.names.shift();
+    if (this.names.length > this.maxWaiting) {
+      this.names.shift();
+      this.dropped++;
+    }
     if (!this.timer) this.timer = setInterval(() => this.tick(), this.everyMs);
   }
   reset() {
     this.names = [];
+    this.dropped = 0;
     this.seen.clear();
   }
   private tick() {
     if (this.names.length && this.isBusy()) return;
-    const batch = this.names.splice(0, this.perBatch);
-    if (batch.length) this.flush(batch.map((b) => b.name));
+    // đông: gộp hết vào 1 câu, đọc mấy tên mới nhất (người vừa vào còn đang xem)
+    const crowded = this.names.length > this.perBatch * 2;
+    const batch = crowded ? this.names.slice(-this.perBatch) : this.names.splice(0, this.perBatch);
+    const more = crowded ? this.names.length - this.perBatch + this.dropped : 0;
+    if (crowded) this.names = [];
+    this.dropped = 0;
+    if (batch.length) this.flush(batch.map((b) => b.name), more);
     if (!this.names.length && this.timer) {
       clearInterval(this.timer);
       this.timer = null;

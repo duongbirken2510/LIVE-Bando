@@ -145,8 +145,8 @@ export function useGame() {
       greeter: new NameBatcher(
         GAME.greetEveryMs,
         GAME.namesPerGreeting,
-        (names) => voice.say(GAME.greeting(joinNames(names), g.kenh)),
-        () => voice.waiting >= 2,
+        (names, more) => voice.say(GAME.greeting(joinNames(names, more > 0), g.kenh, more)),
+        (): boolean => voice.waiting >= 2 || g.queue.some((q: Visit) => q.pri), // có quà lớn đang chờ thì cảm ơn quà trước
       ),
       gifts: new GiftThanker(30_000, GAME.priorityGiftCoins),
       follows: new OncePerPerson(),
@@ -238,7 +238,8 @@ export function useGame() {
   const resetRound = () => {
     g.queue = g.queue.filter((q) => q.kind === 'gift'); // lượt quà giữ lại sang vòng mới, người tặng không mất khoảnh khắc
     g.visiting = null;
-    for (const p of g.players.values()) Object.assign(p, { home: null, pts: 0, likes: 0, pendingXu: 0 });
+    // pendingXu giữ lại: tặng quà mà chưa gõ quê thì vòng sau gõ vẫn được cộng bù
+    for (const p of g.players.values()) Object.assign(p, { home: null, pts: 0, likes: 0 });
     g.lastVisit.clear();
     g.warned = false;
   };
@@ -533,8 +534,9 @@ function lineFor(v: Visit, waiting: number) {
   return talk ? `${call} | ${talk}` : call;
 }
 
-// ['An', 'Bình', 'Chi'] -> 'bạn An, bạn Bình và bạn Chi'
-function joinNames(names: string[]) {
+// ['An', 'Bình', 'Chi'] -> 'bạn An, bạn Bình và bạn Chi'; commasOnly: 'bạn An, bạn Bình, bạn Chi' (câu sau còn "và N bạn nữa")
+function joinNames(names: string[], commasOnly = false) {
   const spoken = names.map((n) => (n === 'bạn' ? n : `bạn ${n}`));
+  if (commasOnly) return spoken.join(', ');
   return spoken.length > 1 ? `${spoken.slice(0, -1).join(', ')} và ${spoken[spoken.length - 1]}` : (spoken[0] ?? '');
 }

@@ -34,12 +34,12 @@ export const PROVINCES: Province[] = [
   ['Phú Thọ', 'phu tho, vinh phuc, hoa binh, viet tri'],
   ['Quảng Ngãi', 'quang ngai, kon tum, kontum, ly son'],
   ['Quảng Ninh', 'quang ninh, ha long, mong cai, cam pha, co to, van don'],
-  ['Quảng Trị', 'quang tri, quang binh, dong hoi, con co'],
+  ['Quảng Trị', 'quang tri, quang binh, dong hoi'],
   ['Sơn La', 'son la'],
   ['Tây Ninh', 'tay ninh, long an'],
   ['Thái Nguyên', 'thai nguyen, bac kan, bac can'],
   ['Thanh Hóa', 'thanh hoa, xu thanh'],
-  ['TP. Hồ Chí Minh', 'ho chi minh, tp hcm, tphcm, hcm, sai gon, saigon, sg, binh duong, ba ria vung tau, ba ria, vung tau, brvt, con dao, con son, thu duc'],
+  ['TP. Hồ Chí Minh', 'ho chi minh, tp hcm, tphcm, hcm, hcmc, sai gon, saigon, sg, binh duong, ba ria vung tau, ba ria, vung tau, brvt, con dao, con son, thu duc'],
   ['Tuyên Quang', 'tuyen quang, ha giang'],
   ['Vĩnh Long', 'vinh long, ben tre, tra vinh'],
 ].map(([name, aliases]) => ({ id: slug(name), name, aliases: aliases.split(',').map((s) => s.trim()) }));
@@ -98,21 +98,21 @@ export const SPOTS: Spot[] = [
   { name: 'Vân Đồn', pid: 'quang-ninh', lon: 107.45, lat: 21.07, span: 0.5, aliases: ['van don'] },
   { name: 'Lý Sơn', pid: 'quang-ngai', lon: 109.12, lat: 15.38, span: 0.35, aliases: ['ly son'] },
   { name: 'Cù Lao Chàm', pid: 'da-nang', lon: 108.51, lat: 15.95, span: 0.35, aliases: ['cu lao cham'] },
-  { name: 'Cồn Cỏ', pid: 'quang-tri', lon: 107.34, lat: 17.16, span: 0.35, aliases: ['con co'] },
+  { name: 'Cồn Cỏ', pid: 'quang-tri', lon: 107.34, lat: 17.16, span: 0.35, aliases: ['dao con co'] },
   { name: 'Phú Quý', pid: 'lam-dong', lon: 108.94, lat: 10.52, span: 0.35, aliases: ['phu quy'] },
   // đảo nhỏ có người ở, nhiều bạn đi nghĩa vụ ở đây
   ...(
     [
       ['Hòn Khoai', 'ca-mau', 104.83, 8.43, ['hon khoai']],
       ['Hòn Chuối', 'ca-mau', 104.33, 8.95, ['hon chuoi']],
-      ['Hòn Sơn', 'an-giang', 104.63, 9.8, ['hon son']],
+      ['Hòn Sơn', 'an-giang', 104.63, 9.8, ['dao hon son']],
       ['Hải Tặc', 'an-giang', 104.4, 10.26, ['dao hai tac']],
-      ['Hòn Mê', 'thanh-hoa', 105.92, 19.38, ['hon me']],
-      ['Hòn Ngư', 'nghe-an', 105.77, 18.8, ['hon ngu']],
-      ['Hòn La', 'quang-tri', 106.52, 17.93, ['hon la']],
+      ['Hòn Mê', 'thanh-hoa', 105.92, 19.38, ['dao hon me']],
+      ['Hòn Ngư', 'nghe-an', 105.77, 18.8, ['dao hon ngu']],
+      ['Hòn La', 'quang-tri', 106.52, 17.93, ['dao hon la']],
       ['Cù Lao Xanh', 'gia-lai', 109.35, 13.62, ['cu lao xanh']],
       ['Cù Lao Câu', 'lam-dong', 108.47, 11.22, ['cu lao cau']],
-      ['Hòn Tre', 'khanh-hoa', 109.23, 12.21, ['hon tre']],
+      ['Hòn Tre', 'khanh-hoa', 109.23, 12.21, ['dao hon tre']],
       ['Bình Ba', 'khanh-hoa', 109.24, 11.84, ['dao binh ba']],
       ['Bình Hưng', 'khanh-hoa', 109.25, 11.71, ['dao binh hung']],
       ['Quan Lạn', 'quang-ninh', 107.53, 21.02, ['quan lan']],
@@ -122,7 +122,7 @@ export const SPOTS: Spot[] = [
       ['Cái Chiên', 'quang-ninh', 107.75, 21.33, ['cai chien']],
       ['Vĩnh Thực', 'quang-ninh', 108.03, 21.45, ['vinh thuc']],
       ['Long Châu', 'hai-phong', 107.12, 20.62, ['dao long chau']],
-      ['Hòn Dấu', 'hai-phong', 106.8, 20.67, ['hon dau']],
+      ['Hòn Dấu', 'hai-phong', 106.8, 20.67, ['dao hon dau']],
     ] as const
   ).map(([name, pid, lon, lat, aliases]) => ({ name, pid, lon, lat, span: 0.3, aliases: [...aliases] })),
   // Hoàng Sa (TP. Đà Nẵng), Trường Sa (tỉnh Khánh Hòa): ngoài khung bản đồ chính, camera về cả nước + sáng khung đảo
@@ -131,7 +131,7 @@ export const SPOTS: Spot[] = [
       ['quần đảo Hoàng Sa', 'da-nang', 112.0, 16.4, ['quan dao hoang sa', 'hoang sa']],
       ['Phú Lâm', 'da-nang', 112.33, 16.83, ['dao phu lam']],
       ['Tri Tôn', 'da-nang', 111.2, 15.78, ['dao tri ton']],
-      ['Linh Côn', 'da-nang', 112.73, 16.67, ['linh con']],
+      ['Linh Côn', 'da-nang', 112.73, 16.67, ['dao linh con']],
       ['quần đảo Trường Sa', 'khanh-hoa', 113.5, 9.8, ['quan dao truong sa', 'truong sa']],
       ['Trường Sa Lớn', 'khanh-hoa', 111.92, 8.64, ['truong sa lon']],
       ['Song Tử Tây', 'khanh-hoa', 114.33, 11.43, ['song tu tay']],
@@ -141,15 +141,17 @@ export const SPOTS: Spot[] = [
       ['An Bang', 'khanh-hoa', 112.92, 7.89, ['dao an bang']],
       ['Phan Vinh', 'khanh-hoa', 113.7, 8.95, ['dao phan vinh']],
       ['Đá Tây', 'khanh-hoa', 112.25, 8.85, ['dao da tay']],
-      ['Len Đao', 'khanh-hoa', 114.27, 9.78, ['len dao']],
+      ['Len Đao', 'khanh-hoa', 114.27, 9.78, ['dao len dao']],
     ] as const
   ).map(([name, pid, lon, lat, aliases]) => ({ name, pid, lon, lat, span: 0.3, aliases: [...aliases], far: true })),
 ];
+// gõ dính liền: "thanhhoa", "danang", "halong"
+const withJoined = (list: string[]) => [...list, ...list.filter((a) => a.includes(' ') && a.length >= 7 && !a.startsWith('dao ')).map((a) => a.replace(/ /g, ''))];
 // cách gọi dài xét trước: "truong sa lon" trước "truong sa"
-const SPOT_ALIASES = SPOTS.flatMap((s) => s.aliases.map((a) => ({ a: ` ${a} `, s }))).sort((x, y) => y.a.length - x.a.length);
+const SPOT_ALIASES = SPOTS.flatMap((s) => withJoined(s.aliases).map((a) => ({ a: ` ${a} `, s }))).sort((x, y) => y.a.length - x.a.length);
 /** Địa danh (đảo, thành phố) nhắc tới trong comment, nếu có */
 export function findSpot(text: string): Spot | null {
-  const t = ` ${norm(text)} `;
+  const t = ` ${norm(prep(text))} `;
   return SPOT_ALIASES.find(({ a }) => t.includes(a))?.s ?? null;
 }
 
@@ -166,17 +168,33 @@ export function slug(name: string) {
   return norm(name).replace(/ /g, '-');
 }
 
+/**
+ * Xét dấu trước khi bỏ dấu, tránh bắt nhầm chữ thường:
+ * "chị Huệ" không phải Huế, "hơn là" không phải Hòn La, "còn có" không phải Cồn Cỏ, "lên đảo" không phải Len Đao.
+ * Gõ có dấu "Hòn La", "Cồn Cỏ", "Len Đao" thì coi như đã ghi chữ "đảo" phía trước.
+ */
+const L = String.raw`\p{L}`;
+const FALSE_WORDS = new RegExp(`(^|[^${L}])(huệ|hơn|còn|hôn)(?=$|[^${L}])`, 'gu');
+function prep(text: string) {
+  return String(text)
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(FALSE_WORDS, '$1 ')
+    .replace(/sơn là/g, 'sơn ')
+    .replace(/hòn |cồn cỏ|len đao/g, (m) => `đảo ${m}`);
+}
+
 // cách gọi tỉnh + tên địa danh (đảo, thành phố) quy về tỉnh của nó; tạo lần đầu dùng vì SPOTS khai báo phía dưới
 let ALIASES: { a: string; p: Province }[] | null = null;
 const aliases = () =>
   (ALIASES ??= [
-    ...PROVINCES.flatMap((p) => p.aliases.map((a) => ({ a: ` ${a} `, p }))),
-    ...SPOTS.flatMap((s) => s.aliases.map((a) => ({ a: ` ${a} `, p: PROVINCE_BY_ID.get(s.pid)! }))),
+    ...PROVINCES.flatMap((p) => withJoined(p.aliases).map((a) => ({ a: ` ${a} `, p }))),
+    ...SPOTS.flatMap((s) => withJoined(s.aliases).map((a) => ({ a: ` ${a} `, p: PROVINCE_BY_ID.get(s.pid)! }))),
   ]);
 
 /** Tỉnh nhắc tới đầu tiên trong comment; trùng vị trí thì lấy cách gọi dài hơn. Không có -> null */
 export function findProvince(text: string): Province | null {
-  const t = ` ${norm(text)} `;
+  const t = ` ${norm(prep(text))} `;
   let best: { i: number; len: number; p: Province } | null = null;
   for (const { a, p } of aliases()) {
     const i = t.indexOf(a);

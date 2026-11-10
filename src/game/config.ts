@@ -105,7 +105,11 @@ export const GAME = {
   // ---------- Chào người vào ----------
   greetEveryMs: 6000,
   namesPerGreeting: 3,
-  greeting: (names: string, kenh: string) => `${kenh} chào ${names}. | Gõ tên quê mình để bản đồ ghé thăm nha.`,
+  // more > 0: phòng đông, gộp "chào bạn A, bạn B, bạn C và 25 bạn nữa"
+  greeting: (names: string, kenh: string, more = 0) =>
+    more > 0
+      ? `${kenh} chào ${names} và ${more} bạn nữa vừa vào live. | Gõ tên quê mình để bản đồ ghé thăm nha.`
+      : `${kenh} chào ${names}. | Gõ tên quê mình để bản đồ ghé thăm nha.`,
 
   // ---------- Theo dõi kênh ----------
   thankFollow: (name: string, kenh: string) => `${kenh} cảm ơn bạn ${name} đã theo dõi kênh nha.`,
