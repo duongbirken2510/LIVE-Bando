@@ -50,8 +50,9 @@ function hit(c: AudioContext, out: AudioNode, at: number, dur: number, peak: num
 
 function schedule() {
   if (!ctx || !master) return;
-  // MC đang nói: nhạc nhỏ còn 35%
-  master.gain.setTargetAtTime(volume * (voice.busy ? 0.35 : 1) * 0.5, ctx.currentTime, 0.25);
+  // MC đang nói: nhạc nhỏ còn 35%. Mở 2 trang stage thì chỉ trang được phát tiếng (mở sau cùng) có nhạc, tránh 2 lớp nhạc
+  const on = voice.enabled ? 1 : 0;
+  master.gain.setTargetAtTime(on * volume * (voice.busy ? 0.35 : 1) * 0.5, ctx.currentTime, 0.25);
   while (nextAt < ctx.currentTime + 0.15) {
     const t = nextAt;
     const s = step % 32;
