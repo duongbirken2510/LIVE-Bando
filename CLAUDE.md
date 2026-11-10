@@ -48,5 +48,7 @@ Người xem gõ tên tỉnh, thành quê mình. Bản đồ Việt Nam 34 tỉn
 - Bản đồ Việt Nam phải đúng: đủ 34 tỉnh, thành, có Hoàng Sa (TP. Đà Nẵng) và Trường Sa (tỉnh Khánh Hòa) trên bản đồ chính và khung phóng to, ghi "Biển Đông".
 - MC đọc tới tên tỉnh thì camera zoom cận cảnh và thắp sáng tỉnh đó.
 - Người chơi hiện tên + avatar.
-- Giọng MC mặc định: nữ HoaiMy (`GAME.voice = 'F'` trong config.ts). Trang điều khiển có khung "Giọng MC" để đổi nam/nữ bất cứ lúc nào; mỗi trang nhớ lựa chọn trong localStorage. Phần chung `src/live/voice.ts` có thêm `voice.defaultWho` (giọng khi câu không ghi M:/F:), đáng chép ngược vào `_base` nếu chủ kênh muốn.
+- Giọng MC mặc định: nữ HoaiMy (`GAME.voice = 'F'` trong config.ts). Đổi nam/nữ ở khung "Giọng đọc trên stage" (phần chung, đã chép vào `_base`); server nhớ trong settings.json. Edge lỗi thì tự đọc bằng giọng Google.
+- 20 giao diện (`src/game/themes.ts`): Sơn mài (mặc định), Lụa đỏ, Biển đêm, Ngọc bích, Hoa sen, Thu Hà Nội, Tre xanh, Gốm Chu Đậu, Giấy dó, Hoàng hôn, Cờ đỏ sao vàng, Đêm trăng, Phố cổ Hội An, Ruộng bậc thang, Tím Huế, Cà phê sữa, Sương sớm, Neon Sài Gòn, Đồng cổ, Mực tàu. Chọn ở khung "Chọn giao diện" ngay dưới "Kết nối TikTok LIVE"; stage và ô xem trước đổi ngay, server nhớ (lệnh `setTheme`). Mỗi giao diện chỉ đổi màu, bo góc, kiểu chữ tiêu đề; bố cục giữ nguyên. Màu viết qua biến CSS trong `src/index.css`, đừng viết cứng màu mới.
+- Live tự động (khung Giả lập, phần chung): 10 / 50 / 100 người chạy trọn 1 vòng 2:45, tự nhảy về đầu vòng mới (`custom: newRound`), comment là tên tỉnh.
 - Giao diện riêng: chất tranh sơn mài (nền đen nâu, viền vàng thếp, son đỏ), font Playfair Display cho tiêu đề + Be Vietnam Pro.

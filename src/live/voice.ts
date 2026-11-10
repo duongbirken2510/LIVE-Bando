@@ -35,8 +35,8 @@ class Voice {
   private fetched = new Set<string>();
   rate = 1;
   volume = 1;
-  /** Giọng khi câu không ghi M:/F: ('M' nam NamMinh, 'F' nữ HoaiMy). Game đổi trong config.ts */
-  defaultWho: Who = 'M';
+  /** Giọng khi câu không ghi M:/F: ('M' nam NamMinh, 'F' nữ HoaiMy). Mặc định theo GAME.voice; chọn ở trang điều khiển (server nhớ trong settings.json) */
+  defaultWho: VoiceWho = 'M';
   enabled = IS_STAGE;
 
   /** Server báo trang stage này có phải trang được phát tiếng không (trang mở sau cùng) */
@@ -184,5 +184,6 @@ function playSafe(audio: HTMLAudioElement) {
 }
 
 export const voice = new Voice();
+export type VoiceWho = Who;
 
 export { speakableName } from './names';

@@ -5,6 +5,7 @@ import { GAME } from './config';
 import { PROVINCE_BY_ID } from './provinces';
 import { VietnamMap, VisitPin } from './VietnamMap';
 import { Avatar } from './Avatar';
+import { themeById, themeVars } from './themes';
 
 /**
  * Màn hình live 1080x1920, chất tranh sơn mài: nền sơn đen nâu, viền thếp vàng, tỉnh sáng màu son / vàng / ngọc.
@@ -15,8 +16,9 @@ export function GameStage({ game }: { game: GameState }) {
   const visitingId = game.visiting?.pid ?? null;
   const fansHere = visitingId ? (game.fans[visitingId] ?? 0) : Object.values(game.fans).reduce((a, b) => a + b, 0);
 
+  const theme = themeById(game.theme);
   return (
-    <div className="stage">
+    <div className="stage" style={themeVars(theme) as React.CSSProperties}>
       <header className="stage-head">
         <h1>
           <span className="t1">Việt Nam</span>
@@ -43,7 +45,7 @@ export function GameStage({ game }: { game: GameState }) {
       </div>
 
       <div className="map-box">
-        <VietnamMap lit={game.lit} visiting={game.visiting} onArrive={(v, at) => setPin(v && at ? { v, at } : null)} />
+        <VietnamMap palette={theme.lit} lit={game.lit} visiting={game.visiting} onArrive={(v, at) => setPin(v && at ? { v, at } : null)} />
       </div>
       <div className="map-box overlay">
         <AnimatePresence>
@@ -180,7 +182,7 @@ function RoundBanner({ game }: { game: GameState }) {
   }, [game.phase, game.round]);
 
   const s = game.summary;
-  const colors = ['var(--gold)', 'var(--pearl)', 'var(--copper)'];
+  const colors = ['var(--accent)', 'var(--pearl)', 'var(--copper)'];
   return (
     <AnimatePresence>
       {(s || openShown) && (

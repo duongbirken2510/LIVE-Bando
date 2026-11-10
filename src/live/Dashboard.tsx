@@ -1,6 +1,20 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { LiveStatus } from './types';
 import { emitTest, sendControl } from './page';
+import { startAutoLive } from './autoLive';
+
+/** Live tự động của game: thời gian 1 vòng, comment theo luật chơi, việc cần làm trước khi chạy (vd nhảy về đầu vòng) */
+export interface AutoLiveConfig {
+  durationMs: number;
+  comment: (i: number) => string;
+  onStart?: () => void;
+}
+
+const DEFAULT_AUTO: AutoLiveConfig = {
+  durationMs: 120_000,
+  comment: () => pickOne(['join', 'thamgia', 'Live hay quá', 'mong mai thi được điểm cao']),
+};
+const pickOne = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];
 
 const FAKE_NAMES = ['Lan Anh', 'Minh Tuấn', 'Bé Na 🌸', 'Hoàng Long', 'Thu Trang', 'Quốc Bảo', 'duyanh99', '𝑵𝒈𝒐̣𝒄 𝑨𝒏𝒉'];
 const pick = () => {
@@ -18,13 +32,20 @@ const pick = () => {
 export function Dashboard({
   status,
   channelName,
+  voiceWho,
   preview,
+  top,
   extra,
+  autoLive = DEFAULT_AUTO,
 }: {
   status: LiveStatus | null;
   channelName: string;
+  voiceWho?: 'M' | 'F';
   preview: ReactNode;
+  /** Khung riêng của game, đặt ngay dưới "Kết nối TikTok LIVE" (vd chọn giao diện) */
+  top?: ReactNode;
   extra?: ReactNode;
+  autoLive?: AutoLiveConfig;
 }) {
   const [user, setUser] = useState(() => localStorageGet('tiktokUser'));
   const [nameText, setNameText] = useState('');
@@ -106,6 +127,8 @@ export function Dashboard({
             </div>
           </Card>
 
+          {top}
+
           <Card title="Giọng đọc trên stage">
             <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
               <span>
@@ -133,6 +156,22 @@ export function Dashboard({
               />
               <Btn onClick={speak} disabled={!speakText.trim()}>
                 Đọc ngay
+              </Btn>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+              Giọng MC:
+              {(
+                [
+                  ['F', '👩 Nữ (Hoài My)'],
+                  ['M', '👨 Nam (Nam Minh)'],
+                ] as const
+              ).map(([v, label]) => (
+                <Btn key={v} tone={voiceWho === v ? 'primary' : 'ghost'} onClick={() => sendControl('setVoice', v)}>
+                  {label}
+                </Btn>
+              ))}
+              <Btn tone="ghost" onClick={() => sendControl('speak', 'Chào cả nhà, mình là MC của kênh hôm nay.')}>
+                🔊 Nghe thử
               </Btn>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
@@ -184,6 +223,7 @@ export function Dashboard({
                 ❤️ 100 tim
               </Btn>
             </div>
+            <AutoLivePanel config={autoLive} />
             <p className="mt-2 text-xs text-slate-500">Sự kiện giả đi tới mọi trang đang mở, kể cả stage trong LIVE Studio.</p>
           </Card>
 
@@ -195,6 +235,52 @@ export function Dashboard({
           <div className="overflow-hidden rounded-2xl ring-1 ring-slate-700">{preview}</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Live tự động: chạy trọn 1 vòng với 10 / 50 / 100 người giả, có người vào, comment, tim, quà, follow */
+function AutoLivePanel({ config }: { config: AutoLiveConfig }) {
+  const [run, setRun] = useState<{ people: number; elapsedMs: number; sent: number; done: boolean } | null>(null);
+  const stopRef = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopRef.current?.(), []); // rời trang thì dừng
+
+  const start = (people: number) => {
+    stopRef.current?.();
+    config.onStart?.();
+    setRun({ people, elapsedMs: 0, sent: 0, done: false });
+    stopRef.current = startAutoLive({
+      people,
+      durationMs: config.durationMs,
+      comment: config.comment,
+      onProgress: (p) => setRun({ people, ...p }),
+    });
+  };
+  const stop = () => {
+    stopRef.current?.();
+    stopRef.current = null;
+  };
+  const mmss = (ms: number) => `${Math.floor(ms / 60000)}:${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}`;
+  const running = run && !run.done;
+
+  return (
+    <div className="mt-4 rounded-xl bg-slate-800/60 p-3">
+      <div className="mb-2 text-sm font-semibold">Live tự động (chạy trọn 1 vòng {mmss(config.durationMs)})</div>
+      <div className="flex flex-wrap gap-2">
+        {[10, 50, 100].map((n) => (
+          <Btn key={n} tone={running && run.people === n ? 'primary' : 'ghost'} onClick={() => start(n)}>
+            ▶ {n} người
+          </Btn>
+        ))}
+        <Btn tone="danger" onClick={stop} disabled={!running}>
+          ⏹ Dừng
+        </Btn>
+      </div>
+      {run && (
+        <div className="mt-2 text-xs text-slate-300">
+          {run.done ? 'Xong' : 'Đang chạy'} {run.people} người: {mmss(run.elapsedMs)} / {mmss(config.durationMs)}, đã bắn {run.sent} sự kiện
+        </div>
+      )}
     </div>
   );
 }

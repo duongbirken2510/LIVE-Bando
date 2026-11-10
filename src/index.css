@@ -11,27 +11,12 @@ body,
   height: 100%;
 }
 
-/* ===== Việt Nam đất nước ta ơi: chất tranh sơn mài ===== */
-:root {
-  --lacquer: #1a0f0a; /* sơn then */
-  --lacquer-2: #2a1610;
-  --land: #2e1d14; /* tỉnh chưa sáng */
-  --cinnabar: #b3261e; /* son đỏ */
-  --gold: #e0b452; /* vàng thếp */
-  --gold-dim: #8f6c33;
-  --pearl: #dfe8e3; /* vỏ trai */
-  --copper: #c9773a;
-  --ink: #f3e9d2;
-  --muted: #b8a58a;
-  --display: 'Playfair Display', Georgia, serif;
-}
-
 .stage-bg {
-  background:
-    radial-gradient(circle at 30% 18%, rgba(224, 180, 82, 0.1) 0 2px, transparent 3px) 0 0 / 46px 46px,
-    radial-gradient(120% 80% at 40% 40%, var(--lacquer-2) 0%, var(--lacquer) 70%);
+  background: #000;
 }
 
+/* ===== Việt Nam đất nước ta ơi =====
+   Mọi màu lấy từ biến của giao diện đang chọn (src/game/themes.ts, gắn vào .stage). */
 .stage {
   position: relative;
   width: 1080px;
@@ -39,6 +24,10 @@ body,
   overflow: hidden;
   color: var(--ink);
   font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 30% 18%, var(--dust) 0 2px, transparent 3px) 0 0 / 46px 46px,
+    radial-gradient(120% 80% at 40% 40%, var(--bg2) 0%, var(--bg1) 70%);
+  transition: background 0.4s;
 }
 
 /* ---- Tiêu đề ---- */
@@ -47,9 +36,9 @@ body,
   inset: 0 0 auto 0;
   height: 170px;
   padding: 18px 40px 0;
-  border-bottom: 3px solid var(--gold-dim);
-  background: linear-gradient(180deg, #7d1812, var(--cinnabar) 70%, #8e1d16);
-  box-shadow: inset 0 -8px 0 -5px var(--gold);
+  border-bottom: 3px solid var(--line);
+  background: linear-gradient(180deg, var(--head1), var(--head2) 70%, var(--head1));
+  box-shadow: inset 0 -8px 0 -5px var(--accent);
 }
 .stage-head h1 {
   display: flex;
@@ -62,21 +51,22 @@ body,
 .stage-head .t1 {
   font-size: 96px;
   font-weight: 900;
-  color: var(--gold);
-  text-shadow: 0 4px 0 #4a0c08;
+  color: var(--accent);
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
 }
 .stage-head .t2 {
   font-size: 58px;
   font-style: italic;
   font-weight: 700;
-  color: #fff3dc;
+  color: var(--head-ink);
 }
 .stage-head p {
   margin-top: 10px;
   text-align: center;
   font-size: 30px;
   font-weight: 600;
-  color: #ffe3b8;
+  color: var(--head-ink);
+  opacity: 0.88;
 }
 
 /* ---- Thanh vòng + đang ghé ---- */
@@ -94,8 +84,8 @@ body,
   align-items: center;
   padding: 0 24px;
   border-radius: 28px;
-  border: 2px solid var(--gold-dim);
-  background: rgba(26, 15, 10, 0.88);
+  border: 2px solid var(--line);
+  background: var(--panel);
   font-size: 26px;
   font-weight: 700;
   white-space: nowrap;
@@ -106,23 +96,22 @@ body,
   font-variant-numeric: tabular-nums;
   min-width: 150px;
   justify-content: center;
-  color: #fff3dc;
 }
 .chip.clock.hot {
-  color: #ffb3a6;
-  border-color: var(--cinnabar);
+  color: var(--accent2);
+  border-color: var(--accent2);
   animation: beat 1s ease-in-out infinite;
 }
 .chip.phase {
-  background: var(--cinnabar);
-  border-color: var(--gold);
+  background: var(--accent2);
+  border-color: var(--accent);
   color: #fff;
 }
 .chip.lit {
   margin-left: auto;
 }
 .chip b {
-  color: var(--gold);
+  color: var(--accent);
   margin: 0 6px;
   font-size: 32px;
 }
@@ -151,15 +140,14 @@ body,
   font-family: var(--display);
   font-size: 44px;
   font-weight: 900;
-  color: var(--gold);
+  color: var(--accent);
 }
 .v-fans {
   margin-left: auto;
   font-size: 24px;
-  color: var(--pearl);
 }
 .v-fans b {
-  color: var(--gold);
+  color: var(--accent);
   font-size: 30px;
 }
 
@@ -178,31 +166,31 @@ body,
 }
 .prov {
   fill: var(--land);
-  stroke: rgba(224, 180, 82, 0.5);
+  stroke: var(--map-line);
   stroke-width: 1.1px;
   vector-effect: non-scaling-stroke;
   stroke-linejoin: round;
   transition: fill 0.8s ease;
 }
 .prov.on {
-  stroke: #ffe6a8;
+  stroke: var(--accent);
 }
 .prov.visit {
-  stroke: #fff6dc;
+  stroke: var(--label);
   stroke-width: 3.5px;
   animation: edge 1.2s ease-in-out infinite;
 }
 @keyframes edge {
   50% {
-    stroke: var(--gold);
+    stroke: var(--accent);
     stroke-width: 6px;
   }
 }
 .prov-lbl {
   font-size: calc(17px / var(--k));
   font-weight: 800;
-  fill: #fff8e6;
-  stroke: var(--lacquer);
+  fill: var(--label);
+  stroke: var(--bg1);
   stroke-width: calc(4px / var(--k));
   paint-order: stroke;
   text-anchor: middle;
@@ -213,7 +201,7 @@ body,
   font-family: var(--display);
   font-style: italic;
   font-size: calc(34px / var(--k));
-  fill: rgba(224, 180, 82, 0.42);
+  fill: var(--sea);
   text-anchor: middle;
 }
 .sea-lbl.sm {
@@ -222,42 +210,42 @@ body,
 /* Hoàng Sa, Trường Sa trên bản đồ chính: sáng cùng Đà Nẵng, Khánh Hòa */
 .isl-main path {
   fill: var(--land);
-  stroke: rgba(224, 180, 82, 0.8);
+  stroke: var(--map-line);
   stroke-width: 1px;
   vector-effect: non-scaling-stroke;
   transition: fill 0.8s;
 }
 .isl-main circle {
-  fill: rgba(223, 232, 227, 0.6);
+  fill: var(--muted);
   transition: fill 0.8s;
 }
 .isl-main.on path,
 .isl-main.on circle {
-  fill: var(--gold);
+  fill: var(--accent);
 }
 .isl-lbl {
   font-size: calc(18px / var(--k));
   font-weight: 800;
-  fill: var(--pearl);
-  stroke: var(--lacquer);
+  fill: var(--label);
+  stroke: var(--bg1);
   stroke-width: calc(4px / var(--k));
   paint-order: stroke;
   text-anchor: end;
 }
 .isl-main.on .isl-lbl {
-  fill: var(--gold);
+  fill: var(--accent);
 }
 .isl-name {
   font-size: 13px;
   font-weight: 700;
-  fill: var(--pearl);
-  stroke: var(--lacquer);
+  fill: var(--ink);
+  stroke: var(--bg1);
   stroke-width: 3px;
   paint-order: stroke;
 }
 .burst {
   fill: none;
-  stroke: var(--gold);
+  stroke: var(--accent);
   stroke-width: 4px;
   vector-effect: non-scaling-stroke;
   r: calc(120px / var(--k));
@@ -289,17 +277,17 @@ body,
   font-family: var(--display);
   font-size: 66px;
   font-weight: 900;
-  color: var(--gold);
+  color: var(--accent);
   white-space: nowrap;
   text-shadow:
-    0 3px 0 var(--lacquer),
-    0 0 4px var(--lacquer),
-    0 0 4px var(--lacquer);
+    0 3px 0 var(--bg1),
+    0 0 4px var(--bg1),
+    0 0 4px var(--bg1);
   margin-bottom: 10px;
 }
 .pin-av {
   border: 6px solid var(--pearl);
-  outline: 4px solid var(--gold);
+  outline: 4px solid var(--accent);
 }
 .pin-name {
   margin-top: 12px;
@@ -310,7 +298,7 @@ body,
   padding: 6px 22px;
   border-radius: 14px;
   background: var(--pearl);
-  color: var(--lacquer);
+  color: var(--bg1);
   font-size: 32px;
   font-weight: 800;
 }
@@ -324,34 +312,32 @@ body,
   white-space: nowrap;
 }
 .pin-gift {
-  background: var(--cinnabar);
+  background: var(--accent2);
   color: #fff;
 }
 .pin-more {
-  background: rgba(26, 15, 10, 0.85);
-  color: var(--gold);
+  background: var(--panel);
+  color: var(--accent);
 }
 .pin-stem {
   width: 6px;
   height: 46px;
-  background: linear-gradient(var(--gold), transparent);
+  background: linear-gradient(var(--accent), transparent);
 }
 
-/* ---- Khung tranh ---- */
+/* ---- Khung ---- */
 .panel {
   position: absolute;
-  border-radius: 18px;
-  border: 2px solid var(--gold-dim);
-  background: rgba(26, 15, 10, 0.9);
-  box-shadow:
-    inset 0 0 0 6px rgba(26, 15, 10, 0.9),
-    inset 0 0 0 7px rgba(224, 180, 82, 0.28);
+  border-radius: var(--r);
+  border: 2px solid var(--line);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 6px var(--panel), inset 0 0 0 7px color-mix(in srgb, var(--accent) 28%, transparent);
 }
 .panel h3 {
   padding: 16px 20px 6px;
   font-size: 25px;
   font-weight: 800;
-  color: var(--gold);
+  color: var(--accent);
 }
 .empty {
   padding: 18px 22px;
@@ -372,7 +358,7 @@ body,
   align-items: center;
 }
 .called-av {
-  border: 4px solid var(--gold);
+  border: 4px solid var(--accent);
   margin-top: 2px;
 }
 .c-name {
@@ -386,10 +372,10 @@ body,
 }
 .c-sub {
   font-size: 22px;
-  color: var(--pearl);
+  color: var(--muted);
 }
 .c-sub b {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .island {
@@ -409,7 +395,6 @@ body,
   padding: 12px 16px 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--ink);
   line-height: 1.25;
 }
 .island-title span {
@@ -422,20 +407,20 @@ body,
 }
 .island path {
   fill: var(--land);
-  stroke: rgba(224, 180, 82, 0.7);
+  stroke: var(--map-line);
   stroke-width: 1px;
   transition: fill 0.8s;
 }
 .island circle {
-  fill: rgba(223, 232, 227, 0.55);
+  fill: var(--muted);
   transition: fill 0.8s;
 }
 .island.on path,
 .island.on circle {
-  fill: var(--gold);
+  fill: var(--accent);
 }
 .island.visit {
-  border-color: var(--gold);
+  border-color: var(--accent);
   transform: scale(1.04);
 }
 
@@ -453,13 +438,13 @@ body,
   font-size: 21px;
   line-height: 1.35;
   font-weight: 600;
-  border-bottom: 1px dashed rgba(224, 180, 82, 0.22);
+  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 22%, transparent);
 }
 .g-row:last-child {
   border: 0;
 }
 .g-row b {
-  color: var(--gold);
+  color: var(--accent);
   font-weight: 800;
 }
 
@@ -480,8 +465,8 @@ body,
   gap: 10px;
   padding: 5px 16px 5px 5px;
   border-radius: 28px;
-  background: rgba(26, 15, 10, 0.82);
-  border: 1px solid rgba(224, 180, 82, 0.25);
+  background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
   font-size: 21px;
 }
 .tk span {
@@ -489,11 +474,8 @@ body,
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.tk b {
-  color: var(--pearl);
-}
 .tk.gift b {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 /* ---- Dưới cùng: bục + người giữ lửa ---- */
@@ -538,6 +520,7 @@ body,
   min-height: 26px;
 }
 .p-bar {
+  --c: var(--accent);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -546,17 +529,15 @@ body,
   font-family: var(--display);
   font-size: 40px;
   font-weight: 900;
-  color: var(--lacquer);
+  color: var(--bg1);
+  background: linear-gradient(color-mix(in srgb, var(--c), #fff 30%), var(--c) 45%, color-mix(in srgb, var(--c), #000 30%));
   transition: height 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.r1 .p-bar {
-  background: linear-gradient(#f2cf7a, var(--gold) 45%, #a77c2c);
-}
 .r2 .p-bar {
-  background: linear-gradient(#ffffff, var(--pearl) 45%, #9fb3ab);
+  --c: var(--pearl);
 }
 .r3 .p-bar {
-  background: linear-gradient(#e9a26b, var(--copper) 45%, #8a4b1f);
+  --c: var(--copper);
 }
 .champ {
   right: 0;
@@ -580,28 +561,27 @@ body,
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(12, 7, 4, 0.62);
+  background: rgba(0, 0, 0, 0.55);
   padding-bottom: 260px;
 }
 .banner-box {
   width: 860px;
   padding: 44px 46px 48px;
-  border-radius: 36px;
-  border: 3px solid var(--gold);
-  background: linear-gradient(180deg, #34190f, var(--lacquer));
+  border-radius: calc(var(--r) * 2);
+  border: 3px solid var(--accent);
+  background: linear-gradient(180deg, var(--bg2), var(--bg1));
   text-align: center;
 }
 .banner-box h2 {
   font-family: var(--display);
   font-size: 84px;
   font-weight: 900;
-  color: var(--gold);
+  color: var(--accent);
   line-height: 1.05;
 }
 .banner-box p {
   margin-top: 10px;
   font-size: 30px;
-  color: #ffe3b8;
 }
 .banner-box .rows {
   margin-top: 30px;
@@ -615,7 +595,7 @@ body,
   gap: 20px;
   padding: 16px 26px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
   font-size: 38px;
   font-weight: 800;
 }
@@ -626,12 +606,12 @@ body,
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--lacquer);
+  color: var(--bg1);
   font-family: var(--display);
 }
 .banner-box .rp {
   margin-left: auto;
-  color: var(--gold);
+  color: var(--accent);
 }
 .banner-box .mvp {
   margin-top: 28px;
@@ -643,7 +623,7 @@ body,
   text-align: left;
 }
 .banner-box .mvp b {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .avatar {

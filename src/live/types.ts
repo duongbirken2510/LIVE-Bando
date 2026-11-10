@@ -45,7 +45,7 @@ export interface LikeEvent {
 }
 
 export interface ControlCommand {
-  action: 'speak' | 'setRate' | 'reset' | 'setName' | 'custom';
+  action: 'speak' | 'setRate' | 'reset' | 'setName' | 'setVoice' | 'setTheme' | 'custom';
   text?: string;
 }
 

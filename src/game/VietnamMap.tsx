@@ -15,7 +15,6 @@ export const MAP_W = 1080;
 export const MAP_H = 1020;
 const FOCUS_X = 354; // tâm vùng nhìn: bên trái cột thẻ
 const FOCUS_W = 640;
-const LIT = ['#e3b04b', '#d2452f', '#3fa58a', '#e07a8f', '#9fc7c0', '#c9773a'];
 
 const mapData: Promise<GeoJSON.FeatureCollection<GeoJSON.MultiPolygon, Props>> = fetch('/vn34.json').then((r) => r.json());
 
@@ -23,7 +22,7 @@ interface Prov {
   id: string;
   name: string;
   d: string;
-  fill: string;
+  color: number; // chỉ số màu (tỉnh liền kề khác nhau), màu thật theo giao diện
   c: [number, number];
   b: [[number, number], [number, number]];
 }
@@ -48,7 +47,7 @@ function prepare(fc: GeoJSON.FeatureCollection<GeoJSON.MultiPolygon, Props>) {
       id: f.properties.id,
       name: f.properties.name,
       d: path(f) ?? '',
-      fill: LIT[(f.properties.color ?? 0) % LIT.length],
+      color: f.properties.color ?? 0,
       c: path.centroid(big) as [number, number],
       b: path.bounds(big) as [[number, number], [number, number]],
     };
@@ -97,7 +96,17 @@ type Prepared = ReturnType<typeof prepare>;
 
 const HOME: ZoomView = [FOCUS_X, MAP_H / 2, MAP_H];
 
-export function VietnamMap({ lit, visiting, onArrive }: { lit: string[]; visiting: Visit | null; onArrive?: (v: Visit | null, at: [number, number] | null) => void }) {
+export function VietnamMap({
+  palette,
+  lit,
+  visiting,
+  onArrive,
+}: {
+  palette: readonly string[];
+  lit: string[];
+  visiting: Visit | null;
+  onArrive?: (v: Visit | null, at: [number, number] | null) => void;
+}) {
   const [data, setData] = useState<Prepared | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const worldRef = useRef<SVGGElement>(null);
@@ -168,7 +177,7 @@ export function VietnamMap({ lit, visiting, onArrive }: { lit: string[]; visitin
               key={p.id}
               d={p.d}
               className={`prov${on(p.id) ? ' on' : ''}${arrived?.pid === p.id ? ' visit' : ''}`}
-              style={on(p.id) ? { fill: p.fill } : undefined}
+              style={on(p.id) ? { fill: palette[p.color % palette.length] } : undefined}
             />
           ))}
           {(

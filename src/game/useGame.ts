@@ -11,18 +11,7 @@ import { findProvince, PROVINCE_BY_ID } from './provinces';
 
 const pick = makePicker();
 
-// Giọng MC chọn ở trang điều khiển, mỗi trang nhớ trong localStorage; chưa chọn thì theo config
-const VOICE_KEY = 'vndnto:voice';
-function savedVoice(): 'M' | 'F' {
-  try {
-    const v = localStorage.getItem(VOICE_KEY);
-    if (v === 'M' || v === 'F') return v;
-  } catch {
-    // bị chặn: dùng mặc định
-  }
-  return GAME.voice;
-}
-voice.defaultWho = savedVoice();
+voice.defaultWho = GAME.voice; // server gửi lại giọng đã chọn (setVoice) ngay khi trang nối vào
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export interface Person {
@@ -89,6 +78,12 @@ export function roundClock(now = Date.now()) {
   const phase: Phase = t < GAME.openMs ? 'open' : t < GAME.roundMs ? 'play' : 'summary';
   return { phase, remainMs: phase === 'summary' ? 0 : GAME.roundMs - t };
 }
+/** Nhảy về đầu 1 vòng mới (live tự động dùng để chạy trọn 1 vòng) */
+function newRound() {
+  const t = (((Date.now() + clockOffset) % CYCLE) + CYCLE) % CYCLE;
+  clockOffset += CYCLE - t;
+}
+export const ROUND_CYCLE_MS = CYCLE;
 function skipPhase() {
   const t = (((Date.now() + clockOffset) % CYCLE) + CYCLE) % CYCLE;
   const next = t < GAME.openMs ? GAME.openMs : t < GAME.roundMs ? GAME.roundMs : CYCLE;
@@ -121,6 +116,7 @@ export function useGame() {
   const [channelName, setChannelName] = useState(GAME.defaultChannelName);
   const [, setVersion] = useState(0);
   const [voiceWho, setVoiceWho] = useState(voice.defaultWho);
+  const [theme, setTheme] = useState<string>(''); // '' = giao diện mặc định; server gửi lại giao diện đã chọn khi nối vào
 
   const [g] = useState(() => ({
     kenh: GAME.defaultChannelName,
@@ -321,15 +317,11 @@ export function useGame() {
       if (c.action === 'setName' && c.text) setChannelName(c.text);
       // 2 lệnh này chạy ở mọi trang để trang điều khiển và stage giống nhau
       if (c.action === 'custom' && c.text === 'skip') skipPhase();
-      if (c.action === 'custom' && (c.text === 'voice:M' || c.text === 'voice:F')) {
-        const who = c.text === 'voice:F' ? 'F' : 'M';
-        voice.defaultWho = who;
-        setVoiceWho(who);
-        try {
-          localStorage.setItem(VOICE_KEY, who);
-        } catch {
-          // bỏ qua
-        }
+      if (c.action === 'custom' && c.text === 'newRound') newRound();
+      if (c.action === 'setTheme' && c.text) setTheme(c.text);
+      if (c.action === 'setVoice' && (c.text === 'M' || c.text === 'F')) {
+        voice.defaultWho = c.text;
+        setVoiceWho(c.text);
       }
       if (c.action === 'custom' && c.text === 'resetFans') {
         g.fans.clear();
@@ -445,6 +437,7 @@ export function useGame() {
     status,
     channelName,
     voiceWho,
+    theme,
     round: g.round,
     phase: g.phase,
     top: rank.slice(0, 3),

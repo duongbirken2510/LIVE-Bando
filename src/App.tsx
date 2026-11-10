@@ -1,9 +1,10 @@
 import { IS_STAGE, emitTest, sendControl } from './live/page';
 import { StageFrame } from './live/StageFrame';
 import { Dashboard } from './live/Dashboard';
-import { useGame } from './game/useGame';
+import { useGame, ROUND_CYCLE_MS } from './game/useGame';
 import { GameStage } from './game/GameStage';
 import { PROVINCES } from './game/provinces';
+import { THEMES, themeById } from './game/themes';
 
 export default function App() {
   const game = useGame();
@@ -24,18 +25,51 @@ export default function App() {
     <Dashboard
       status={game.status}
       channelName={game.channelName}
+      voiceWho={game.voiceWho}
       preview={
         <StageFrame maxHeight={720}>
           <GameStage game={game} />
         </StageFrame>
       }
-      extra={
-        <>
-          <VoicePicker who={game.voiceWho} />
-          <GameControls />
-        </>
-      }
+      top={<ThemePicker current={themeById(game.theme).id} />}
+      extra={<GameControls />}
+      autoLive={{
+        durationMs: ROUND_CYCLE_MS, // trọn 1 vòng: mở màn, gặp gỡ, tổng kết
+        comment: () => provComment(),
+        onStart: () => sendControl('custom', 'newRound'),
+      }}
     />
+  );
+}
+
+/** 20 giao diện: bấm là stage và ô xem trước đổi ngay; server nhớ lựa chọn */
+function ThemePicker({ current }: { current: string }) {
+  return (
+    <section className="rounded-2xl bg-slate-900 p-4 ring-1 ring-slate-800">
+      <h2 className="mb-3 font-semibold">
+        Chọn giao diện <span className="text-sm font-normal text-slate-400">({themeById(current).name})</span>
+      </h2>
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+        {THEMES.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => sendControl('setTheme', t.id)}
+            className={`overflow-hidden rounded-lg text-left ring-2 transition ${t.id === current ? 'ring-amber-400' : 'ring-transparent hover:ring-slate-500'}`}
+            title={t.name}
+          >
+            <div style={{ background: `linear-gradient(90deg, ${t.head1}, ${t.head2})`, height: 8 }} />
+            <div className="flex h-11 items-center justify-center gap-1" style={{ background: `radial-gradient(circle at 40% 40%, ${t.bg2}, ${t.bg1})` }}>
+              {t.lit.slice(0, 4).map((c) => (
+                <span key={c} className="h-3 w-3 rounded-full" style={{ background: c, outline: `1px solid ${t.mapLine}` }} />
+              ))}
+            </div>
+            <div className="truncate px-1.5 py-1 text-[11px] font-medium" style={{ background: t.bg1, color: t.accent }}>
+              {t.name}
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -50,33 +84,6 @@ const provComment = () => {
   const p = any(PROVINCES);
   return any([p.name, `quê mình ${any(p.aliases)} nè`, `${p.name} ơi`, any(p.aliases).toUpperCase()]);
 };
-
-function VoicePicker({ who }: { who: 'M' | 'F' }) {
-  const opt = (v: 'M' | 'F', label: string) => (
-    <button
-      onClick={() => sendControl('custom', `voice:${v}`)}
-      className={`rounded-lg px-4 py-2 text-sm font-medium ${who === v ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700'}`}
-    >
-      {label}
-    </button>
-  );
-  return (
-    <section className="rounded-2xl bg-slate-900 p-4 ring-1 ring-slate-800">
-      <h2 className="mb-3 font-semibold">Giọng MC</h2>
-      <div className="flex flex-wrap items-center gap-2">
-        {opt('F', '👩 Giọng nữ (Hoài My)')}
-        {opt('M', '👨 Giọng nam (Nam Minh)')}
-        <button
-          className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium hover:bg-slate-700"
-          onClick={() => sendControl('speak', 'Chào cả nhà! Gõ tên tỉnh, thành quê mình để bản đồ ghé thăm nha.')}
-        >
-          🔊 Nghe thử trên stage
-        </button>
-      </div>
-      <p className="mt-2 text-xs text-slate-500">Đổi giọng có tác dụng ngay, kể cả đang live. Câu đang đọc dở vẫn giữ giọng cũ.</p>
-    </section>
-  );
-}
 
 function GameControls() {
   const btn = 'rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium hover:bg-slate-700';

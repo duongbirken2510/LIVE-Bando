@@ -80,16 +80,29 @@ function announceSpeaker() {
 let activeConn: InstanceType<typeof TikTokLiveConnection> | null = null;
 let lastRateControl: { action: string; text: string } | null = null;
 
-// Tên kênh (giọng đọc + tiêu đề) lưu ở settings.json cạnh file này, tắt server mở lại vẫn còn
+// Tên kênh (giọng đọc + tiêu đề) và giọng MC nam/nữ lưu ở settings.json cạnh file này, tắt server mở lại vẫn còn
 const SETTINGS_FILE = path.join(__dirname, 'settings.json');
 let lastNameControl: { action: string; text: string } | null = null;
+let lastVoiceControl: { action: string; text: string } | null = null;
+let lastThemeControl: { action: string; text: string } | null = null; // giao diện game chọn ở trang điều khiển
+let settings: { channelName?: string; voice?: string; theme?: string } = {};
 try {
-  const saved = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-  if (typeof saved.channelName === 'string' && saved.channelName.trim()) {
-    lastNameControl = { action: 'setName', text: saved.channelName.trim() };
+  settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8')) || {};
+  if (typeof settings.channelName === 'string' && settings.channelName.trim()) {
+    lastNameControl = { action: 'setName', text: settings.channelName.trim() };
   }
+  if (settings.voice === 'M' || settings.voice === 'F') lastVoiceControl = { action: 'setVoice', text: settings.voice };
+  if (typeof settings.theme === 'string' && /^[a-z0-9-]{1,40}$/.test(settings.theme)) lastThemeControl = { action: 'setTheme', text: settings.theme };
 } catch {
-  // chưa lưu tên nào: dùng tên mặc định trong config.ts
+  // chưa lưu gì: dùng mặc định trong config.ts
+}
+function saveSettings(patch: typeof settings) {
+  settings = { ...settings, ...patch };
+  try {
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+  } catch (err) {
+    console.error('Không lưu được settings.json:', err);
+  }
 }
 
 function broadcast(eventType: string, data: unknown) {
@@ -111,6 +124,8 @@ app.get('/api/tiktok/events', (req, res) => {
   res.write(`event: status\ndata: ${JSON.stringify(liveStats)}\n\n`);
   if (lastRateControl) res.write(`event: control\ndata: ${JSON.stringify(lastRateControl)}\n\n`);
   if (lastNameControl) res.write(`event: control\ndata: ${JSON.stringify(lastNameControl)}\n\n`);
+  if (lastVoiceControl) res.write(`event: control\ndata: ${JSON.stringify(lastVoiceControl)}\n\n`);
+  if (lastThemeControl) res.write(`event: control\ndata: ${JSON.stringify(lastThemeControl)}\n\n`);
   sseClients.push(res);
   const stageId = typeof req.query.stage === 'string' ? req.query.stage.slice(0, 40) : '';
   if (stageId) {
@@ -303,7 +318,7 @@ app.post('/api/tiktok/disconnect', (_req, res) => {
 });
 
 // ---------- Lệnh từ trang điều khiển (chỉ trang stage làm theo) ----------
-const CONTROL_ACTIONS = ['speak', 'setRate', 'reset', 'setName', 'custom'];
+const CONTROL_ACTIONS = ['speak', 'setRate', 'reset', 'setName', 'setVoice', 'setTheme', 'custom'];
 app.post('/api/control', (req, res) => {
   const { action, text } = req.body || {};
   if (!CONTROL_ACTIONS.includes(action)) return res.status(400).json({ success: false, error: 'Lệnh không hợp lệ' });
@@ -318,11 +333,19 @@ app.post('/api/control', (req, res) => {
     if (!name) return res.status(400).json({ success: false, error: 'Chưa nhập tên kênh' });
     payload.text = name;
     lastNameControl = { action, text: name };
-    try {
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify({ channelName: name }, null, 2));
-    } catch (err) {
-      console.error('Không lưu được settings.json:', err);
-    }
+    saveSettings({ channelName: name });
+  }
+  if (action === 'setVoice') {
+    // 'M' giọng nam NamMinh, 'F' giọng nữ HoaiMy
+    if (payload.text !== 'M' && payload.text !== 'F') return res.status(400).json({ success: false, error: 'Giọng không hợp lệ' });
+    lastVoiceControl = { action, text: payload.text };
+    saveSettings({ voice: payload.text });
+  }
+  if (action === 'setTheme') {
+    // mã giao diện do game tự định nghĩa: chữ thường, số, gạch nối
+    if (!payload.text || !/^[a-z0-9-]{1,40}$/.test(payload.text)) return res.status(400).json({ success: false, error: 'Giao diện không hợp lệ' });
+    lastThemeControl = { action, text: payload.text };
+    saveSettings({ theme: payload.text });
   }
   broadcast('control', payload);
   res.json({ success: true, pages: sseClients.length });
