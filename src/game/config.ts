@@ -15,6 +15,22 @@ export const GAME = {
   // Giọng MC: 'F' = nữ HoaiMy (chủ kênh chọn), 'M' = nam NamMinh
   voice: 'F' as 'M' | 'F',
 
+  // Chữ trên màn hình: mặc định, chủ kênh sửa được ở trang điều khiển (khung "Chữ trên màn hình & âm thanh")
+  labels: {
+    title1: 'Việt Nam',
+    title2: 'đất nước ta ơi',
+    subtitle: 'Gõ tên tỉnh, thành quê bạn để bản đồ ghé thăm',
+    called: 'Vừa gọi tên quê',
+    gifts: 'Quà gửi về quê',
+    champ: 'Người giữ lửa quê',
+    podium: 'Bục quê nhà',
+    visiting: 'Đang ghé thăm',
+    fans: 'Đồng hương các buổi live',
+  },
+  // Nhạc nền mặc định: bật, âm lượng 30%
+  musicOn: true,
+  musicVolume: 30,
+
   // ---------- Vòng chơi ----------
   openMs: 15_000, // "Mở màn vòng": 15 giây đầu
   roundMs: 150_000, // 1 vòng 2 phút 30 giây (tính cả mở màn)
@@ -59,12 +75,12 @@ export const GAME = {
   // ---------- Câu đọc theo vòng ----------
   roundStart: (no: number) => `^Vòng ${no} bắt đầu! | Cả nhà gõ tên tỉnh, thành quê mình để bản đồ ghé thăm nha.`,
   tenSecondsLeft: 'Còn mười giây! | ^Gọi tên quê mình lẹ lên nào!',
-  summary: (no: number, top: { name: string; pts: number }[], champion: string | null) =>
+  summary: (no: number, top: { name: string; pts: number }[], champion: string | null, champTitle: string) =>
     top.length
       ? [
           `Hết giờ vòng ${no}.`,
           `Quê đứng đầu là ${top[0].name} với ${top[0].pts} điểm${top[1] ? `, nhì là ${top[1].name}` : ''}${top[2] ? `, ba là ${top[2].name}` : ''}.`,
-          champion ? `Người giữ lửa quê vòng này là bạn ${champion}.` : '',
+          champion ? `${champTitle} vòng này là bạn ${champion}.` : '',
         ]
           .filter(Boolean)
           .join(' | ')

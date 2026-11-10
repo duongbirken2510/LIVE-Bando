@@ -85,7 +85,8 @@ const SETTINGS_FILE = path.join(__dirname, 'settings.json');
 let lastNameControl: { action: string; text: string } | null = null;
 let lastVoiceControl: { action: string; text: string } | null = null;
 let lastThemeControl: { action: string; text: string } | null = null; // giao diện game chọn ở trang điều khiển
-let settings: { channelName?: string; voice?: string; theme?: string } = {};
+let lastPrefsControl: { action: string; text: string } | null = null; // cài đặt riêng của game (chữ tùy chỉnh, nhạc nền...)
+let settings: { channelName?: string; voice?: string; theme?: string; prefs?: Record<string, string> } = {};
 try {
   settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8')) || {};
   if (typeof settings.channelName === 'string' && settings.channelName.trim()) {
@@ -93,8 +94,19 @@ try {
   }
   if (settings.voice === 'M' || settings.voice === 'F') lastVoiceControl = { action: 'setVoice', text: settings.voice };
   if (typeof settings.theme === 'string' && /^[a-z0-9-]{1,40}$/.test(settings.theme)) lastThemeControl = { action: 'setTheme', text: settings.theme };
+  const p = cleanPrefs(settings.prefs);
+  if (p) lastPrefsControl = { action: 'setPrefs', text: JSON.stringify(p) };
 } catch {
   // chưa lưu gì: dùng mặc định trong config.ts
+}
+/** Cài đặt game: object chữ -> chữ, tối đa 40 mục, mỗi mục 120 ký tự. Sai dạng -> null */
+function cleanPrefs(v: unknown): Record<string, string> | null {
+  if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+  const out: Record<string, string> = {};
+  for (const [k, val] of Object.entries(v).slice(0, 40)) {
+    if (/^[a-zA-Z0-9_]{1,40}$/.test(k) && typeof val === 'string') out[k] = val.replace(/[\x00-\x1f\x7f]/g, '').slice(0, 120);
+  }
+  return out;
 }
 function saveSettings(patch: typeof settings) {
   settings = { ...settings, ...patch };
@@ -126,6 +138,7 @@ app.get('/api/tiktok/events', (req, res) => {
   if (lastNameControl) res.write(`event: control\ndata: ${JSON.stringify(lastNameControl)}\n\n`);
   if (lastVoiceControl) res.write(`event: control\ndata: ${JSON.stringify(lastVoiceControl)}\n\n`);
   if (lastThemeControl) res.write(`event: control\ndata: ${JSON.stringify(lastThemeControl)}\n\n`);
+  if (lastPrefsControl) res.write(`event: control\ndata: ${JSON.stringify(lastPrefsControl)}\n\n`);
   sseClients.push(res);
   const stageId = typeof req.query.stage === 'string' ? req.query.stage.slice(0, 40) : '';
   if (stageId) {
@@ -318,7 +331,7 @@ app.post('/api/tiktok/disconnect', (_req, res) => {
 });
 
 // ---------- Lệnh từ trang điều khiển (chỉ trang stage làm theo) ----------
-const CONTROL_ACTIONS = ['speak', 'setRate', 'reset', 'setName', 'setVoice', 'setTheme', 'custom'];
+const CONTROL_ACTIONS = ['speak', 'setRate', 'reset', 'setName', 'setVoice', 'setTheme', 'setPrefs', 'custom'];
 app.post('/api/control', (req, res) => {
   const { action, text } = req.body || {};
   if (!CONTROL_ACTIONS.includes(action)) return res.status(400).json({ success: false, error: 'Lệnh không hợp lệ' });
@@ -346,6 +359,21 @@ app.post('/api/control', (req, res) => {
     if (!payload.text || !/^[a-z0-9-]{1,40}$/.test(payload.text)) return res.status(400).json({ success: false, error: 'Giao diện không hợp lệ' });
     lastThemeControl = { action, text: payload.text };
     saveSettings({ theme: payload.text });
+  }
+  if (action === 'setPrefs') {
+    // gửi cả bộ cài đặt (JSON), server gộp với bộ cũ rồi phát lại bộ đầy đủ
+    let incoming: unknown = null;
+    try {
+      incoming = JSON.parse(payload.text || '');
+    } catch {
+      // sai JSON
+    }
+    const p = cleanPrefs(incoming);
+    if (!p) return res.status(400).json({ success: false, error: 'Cài đặt không hợp lệ' });
+    const merged = { ...(cleanPrefs(settings.prefs) ?? {}), ...p };
+    payload.text = JSON.stringify(merged);
+    lastPrefsControl = { action, text: payload.text };
+    saveSettings({ prefs: merged });
   }
   broadcast('control', payload);
   res.json({ success: true, pages: sseClients.length });

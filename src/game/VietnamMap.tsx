@@ -4,6 +4,7 @@ import { interpolateZoom, type ZoomView } from 'd3-interpolate';
 import type { Visit } from './useGame';
 import { Avatar } from './Avatar';
 import { PROVINCE_BY_ID } from './provinces';
+import { GAME } from './config';
 
 // Bản đồ 34 tỉnh, thành (public/vn34.json, dựng bằng tools/prep-map.mjs).
 // Hoàng Sa (TP. Đà Nẵng) và Trường Sa (tỉnh Khánh Hòa) vẽ trong 2 khung riêng, sáng cùng tỉnh của mình.
@@ -100,11 +101,14 @@ export function VietnamMap({
   palette,
   lit,
   visiting,
+  lightDelayMs = 0,
   onArrive,
 }: {
   palette: readonly string[];
   lit: string[];
   visiting: Visit | null;
+  /** Camera tới nơi rồi chờ bao lâu mới thắp sáng tỉnh (đợi đốm sáng bay vào) */
+  lightDelayMs?: number;
   onArrive?: (v: Visit | null, at: [number, number] | null) => void;
 }) {
   const [data, setData] = useState<Prepared | null>(null);
@@ -143,18 +147,22 @@ export function VietnamMap({
     const ms = Math.min(1400, Math.max(650, i.duration * 0.8));
     const t0 = performance.now();
     let raf = 0;
+    let light = 0;
     const step = (now: number) => {
       const t = Math.min(1, (now - t0) / ms);
       const e = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
       const cam = camera(i(e));
       if (t < 1) raf = requestAnimationFrame(step);
       else if (p && visiting) {
-        setArrived(visiting);
         onArrive?.(visiting, [p.c[0] * cam.k + cam.x, p.c[1] * cam.k + cam.y]);
+        light = window.setTimeout(() => setArrived(visiting), lightDelayMs);
       }
     };
     raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(light);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, target, visiting?.id]);
 
@@ -251,8 +259,11 @@ function IslandFrame({ id, feat, on, visit, className, w, h, children }: { id: k
 
 /** Ghim người chơi đúng tâm tỉnh khi camera tới nơi: tên tỉnh to, avatar, tên người, quà */
 export function VisitPin({ v, at }: { v: Visit; at: [number, number] }) {
+  // tích điểm: quà thì điểm quà, gọi tên thì +1 cho mỗi người đang cùng gọi
+  const gained = v.kind === 'gift' ? v.pts : (v.others + 1) * GAME.pointsPerComment;
   return (
     <div className="pin" style={{ left: at[0], top: Math.max(at[1], 330) }}>
+      {gained > 0 && <div className="pin-points">+{gained.toLocaleString('vi-VN')} điểm</div>}
       <div className="pin-prov">{v.pid && provName(v.pid)}</div>
       <Avatar user={v.user} size={124} className="pin-av" />
       <div className="pin-name">{v.user.name}</div>

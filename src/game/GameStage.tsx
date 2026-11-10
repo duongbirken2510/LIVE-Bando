@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { roundClock, type GameState, type Visit } from './useGame';
 import { GAME } from './config';
@@ -6,6 +6,10 @@ import { PROVINCE_BY_ID } from './provinces';
 import { VietnamMap, VisitPin } from './VietnamMap';
 import { Avatar } from './Avatar';
 import { themeById, themeVars } from './themes';
+import { playSpark, sound } from './sfx';
+import { setMusicVolume, startMusic, stopMusic } from './music';
+import { voice } from '../live/voice';
+import { IS_STAGE } from '../live/page';
 
 /**
  * Màn hình live 1080x1920, chất tranh sơn mài: nền sơn đen nâu, viền thếp vàng, tỉnh sáng màu son / vàng / ngọc.
@@ -13,18 +17,48 @@ import { themeById, themeVars } from './themes';
  */
 export function GameStage({ game }: { game: GameState }) {
   const [pin, setPin] = useState<{ v: Visit; at: [number, number] } | null>(null);
+  const [spark, setSpark] = useState<{ id: number; from: [number, number]; to: [number, number] } | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const calledAvRef = useRef<HTMLDivElement>(null);
+  const latest = useRef(0);
   const visitingId = game.visiting?.pid ?? null;
+
+  // Camera tới nơi: đốm sáng bay từ avatar "Vừa gọi tên quê" vào tỉnh, chạm tới thì tỉnh sáng + hiện ghim
+  const onArrive = (v: Visit | null, at: [number, number] | null) => {
+    latest.current = v?.id ?? 0;
+    if (!v || !at) {
+      setPin(null);
+      setSpark(null);
+      return;
+    }
+    const to: [number, number] = [at[0], at[1] + MAP_TOP];
+    setSpark({ id: v.id, from: centerIn(stageRef.current, calledAvRef.current) ?? [845, 440], to });
+    playSpark(SPARK_MS);
+    setTimeout(() => latest.current === v.id && setPin({ v, at }), SPARK_MS);
+    setTimeout(() => latest.current === v.id && setSpark(null), SPARK_MS + 600); // loé xong thì tắt
+  };
   const fansHere = visitingId ? (game.fans[visitingId] ?? 0) : Object.values(game.fans).reduce((a, b) => a + b, 0);
+  const L = game.labels;
+
+  // Âm thanh toàn bộ + nhạc nền (chỉ trang stage phát tiếng)
+  useEffect(() => {
+    sound.on = game.soundOn;
+    voice.volume = game.soundOn ? 1 : 0; // tắt: MC vẫn "đọc" theo nhịp nhưng không ra tiếng
+    if (IS_STAGE && game.soundOn && game.music.on) startMusic(game.music.volume / 100);
+    else stopMusic();
+    setMusicVolume(game.music.volume / 100);
+  }, [game.soundOn, game.music.on, game.music.volume]);
+  useEffect(() => () => stopMusic(), []);
 
   const theme = themeById(game.theme);
   return (
-    <div className="stage" style={themeVars(theme) as React.CSSProperties}>
+    <div ref={stageRef} className="stage" style={themeVars(theme) as React.CSSProperties}>
       <header className="stage-head">
         <h1>
-          <span className="t1">Việt Nam</span>
-          <span className="t2">đất nước ta ơi</span>
+          <span className="t1">{L.title1}</span>
+          <span className="t2">{L.title2}</span>
         </h1>
-        <p>{GAME.subtitle}</p>
+        <p>{L.subtitle}</p>
       </header>
 
       <div className="bar">
@@ -37,15 +71,15 @@ export function GameStage({ game }: { game: GameState }) {
       </div>
 
       <div className="visiting">
-        <span className="v-label">Đang ghé thăm</span>
+        <span className="v-label">{L.visiting}</span>
         <span className="v-name">{visitingId ? PROVINCE_BY_ID.get(visitingId)?.name : 'Cả nước'}</span>
         <span className="v-fans">
-          Đồng hương các buổi live: <b>{fansHere.toLocaleString('vi-VN')}</b> người
+          {L.fans}: <b>{fansHere.toLocaleString('vi-VN')}</b> người
         </span>
       </div>
 
       <div className="map-box">
-        <VietnamMap palette={theme.lit} lit={game.lit} visiting={game.visiting} onArrive={(v, at) => setPin(v && at ? { v, at } : null)} />
+        <VietnamMap palette={theme.lit} lit={game.lit} visiting={game.visiting} lightDelayMs={SPARK_MS} onArrive={onArrive} />
       </div>
       <div className="map-box overlay">
         <AnimatePresence>
@@ -58,10 +92,10 @@ export function GameStage({ game }: { game: GameState }) {
         <Ticker game={game} hidden={!!visitingId} />
       </div>
 
-      <Called v={game.called} />
+      <Called v={game.called} avRef={calledAvRef} title={L.called} />
 
       <div className="panel gifts">
-        <h3>Quà gửi về quê</h3>
+        <h3>{L.gifts}</h3>
         {GAME.giftTable.map(([k, v]) => (
           <div key={k} className="g-row">
             <span>{k}</span>
@@ -71,9 +105,9 @@ export function GameStage({ game }: { game: GameState }) {
       </div>
 
       <div className="bottom">
-        <Podium top={game.top} />
+        <Podium top={game.top} title={L.podium} />
         <div className="panel champ">
-          <h3>Người giữ lửa quê</h3>
+          <h3>{L.champ}</h3>
           {game.champion ? (
             <>
               <Avatar user={game.champion} size={104} className="champ-av" />
@@ -88,8 +122,54 @@ export function GameStage({ game }: { game: GameState }) {
         </div>
       </div>
 
+      <AnimatePresence>{spark && <Spark key={spark.id} from={spark.from} to={spark.to} />}</AnimatePresence>
+
       <RoundBanner game={game} />
     </div>
+  );
+}
+
+const MAP_TOP = 310; // .map-box top trong khung 1080x1920
+const SPARK_MS = 750; // đốm sáng bay bao lâu; tỉnh sáng đúng lúc đốm chạm tới
+
+/** Tâm của phần tử con, tính theo toạ độ khung 1080x1920 (khung có thể đang thu nhỏ) */
+function centerIn(stage: HTMLElement | null, el: HTMLElement | null): [number, number] | null {
+  if (!stage || !el) return null;
+  const s = stage.getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  const k = s.width / 1080 || 1;
+  return [(r.left + r.width / 2 - s.left) / k, (r.top + r.height / 2 - s.top) / k];
+}
+
+/** Đốm sáng bay vòng cung từ avatar vào tỉnh, kéo theo 3 đốm nhỏ làm đuôi, chạm tới thì loé ra */
+function Spark({ from, to }: { from: [number, number]; to: [number, number] }) {
+  // vòng cung: điểm giữa đẩy lên trên một đoạn theo độ dài đường bay
+  const dist = Math.hypot(to[0] - from[0], to[1] - from[1]);
+  const mid: [number, number] = [(from[0] + to[0]) / 2, Math.min(from[1], to[1]) - Math.min(220, dist * 0.35)];
+  const xs = [from[0], mid[0], to[0]];
+  const ys = [from[1], mid[1], to[1]];
+  const fly = { duration: SPARK_MS / 1000, ease: [0.45, 0, 0.25, 1] as const, times: [0, 0.5, 1] };
+  return (
+    <motion.div className="spark-layer" initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.3 } }}>
+      {[3, 2, 1].map((i) => (
+        <motion.div
+          key={i}
+          className="spark tail"
+          style={{ width: 34 - i * 7, height: 34 - i * 7, marginLeft: -(34 - i * 7) / 2, marginTop: -(34 - i * 7) / 2, opacity: 0.75 - i * 0.18 }}
+          initial={{ x: from[0], y: from[1] }}
+          animate={{ x: xs, y: ys }}
+          transition={{ ...fly, delay: i * 0.045 }}
+        />
+      ))}
+      <motion.div className="spark" initial={{ x: from[0], y: from[1], scale: 0.4 }} animate={{ x: xs, y: ys, scale: [0.4, 1.25, 1] }} transition={fly} />
+      <motion.div
+        className="spark-flash"
+        style={{ left: to[0], top: to[1] }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1.6, 2.2], opacity: [0, 0.9, 0] }}
+        transition={{ duration: 0.6, delay: SPARK_MS / 1000 - 0.05, times: [0, 0.35, 1] }}
+      />
+    </motion.div>
   );
 }
 
@@ -107,13 +187,15 @@ function Clock({ phase }: { phase: string }) {
   );
 }
 
-function Called({ v }: { v: Visit | null }) {
+function Called({ v, avRef, title }: { v: Visit | null; avRef: React.RefObject<HTMLDivElement | null>; title: string }) {
   return (
     <div className="panel called">
-      <h3>Vừa gọi tên quê</h3>
+      <h3>{title}</h3>
       {v ? (
         <motion.div key={v.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="called-body">
-          <Avatar user={v.user} size={112} className="called-av" />
+          <div ref={avRef} className="called-av-wrap">
+            <Avatar user={v.user} size={112} className="called-av" />
+          </div>
           <div className="c-name">{v.user.name}</div>
           <div className="c-sub">
             {v.pid ? (
@@ -147,11 +229,11 @@ function Ticker({ game, hidden }: { game: GameState; hidden: boolean }) {
   );
 }
 
-function Podium({ top }: { top: GameState['top'] }) {
+function Podium({ top, title }: { top: GameState['top']; title: string }) {
   const max = top[0]?.pts || 1;
   return (
     <div className="panel podium">
-      <h3>Bục quê nhà</h3>
+      <h3>{title}</h3>
       <div className="cols">
         {[1, 0, 2].map((i) => {
           const r = top[i];
@@ -210,7 +292,7 @@ function RoundBanner({ game }: { game: GameState }) {
                   <div className="mvp">
                     <Avatar user={s.champion} size={84} />
                     <div>
-                      Người giữ lửa quê: <b>{s.champion.name}</b>
+                      {game.labels.champ}: <b>{s.champion.name}</b>
                       <br />
                       góp {s.champion.pts.toLocaleString('vi-VN')} điểm cho quê
                     </div>
@@ -220,7 +302,7 @@ function RoundBanner({ game }: { game: GameState }) {
             ) : (
               <>
                 <h2>Vòng {game.round}</h2>
-                <p>Gõ tên tỉnh, thành quê bạn để bản đồ ghé thăm</p>
+                <p>{game.labels.subtitle}</p>
               </>
             )}
           </motion.div>

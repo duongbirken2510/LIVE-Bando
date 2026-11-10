@@ -285,6 +285,39 @@ body,
     0 0 4px var(--bg1);
   margin-bottom: 10px;
 }
+/* tích điểm: số điểm vọt lên khỏi tỉnh rồi mờ dần */
+.pin-points {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow:
+    0 3px 0 var(--bg1),
+    0 0 6px var(--bg1);
+  animation: points-up 1.8s ease-out forwards;
+}
+@keyframes points-up {
+  0% {
+    transform: translate(-50%, 30px) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    transform: translate(-50%, 0) scale(1.15);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-50%, -60px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -110px) scale(0.95);
+    opacity: 0;
+  }
+}
 .pin-av {
   border: 6px solid var(--pearl);
   outline: 4px solid var(--accent);
@@ -323,6 +356,39 @@ body,
   width: 6px;
   height: 46px;
   background: linear-gradient(var(--accent), transparent);
+}
+
+/* đốm sáng bay từ avatar "Vừa gọi tên quê" vào tỉnh */
+.spark-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 18%, var(--accent) 45%, transparent 72%);
+  box-shadow: 0 0 26px 10px color-mix(in srgb, var(--accent) 65%, transparent); /* ánh sáng thật của đốm lửa, cố ý */
+}
+.spark.tail {
+  box-shadow: 0 0 14px 4px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.spark-flash {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 10%, color-mix(in srgb, var(--accent) 80%, transparent) 35%, transparent 70%);
+}
+.called-av-wrap {
+  border-radius: 50%;
 }
 
 /* ---- Khung ---- */

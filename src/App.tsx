@@ -5,6 +5,11 @@ import { useGame, ROUND_CYCLE_MS } from './game/useGame';
 import { GameStage } from './game/GameStage';
 import { PROVINCES } from './game/provinces';
 import { THEMES, themeById } from './game/themes';
+import { useState } from 'react';
+import type { GameState, Labels } from './game/useGame';
+import { GAME } from './game/config';
+import { playSpark } from './game/sfx';
+import { startMusic, stopMusic } from './game/music';
 
 export default function App() {
   const game = useGame();
@@ -31,7 +36,12 @@ export default function App() {
           <GameStage game={game} />
         </StageFrame>
       }
-      top={<ThemePicker current={themeById(game.theme).id} />}
+      top={
+        <>
+          <ThemePicker current={themeById(game.theme).id} />
+          <TextAndSound game={game} />
+        </>
+      }
       extra={<GameControls />}
       autoLive={{
         durationMs: ROUND_CYCLE_MS, // trọn 1 vòng: mở màn, gặp gỡ, tổng kết
@@ -39,6 +49,125 @@ export default function App() {
         onStart: () => sendControl('custom', 'newRound'),
       }}
     />
+  );
+}
+
+const LABEL_FIELDS: [keyof Labels, string][] = [
+  ['title1', 'Tên game, dòng to'],
+  ['title2', 'Tên game, dòng nghiêng'],
+  ['subtitle', 'Dòng hướng dẫn dưới tên'],
+  ['called', 'Khung người vừa gọi'],
+  ['gifts', 'Khung bảng quà'],
+  ['champ', 'Danh hiệu người góp nhiều nhất'],
+  ['podium', 'Khung top 3'],
+  ['visiting', 'Chữ trước tên tỉnh đang ghé'],
+  ['fans', 'Chữ đếm đồng hương'],
+];
+const setPrefs = (p: Record<string, string>) => sendControl('setPrefs', JSON.stringify(p));
+
+/** Sửa chữ trên màn hình, bật/tắt âm thanh, nhạc nền, nút mô phỏng 1 lượt gọi tên */
+function TextAndSound({ game }: { game: GameState }) {
+  const [draft, setDraft] = useState<Record<string, string> | null>(null);
+  const [previewing, setPreviewing] = useState(false);
+  // ô nhập: chữ đang soạn, chưa soạn thì lấy chữ chủ kênh đã lưu
+  const val = (k: keyof Labels) => draft?.[k] ?? game.prefs[`label_${k}`] ?? '';
+  const save = () => {
+    if (!draft) return;
+    setPrefs(Object.fromEntries(Object.entries(draft).map(([k, v]) => [`label_${k}`, v])));
+    setDraft(null);
+  };
+  const restore = () => {
+    setPrefs(Object.fromEntries(LABEL_FIELDS.map(([k]) => [`label_${k}`, ''])));
+    setDraft(null);
+  };
+  const simulate = async () => {
+    const u = fakeUser();
+    await emitTest('chat', { ...u, comment: provComment() });
+  };
+  const previewMusic = () => {
+    setPreviewing(true);
+    startMusic(game.music.volume / 100);
+    setTimeout(() => {
+      stopMusic();
+      setPreviewing(false);
+    }, 8000);
+  };
+  const box = 'rounded-lg bg-slate-800 px-3 py-2 text-sm';
+  const btn = 'rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium hover:bg-slate-700';
+
+  return (
+    <section className="rounded-2xl bg-slate-900 p-4 ring-1 ring-slate-800">
+      <h2 className="mb-3 font-semibold">Chữ trên màn hình & âm thanh</h2>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        {LABEL_FIELDS.map(([k, hint]) => (
+          <label key={k} className="text-xs text-slate-400">
+            {hint}
+            <input
+              className={`${box} mt-1 w-full text-slate-100`}
+              maxLength={60}
+              placeholder={GAME.labels[k]}
+              value={val(k)}
+              onChange={(e) => setDraft({ ...(draft ?? {}), [k]: e.target.value })}
+              onKeyDown={(e) => e.key === 'Enter' && save()}
+            />
+          </label>
+        ))}
+      </div>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <button className="rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-slate-950 disabled:opacity-40" disabled={!draft} onClick={save}>
+          Lưu chữ
+        </button>
+        <button className={btn} onClick={restore}>
+          Về chữ mặc định
+        </button>
+        <span className="self-center text-xs text-slate-500">Ô để trống thì dùng chữ mặc định (chữ mờ).</span>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl bg-slate-800/60 p-3 text-sm">
+        <Switch on={game.soundOn} onChange={(on) => setPrefs({ soundOn: on ? '1' : '0' })} label="Âm thanh toàn bộ" />
+        <Switch on={game.music.on} onChange={(on) => setPrefs({ musicOn: on ? '1' : '0' })} label="Nhạc nền" />
+        <label className="flex items-center gap-2">
+          Âm lượng nhạc
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={5}
+            value={game.music.volume}
+            onChange={(e) => setPrefs({ musicVolume: e.target.value })}
+            className="accent-amber-500"
+          />
+          <span className="w-9 text-right tabular-nums">{game.music.volume}%</span>
+        </label>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button className="rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-slate-950" onClick={simulate}>
+          ✨ Mô phỏng 1 lượt gọi tên
+        </button>
+        <button className={btn} onClick={() => playSpark(750, true)}>
+          🔊 Nghe tiếng đốm sáng (máy này)
+        </button>
+        <button className={btn} onClick={previewMusic} disabled={previewing}>
+          🎵 {previewing ? 'Đang phát 8 giây...' : 'Nghe thử nhạc nền (máy này)'}
+        </button>
+      </div>
+      <p className="mt-2 text-xs text-slate-500">
+        Mô phỏng: 1 người giả gọi tên 1 tỉnh, stage chạy đủ đốm sáng, tích điểm, giọng MC và âm thanh (nếu đang bật). Nút "máy này" chỉ phát ở loa máy tính, không lên live.
+      </p>
+    </section>
+  );
+}
+
+function Switch({ on, onChange, label }: { on: boolean; onChange: (on: boolean) => void; label: string }) {
+  return (
+    <button role="switch" aria-checked={on} onClick={() => onChange(!on)} className="flex items-center gap-2">
+      <span className={`relative h-6 w-11 rounded-full transition ${on ? 'bg-emerald-500' : 'bg-slate-600'}`}>
+        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${on ? 'left-[22px]' : 'left-0.5'}`} />
+      </span>
+      {label}: <b className={on ? 'text-emerald-400' : 'text-slate-400'}>{on ? 'Bật' : 'Tắt'}</b>
+    </button>
   );
 }
 

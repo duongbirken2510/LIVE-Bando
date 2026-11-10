@@ -8,6 +8,7 @@ import { detectWish, GiftThanker, makePicker, OncePerPerson, RecentPeople, WishL
 import { IS_STAGE } from '../live/page';
 import { GAME } from './config';
 import { findProvince, PROVINCE_BY_ID } from './provinces';
+import { talkAbout } from './provinceTalk';
 
 const pick = makePicker();
 
@@ -117,6 +118,8 @@ export function useGame() {
   const [, setVersion] = useState(0);
   const [voiceWho, setVoiceWho] = useState(voice.defaultWho);
   const [theme, setTheme] = useState<string>(''); // '' = giao diện mặc định; server gửi lại giao diện đã chọn khi nối vào
+  // Cài đặt chủ kênh sửa ở trang điều khiển (chữ trên màn hình, nhạc nền). Server nhớ, gửi lại khi trang nối vào.
+  const [prefs, setPrefs] = useState<Record<string, string>>({});
 
   const [g] = useState(() => ({
     kenh: GAME.defaultChannelName,
@@ -131,6 +134,7 @@ export function useGame() {
     visiting: null as Visit | null,
     called: null as Visit | null,
     feed: [] as FeedItem[],
+    prefs: {} as Record<string, string>,
     summary: null as Summary | null,
     fans: loadFans(),
     saveTimer: 0,
@@ -319,6 +323,15 @@ export function useGame() {
       if (c.action === 'custom' && c.text === 'skip') skipPhase();
       if (c.action === 'custom' && c.text === 'newRound') newRound();
       if (c.action === 'setTheme' && c.text) setTheme(c.text);
+      if (c.action === 'setPrefs' && c.text) {
+        try {
+          const p = JSON.parse(c.text) as Record<string, string>;
+          g.prefs = p;
+          setPrefs(p);
+        } catch {
+          // bỏ qua bộ cài đặt hỏng
+        }
+      }
       if (c.action === 'setVoice' && (c.text === 'M' || c.text === 'F')) {
         voice.defaultWho = c.text;
         setVoiceWho(c.text);
@@ -365,7 +378,7 @@ export function useGame() {
         g.summary = { no: g.round, top, champion: champ };
         g.queue.length = 0;
         g.visiting = null;
-        voice.say(GAME.summary(g.round, top, champ && speakableName(champ.name)), true);
+        voice.say(GAME.summary(g.round, top, champ && speakableName(champ.name), labelsOf(g.prefs).champ), true);
       } else if (c.phase === 'open' || g.phase === 'summary') {
         g.round++;
         g.scores = g.next;
@@ -438,6 +451,13 @@ export function useGame() {
     channelName,
     voiceWho,
     theme,
+    prefs,
+    labels: labelsOf(prefs),
+    soundOn: prefs.soundOn !== '0', // công tắc "Âm thanh toàn bộ"
+    music: {
+      on: prefs.musicOn ? prefs.musicOn === '1' : GAME.musicOn,
+      volume: Math.min(100, Math.max(0, Number(prefs.musicVolume ?? GAME.musicVolume) || 0)),
+    },
     round: g.round,
     phase: g.phase,
     top: rank.slice(0, 3),
@@ -454,13 +474,26 @@ export function useGame() {
 }
 
 export type GameState = ReturnType<typeof useGame>;
+export type Labels = typeof GAME.labels;
+
+/** Chữ trên màn hình: chữ chủ kênh đặt (prefs.label_xxx), ô để trống thì dùng chữ mặc định */
+export function labelsOf(prefs: Record<string, string>): Labels {
+  const out = { ...GAME.labels };
+  for (const k of Object.keys(out) as (keyof Labels)[]) {
+    const v = prefs[`label_${k}`]?.trim();
+    if (v) out[k] = v;
+  }
+  return out;
+}
 
 function lineFor(v: Visit) {
   const name = speakableName(v.user.name);
   const prov = v.pid ? PROVINCE_BY_ID.get(v.pid)!.name : '';
   if (v.kind === 'gift') return v.pid ? GAME.giftLine(name, v.gift, prov, v.pts) : GAME.giftNoHome(name, v.gift);
-  if (v.others > 0) return GAME.calledWithOthers(name, prov, v.others);
-  return pick(GAME.calledLines)!(name, prov);
+  const call = v.others > 0 ? GAME.calledWithOthers(name, prov, v.others) : pick(GAME.calledLines)!(name, prov);
+  // nhắc món ngon, danh thắng, khen người ở tỉnh đó (src/game/provinceTalk.ts)
+  const talk = v.pid ? talkAbout(v.pid, prov) : '';
+  return talk ? `${call} | ${talk}` : call;
 }
 
 // ['An', 'Bình', 'Chi'] -> 'bạn An, bạn Bình và bạn Chi'
