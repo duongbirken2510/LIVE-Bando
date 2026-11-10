@@ -34,8 +34,8 @@ body,
 .stage-head {
   position: absolute;
   inset: 0 0 auto 0;
-  height: 170px;
-  padding: 18px 40px 0;
+  height: 190px;
+  padding: 38px 40px 0;
   border-bottom: 3px solid var(--line);
   background: linear-gradient(180deg, var(--head1), var(--head2) 70%, var(--head1));
   box-shadow: inset 0 -8px 0 -5px var(--accent);
@@ -72,7 +72,7 @@ body,
 /* ---- Thanh vòng + đang ghé ---- */
 .bar {
   position: absolute;
-  top: 182px;
+  top: 200px;
   left: 30px;
   right: 90px;
   display: flex;
@@ -86,7 +86,7 @@ body,
   border-radius: 28px;
   border: 2px solid var(--line);
   background: var(--panel);
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -123,20 +123,26 @@ body,
 
 .visiting {
   position: absolute;
-  top: 248px;
+  top: 262px;
   left: 30px;
   right: 90px;
-  height: 58px;
+  height: 52px;
   display: flex;
   align-items: baseline;
   gap: 16px;
   padding: 0 6px;
 }
 .v-label {
-  font-size: 24px;
+  white-space: nowrap;
+  font-size: 28px;
   color: var(--muted);
 }
 .v-name {
+  flex: none;
+  max-width: 520px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: var(--display);
   font-size: 44px;
   font-weight: 900;
@@ -144,7 +150,11 @@ body,
 }
 .v-fans {
   margin-left: auto;
-  font-size: 24px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 28px;
 }
 .v-fans b {
   color: var(--accent);
@@ -154,11 +164,16 @@ body,
 /* ---- Bản đồ ---- */
 .map-box {
   position: absolute;
-  top: 310px;
+  top: 316px;
   left: 0;
   width: 1080px;
-  height: 1020px;
-  overflow: hidden; /* zoom gần không được tràn lên tiêu đề / xuống bục */
+  height: 1470px;
+  overflow: hidden; /* zoom gần không được tràn lên tiêu đề */
+  /* mép dưới mờ dần vào nền (chỗ comment), không cắt ngang khi zoom gần */
+  mask-image: linear-gradient(#000 calc(100% - 160px), transparent);
+}
+.map-box.overlay {
+  mask-image: none;
 }
 .vn-map {
   position: absolute;
@@ -210,7 +225,7 @@ body,
   text-anchor: middle;
 }
 .sea-lbl.sm {
-  font-size: calc(20px / var(--k));
+  font-size: calc(24px / var(--k));
 }
 /* Hoàng Sa, Trường Sa trên bản đồ chính: sáng cùng Đà Nẵng, Khánh Hòa */
 .isl-main path {
@@ -229,24 +244,16 @@ body,
   fill: var(--accent);
 }
 .isl-lbl {
-  font-size: calc(18px / var(--k));
+  font-size: calc(24px / var(--k));
   font-weight: 800;
   fill: var(--label);
   stroke: var(--bg1);
-  stroke-width: calc(4px / var(--k));
+  stroke-width: calc(5px / var(--k));
   paint-order: stroke;
-  text-anchor: end;
+  text-anchor: middle;
 }
 .isl-main.on .isl-lbl {
   fill: var(--accent);
-}
-.isl-name {
-  font-size: 13px;
-  font-weight: 700;
-  fill: var(--ink);
-  stroke: var(--bg1);
-  stroke-width: 3px;
-  paint-order: stroke;
 }
 .burst {
   fill: none;
@@ -325,7 +332,7 @@ body,
 }
 .pin-sub {
   margin: -6px 0 10px;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--label);
   text-shadow: 0 0 4px var(--bg1), 0 2px 0 var(--bg1);
@@ -352,7 +359,7 @@ body,
   margin-top: 8px;
   padding: 4px 18px;
   border-radius: 12px;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -445,7 +452,7 @@ body,
 .gfx-banner {
   position: absolute;
   left: 50%;
-  top: 1150px; /* phía dưới bản đồ, trên bục: ghim luôn mọc lên trên điểm cắm nên chỗ này trống */
+  top: 1330px; /* dưới thẻ Vừa gọi tên quê, đè tạm lên miền Nam: ghim luôn mọc lên trên điểm cắm nên chỗ này trống */
   translate: -50% 0;
   display: flex;
   align-items: center;
@@ -458,7 +465,7 @@ body,
   white-space: nowrap;
 }
 .gfx-banner.t5 {
-  top: 1110px;
+  top: 1300px;
   padding: 26px 44px 26px 26px;
   border-width: 5px;
   background: linear-gradient(135deg, var(--accent2), var(--head1));
@@ -496,23 +503,32 @@ body,
   box-shadow: inset 0 0 0 6px var(--panel), inset 0 0 0 7px color-mix(in srgb, var(--accent) 28%, transparent);
 }
 .panel h3 {
-  padding: 16px 20px 6px;
-  font-size: 25px;
+  padding: 14px 20px 4px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--accent);
 }
 .empty {
-  padding: 18px 22px;
-  font-size: 23px;
+  padding: 14px 22px;
+  font-size: 28px;
   color: var(--muted);
+}
+.empty.big {
+  padding-top: 6px;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--accent);
 }
 
 .called {
-  left: 700px;
-  top: 322px;
-  width: 290px;
-  height: 252px;
+  left: 20px;
+  top: 880px;
+  width: 270px;
+  height: 312px;
   text-align: center;
+  z-index: 3;
 }
 .called-body {
   display: flex;
@@ -525,100 +541,28 @@ body,
 }
 .c-name {
   margin-top: 8px;
-  max-width: 260px;
+  max-width: 244px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 800;
 }
 .c-sub {
-  font-size: 22px;
+  font-size: 28px;
   color: var(--muted);
 }
 .c-sub b {
   color: var(--accent);
 }
 
-.island {
-  left: 700px;
-  width: 290px;
-  transition:
-    border-color 0.4s,
-    transform 0.4s;
-}
-.inset-hs {
-  top: 280px;
-}
-.inset-ts {
-  top: 806px;
-}
-.island-title {
-  padding: 12px 16px 0;
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.25;
-}
-.island-title span {
-  font-weight: 600;
-  color: var(--muted);
-}
-.island svg {
-  display: block;
-  margin: 0 auto 4px;
-}
-.island path {
-  fill: var(--land);
-  stroke: var(--map-line);
-  stroke-width: 1px;
-  transition: fill 0.8s;
-}
-.island circle {
-  fill: var(--muted);
-  transition: fill 0.8s;
-}
-.island.on path,
-.island.on circle {
-  fill: var(--accent);
-}
-.island.visit {
-  border-color: var(--accent);
-  transform: scale(1.04);
-}
 
-.gifts {
-  left: 700px;
-  top: 790px;
-  width: 290px;
-  padding-bottom: 10px;
-}
-.g-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 20px;
-  padding: 2px 0;
-  font-size: 21px;
-  line-height: 1.35;
-  font-weight: 600;
-  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 22%, transparent);
-}
-.g-row:last-child {
-  border: 0;
-}
-.g-row b {
-  color: var(--accent);
-  font-weight: 800;
-}
 
 .ticker {
-  position: absolute;
-  left: 30px;
-  top: 440px;
-  width: 330px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: opacity 0.4s;
+  min-height: 224px;
   pointer-events: none;
 }
 .tk {
@@ -626,10 +570,10 @@ body,
   align-items: center;
   gap: 10px;
   padding: 5px 16px 5px 5px;
-  border-radius: 28px;
+  border-radius: 30px;
   background: var(--panel);
   border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  font-size: 21px;
+  font-size: 26px;
 }
 .tk span {
   overflow: hidden;
@@ -640,86 +584,212 @@ body,
   color: var(--accent);
 }
 
-/* ---- Dưới cùng: bục + người giữ lửa ---- */
-.bottom {
+.side {
   position: absolute;
-  top: 1345px;
-  left: 30px;
-  right: 90px;
-  height: 320px;
+  left: 720px;
+  top: 330px;
+  width: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 3;
 }
+.upcoming {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 112px;
+  align-content: flex-start;
+  padding: 10px 14px;
+  border-radius: var(--r);
+  border: 2px solid var(--line);
+  background: var(--panel);
+}
+.side .panel {
+  position: relative;
+}
+.up-lbl {
+  width: 100%;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.up-name {
+  padding: 2px 14px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  font-size: 28px;
+  font-weight: 700;
+}
+.up-empty {
+  font-size: 26px;
+  color: var(--muted);
+}
+.gift-strip {
+  display: flex;
+  flex-direction: column;
+  height: 86px;
+  padding: 8px 16px;
+  overflow: hidden;
+  border-radius: var(--r);
+  border: 2px solid var(--line);
+  background: var(--panel);
+}
+.gs-lbl {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.gs-row {
+  font-size: 30px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.gs-row b {
+  color: var(--accent);
+  margin-left: 6px;
+}
+
+/* tên tỉnh to giữa bản đồ lúc camera tới, mờ dần (nằm dưới ghim) */
+.big-prov {
+  position: absolute;
+  left: 290px;
+  top: 790px;
+  width: 430px;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-weight: 900;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow:
+    0 4px 0 var(--bg1),
+    0 0 16px var(--bg1);
+  pointer-events: none;
+}
+
+/* 10 giây cuối vòng */
+.final {
+  position: absolute;
+  left: 20px;
+  top: 326px;
+  width: 680px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 6px 18px;
+  border-radius: var(--r);
+  border: 3px solid var(--accent2);
+  background: color-mix(in srgb, var(--bg1) 80%, transparent);
+  z-index: 5;
+  pointer-events: none;
+}
+.final b {
+  font-family: var(--display);
+  font-size: 88px;
+  line-height: 1;
+  font-weight: 900;
+  color: var(--accent2);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--accent2) 70%, transparent);
+}
+.final span {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+/* ---- Dưới cùng: bục + người giữ lửa ---- */
 .podium {
-  left: 0;
-  top: 0;
-  width: 640px;
-  height: 320px;
+  padding-bottom: 10px;
+}
+.p-name {
+  /* tên tỉnh dài (Hồ Chí Minh) xuống 2 dòng, cột hẹp nên chữ nhỏ hơn mức 28px chung */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.p-pts {
+  margin: 2px 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
 }
 .podium .cols {
   display: flex;
   align-items: flex-end;
-  gap: 14px;
-  height: 262px;
-  padding: 0 18px;
+  gap: 10px;
+  height: 236px; /* tên 2 dòng + điểm + cột cao nhất 150px: luôn vừa khung */
+  padding: 0 12px;
 }
 .col {
+  --c: var(--accent);
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   height: 100%;
 }
-.p-name {
-  font-size: 28px;
-  font-weight: 800;
-  text-align: center;
-  line-height: 1.1;
+.col.r2 {
+  --c: var(--pearl);
 }
-.p-pts {
-  margin: 2px 0 6px;
-  font-size: 21px;
-  color: var(--muted);
-  min-height: 26px;
+.col.r3 {
+  --c: var(--copper);
 }
 .p-bar {
-  --c: var(--accent);
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 8px;
-  border-radius: 14px 14px 4px 4px;
+  padding-top: 6px;
+  border-radius: 12px 12px 4px 4px;
   font-family: var(--display);
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 900;
   color: var(--bg1);
   background: linear-gradient(color-mix(in srgb, var(--c), #fff 30%), var(--c) 45%, color-mix(in srgb, var(--c), #000 30%));
   transition: height 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.r2 .p-bar {
-  --c: var(--pearl);
-}
-.r3 .p-bar {
-  --c: var(--copper);
-}
 .champ {
-  right: 0;
-  top: 0;
-  width: 290px;
-  height: 320px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding-bottom: 12px;
 }
 .champ-av {
   border: 4px solid var(--copper);
-  margin-top: 6px;
+}
+.champ-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 14px;
+}
+.champ-txt {
+  min-width: 0;
+  text-align: left;
+}
+.champ-txt .c-name {
+  margin: 0;
+  max-width: 150px;
+  font-size: 28px;
+}
+.champ .empty {
+  padding-top: 6px;
 }
 
 /* ---- Màn mở vòng / tổng kết ---- */
 .banner {
   position: absolute;
   inset: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: center;

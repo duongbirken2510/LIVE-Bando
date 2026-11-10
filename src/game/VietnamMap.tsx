@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { geoArea, geoMercator, geoPath } from 'd3-geo';
 import { interpolateZoom, type ZoomView } from 'd3-interpolate';
 import type { Visit } from './useGame';
@@ -7,15 +7,17 @@ import { PROVINCE_BY_ID } from './provinces';
 import { GAME } from './config';
 
 // Bản đồ 34 tỉnh, thành (public/vn34.json, dựng bằng tools/prep-map.mjs).
-// Hoàng Sa (TP. Đà Nẵng) và Trường Sa (tỉnh Khánh Hòa) vẽ trong 2 khung riêng, sáng cùng tỉnh của mình.
+// Hoàng Sa (TP. Đà Nẵng) và Trường Sa (tỉnh Khánh Hòa) vẽ đúng vị trí thật trên bản đồ chính, sáng cùng tỉnh của mình.
 
 type Props = { id: string; name: string; color?: number; island?: boolean; parent?: string };
 type Feat = GeoJSON.Feature<GeoJSON.MultiPolygon, Props>;
 
 export const MAP_W = 1080;
-export const MAP_H = 1020;
-const FOCUS_X = 354; // tâm vùng nhìn: bên trái cột thẻ
-const FOCUS_W = 640;
+export const MAP_H = 1470; // kéo xuống sát thanh dưới: phần dưới bị chat che lúc nhìn cả nước, zoom vào tỉnh thì camera đưa lên giữa
+// Bản đồ là nhân vật chính: chữ S cao gần hết khung. Thẻ "Vừa gọi tên quê" nằm ở khoảng trống bên trái (vùng Lào),
+// cột thẻ bên phải từ x = 720. Tỉnh đang ghé hiện giữa 2 bên.
+const FOCUS_X = 505;
+const FOCUS_W = 420;
 
 const mapData: Promise<GeoJSON.FeatureCollection<GeoJSON.MultiPolygon, Props>> = fetch('/vn34.json').then((r) => r.json());
 
@@ -38,7 +40,12 @@ function fixWinding(f: Feat) {
 function prepare(fc: GeoJSON.FeatureCollection<GeoJSON.MultiPolygon, Props>) {
   fc.features.forEach((f) => fixWinding(f as Feat));
   const main = fc.features.filter((f) => !f.properties.island) as Feat[];
-  const proj = geoMercator().fitExtent([[40, 14], [668, MAP_H - 14]], { type: 'FeatureCollection', features: main });
+  // đất liền vừa chiều cao khung, dồn sát mép trái; phần biển bên phải dành cho Hoàng Sa, Trường Sa và cột thẻ
+  const mainFc = { type: 'FeatureCollection', features: main } as const;
+  const proj = geoMercator().fitExtent([[0, 30], [2000, MAP_H - 30]], mainFc);
+  const left = geoPath(proj).bounds(mainFc)[0][0];
+  const [tx, ty] = proj.translate();
+  proj.translate([tx - left + 30, ty]);
   const path = geoPath(proj);
   const provs: Prov[] = main.map((f) => {
     // tâm và khung zoom theo mảnh đất liền lớn nhất (bỏ đảo nhỏ ra xa)
@@ -59,40 +66,30 @@ function prepare(fc: GeoJSON.FeatureCollection<GeoJSON.MultiPolygon, Props>) {
       .filter((f) => f.properties.island)
       .map((f) => [f.properties.id, f as Feat]),
   ) as Record<'hoang-sa' | 'truong-sa', Feat>;
-  // Trên bản đồ chính: Hoàng Sa đúng vĩ độ, ngoài khơi Đà Nẵng; Trường Sa thu gọn ngoài khơi Khánh Hòa (thật ra xa hơn, vượt khung hình)
-  const onMain = {
-    'hoang-sa': islandShapes(islands['hoang-sa'], [[566, 440], [682, 520]]),
-    'truong-sa': islandShapes(islands['truong-sa'], [[596, 872], [684, 996]]),
+  // Hoàng Sa, Trường Sa thật nằm rất xa (vẽ đúng chỗ thì cả nước phải thu nhỏ lại): vẽ thu gọn ngoài khơi
+  // TP. Đà Nẵng và tỉnh Khánh Hòa, giữ đúng hình dạng cụm đảo, không lấn sang cột thẻ bên phải (x >= 720)
+  const dn = at(108.25, 16.05);
+  const kh = at(109.25, 12.25);
+  const shapes = (feat: Feat, box: [[number, number], [number, number]]) => {
+    const pr = geoMercator().fitExtent(box, feat);
+    const p = geoPath(pr);
+    return {
+      parts: feat.geometry.coordinates.map((c) => {
+        const poly = { type: 'Polygon', coordinates: c } as GeoJSON.Polygon;
+        return { d: p(poly) ?? '', c: p.centroid(poly) };
+      }),
+      box: p.bounds(feat) as [[number, number], [number, number]],
+      at: (lon: number, lat: number) => pr([lon, lat]) as [number, number], // toạ độ 1 đảo trong cụm vẽ thu gọn
+    };
   };
-  return { provs, byId: new Map(provs.map((p) => [p.id, p])), at, islands, onMain };
+  const onMain = {
+    // Hoàng Sa: khe giữa bờ biển và cột thẻ. Trường Sa: dưới cột thẻ nên rộng hơn
+    'hoang-sa': shapes(islands['hoang-sa'], [[dn[0] + 45, dn[1] - 60], [Math.min(dn[0] + 190, 705), dn[1] + 25]]),
+    'truong-sa': shapes(islands['truong-sa'], [[kh[0] + 40, kh[1] + 50], [kh[0] + 250, kh[1] + 210]]),
+  };
+  return { provs, byId: new Map(provs.map((p) => [p.id, p])), at, onMain };
 }
 
-function islandShapes(feat: Feat, box: [[number, number], [number, number]]) {
-  const proj = geoMercator().fitExtent(box, feat);
-  const p = geoPath(proj);
-  const parts = feat.geometry.coordinates.map((c) => {
-    const poly = { type: 'Polygon', coordinates: c } as GeoJSON.Polygon;
-    return { d: p(poly) ?? '', c: p.centroid(poly) };
-  });
-  return { parts, proj, box };
-}
-
-// Đảo chính (toạ độ gần đúng) để ghi tên trong khung phóng to
-const ISLAND_NAMES = {
-  'hoang-sa': [
-    ['Phú Lâm', 112.33, 16.83],
-    ['Linh Côn', 112.73, 16.67],
-    ['Hoàng Sa', 111.61, 16.53],
-    ['Tri Tôn', 111.2, 15.78],
-  ],
-  'truong-sa': [
-    ['Song Tử Tây', 114.33, 11.43],
-    ['Thị Tứ', 114.28, 11.05],
-    ['Nam Yết', 114.36, 10.18],
-    ['Sinh Tồn', 114.33, 9.88],
-    ['Trường Sa Lớn', 111.92, 8.64],
-  ],
-} as const;
 type Prepared = ReturnType<typeof prepare>;
 
 const HOME: ZoomView = [FOCUS_X, MAP_H / 2, MAP_H];
@@ -100,12 +97,15 @@ const HOME: ZoomView = [FOCUS_X, MAP_H / 2, MAP_H];
 export function VietnamMap({
   palette,
   lit,
+  heat,
   visiting,
   lightDelayMs = 0,
   onArrive,
 }: {
   palette: readonly string[];
   lit: string[];
+  /** 0..1 theo điểm: quê nhiều điểm thì màu đậm */
+  heat: Record<string, number>;
   visiting: Visit | null;
   /** Camera tới nơi rồi chờ bao lâu mới thắp sáng tỉnh (đợi đốm sáng bay vào) */
   lightDelayMs?: number;
@@ -139,12 +139,17 @@ export function VietnamMap({
     const spot = visiting?.spot;
     let to = HOME;
     let anchor: [number, number] | null = p ? p.c : null; // điểm ghim / đốm sáng rơi vào (toạ độ bản đồ)
-    let fixedAt: [number, number] | null = null; // đảo xa: ghim vào khung Hoàng Sa / Trường Sa
     if (p && spot?.far) {
-      // cắm vào cụm đảo vẽ trên bản đồ chính (camera ở cả nước nên toạ độ bản đồ = toạ độ màn hình)
-      const box = data.onMain[spot.pid === 'da-nang' ? 'hoang-sa' : 'truong-sa'].box;
-      anchor = [(box[0][0] + box[1][0]) / 2, (box[0][1] + box[1][1]) / 2];
-      fixedAt = [Math.min(anchor[0], 560), anchor[1]]; // lệch trái chút cho tên đảo không chạm cột khung bên phải
+      // đảo xa: camera phóng thẳng vào cụm đảo vẽ thu gọn, ghim cắm đúng đảo (gõ "Trường Sa" chung thì cắm giữa cụm)
+      const g = data.onMain[spot.pid === 'da-nang' ? 'hoang-sa' : 'truong-sa'];
+      const [[x0, y0], [x1, y1]] = g.box;
+      const whole = spot.name.startsWith('quần đảo');
+      const [sx, sy] = whole ? [(x0 + x1) / 2, (y0 + y1) / 2] : g.at(spot.lon, spot.lat);
+      const x = Math.min(x1, Math.max(x0, sx));
+      const y = Math.min(y1, Math.max(y0, sy));
+      const size = Math.max(y1 - y0, ((x1 - x0) * MAP_H) / FOCUS_W) * 2.4;
+      to = [whole ? (x0 + x1) / 2 : x, (whole ? (y0 + y1) / 2 : y) - (90 * size) / MAP_H, size];
+      anchor = [x, y];
     } else if (p && spot) {
       const [x, y] = data.at(spot.lon, spot.lat);
       const h = Math.abs(data.at(spot.lon, spot.lat - spot.span / 2)[1] - data.at(spot.lon, spot.lat + spot.span / 2)[1]);
@@ -171,7 +176,7 @@ export function VietnamMap({
       const cam = camera(i(e));
       if (t < 1) raf = requestAnimationFrame(step);
       else if (p && visiting) {
-        onArrive?.(visiting, fixedAt ?? [anchor![0] * cam.k + cam.x, anchor![1] * cam.k + cam.y]);
+        onArrive?.(visiting, [anchor![0] * cam.k + cam.x, anchor![1] * cam.k + cam.y]);
         light = window.setTimeout(() => setArrived(visiting), lightDelayMs);
       }
     };
@@ -186,9 +191,9 @@ export function VietnamMap({
   if (!data) return null;
   const litSet = new Set(lit);
   const on = (id: string) => (litSet.has(id) && (id !== target || arrived?.pid === id)) || arrived?.pid === id;
-  const sea = data.at(110.3, 13.4);
+  const sea = data.at(109.7, 8.9); // dưới Trường Sa, ngoài khơi Cà Mau: không chạm đất liền, không vướng thẻ
   const gulf = data.at(107.75, 19.9);
-  const thai = data.at(103.2, 9.9);
+  const thai = data.at(102.5, 8.7);
 
   return (
     <>
@@ -196,13 +201,15 @@ export function VietnamMap({
         <g ref={worldRef}>
           <text className="sea-lbl" x={sea[0]} y={sea[1]}>Biển Đông</text>
           <text className="sea-lbl sm" x={gulf[0]} y={gulf[1]}>Vịnh Bắc Bộ</text>
-          <text className="sea-lbl sm" x={thai[0]} y={thai[1]}>Vịnh Thái Lan</text>
+          <text className="sea-lbl sm" x={thai[0]} y={thai[1]} style={{ textAnchor: 'start' }}>
+            Vịnh Thái Lan
+          </text>
           {data.provs.map((p) => (
             <path
               key={p.id}
               d={p.d}
               className={`prov${on(p.id) ? ' on' : ''}${arrived?.pid === p.id ? ' visit' : ''}`}
-              style={on(p.id) ? { fill: palette[p.color % palette.length] } : undefined}
+              style={on(p.id) ? { fill: palette[p.color % palette.length], fillOpacity: 0.5 + 0.5 * (arrived?.pid === p.id ? 1 : (heat[p.id] ?? 0)) } : undefined}
             />
           ))}
           {(
@@ -220,7 +227,13 @@ export function VietnamMap({
                     <circle cx={s.c[0]} cy={s.c[1]} r={2.4} />
                   </g>
                 ))}
-                <text className="isl-lbl" x={g.box[1][0]} y={id === 'hoang-sa' ? g.box[1][1] + 26 : g.box[0][1] - 10}>
+                {/* Hoàng Sa: tên phía trên, canh phải theo cụm đảo (bên phải là cột thẻ); Trường Sa: tên phía dưới */}
+                <text
+                  className="isl-lbl"
+                  x={id === 'hoang-sa' ? g.box[1][0] : (g.box[0][0] + g.box[1][0]) / 2}
+                  y={id === 'hoang-sa' ? g.box[0][1] - 14 : g.box[1][1] + 30}
+                  style={id === 'hoang-sa' ? { textAnchor: 'end' } : undefined}
+                >
                   {label}
                 </text>
               </g>
@@ -236,39 +249,7 @@ export function VietnamMap({
             ))}
         </g>
       </svg>
-      <IslandFrame id="hoang-sa" feat={data.islands['hoang-sa']} on={on('da-nang')} visit={arrived?.pid === 'da-nang'} className="inset-hs" w={286} h={118}>
-        Quần đảo Hoàng Sa <span>(TP. Đà Nẵng)</span>
-      </IslandFrame>
-      <IslandFrame id="truong-sa" feat={data.islands['truong-sa']} on={on('khanh-hoa')} visit={arrived?.pid === 'khanh-hoa'} className="inset-ts" w={286} h={150}>
-        Quần đảo Trường Sa <span>(tỉnh Khánh Hòa)</span>
-      </IslandFrame>
     </>
-  );
-}
-
-function IslandFrame({ id, feat, on, visit, className, w, h, children }: { id: keyof typeof ISLAND_NAMES; feat: Feat; on: boolean; visit: boolean; className: string; w: number; h: number; children: ReactNode }) {
-  const shapes = useMemo(() => islandShapes(feat, [[18, 12], [w - 18, h - 12]]), [feat, w, h]);
-  return (
-    <div className={`panel island ${className}${on ? ' on' : ''}${visit ? ' visit' : ''}`}>
-      <div className="island-title">{children}</div>
-      <svg width={w} height={h}>
-        {shapes.parts.map((s, i) => (
-          <g key={i}>
-            <path d={s.d} />
-            <circle cx={s.c[0]} cy={s.c[1]} r={2.6} />
-          </g>
-        ))}
-        {ISLAND_NAMES[id].map(([n, lon, lat]) => {
-          const [x, y] = shapes.proj([lon, lat]) ?? [0, 0];
-          const right = x > w * 0.62; // gần mép phải thì ghi tên sang trái
-          return (
-            <text key={n} className="isl-name" x={right ? x - 6 : x + 6} y={y + 4} textAnchor={right ? 'end' : 'start'}>
-              {n}
-            </text>
-          );
-        })}
-      </svg>
-    </div>
   );
 }
 

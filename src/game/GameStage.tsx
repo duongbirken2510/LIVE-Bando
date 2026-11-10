@@ -14,10 +14,13 @@ import { IS_STAGE } from '../live/page';
 
 /**
  * Màn hình live 1080x1920, chất tranh sơn mài: nền sơn đen nâu, viền thếp vàng, tỉnh sáng màu son / vàng / ngọc.
- * Chừa 255px dưới cùng cho giao diện TikTok.
+ * Bố cục: bản đồ chữ S to gần hết khung là nhân vật chính. Thẻ đặt vào chỗ trống quanh chữ S:
+ * "Vừa gọi tên quê" ở khoảng trống bên trái (vùng Lào), cột phải (Sắp ghé, dòng chạy, quà, Bục quê nhà, Người giữ lửa quê).
+ * Góc dưới bên trái là chỗ comment của TikTok: chỉ có đất liền miền Nam, không đặt thẻ.
  */
 export function GameStage({ game }: { game: GameState }) {
   const [pin, setPin] = useState<{ v: Visit; at: [number, number] } | null>(null);
+  const [big, setBig] = useState<{ id: number; name: string } | null>(null);
   const [spark, setSpark] = useState<{ id: number; from: [number, number]; to: [number, number] } | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const calledAvRef = useRef<HTMLDivElement>(null);
@@ -33,11 +36,12 @@ export function GameStage({ game }: { game: GameState }) {
       return;
     }
     const to: [number, number] = [at[0], at[1] + MAP_TOP];
-    setSpark({ id: v.id, from: centerIn(stageRef.current, calledAvRef.current) ?? [845, 440], to });
+    setSpark({ id: v.id, from: centerIn(stageRef.current, calledAvRef.current) ?? [155, 990], to });
     playSpark(SPARK_MS);
     setTimeout(() => {
       if (latest.current !== v.id) return;
       setPin({ v, at });
+      setBig({ id: v.id, name: v.spot ? v.spot.name : (v.pid && PROVINCE_BY_ID.get(v.pid)?.name) || '' });
       if (v.kind === 'gift' && game.giftFx) playGift(GAME.giftTier(v.xu));
     }, SPARK_MS);
     setTimeout(() => latest.current === v.id && setSpark(null), SPARK_MS + 600); // loé xong thì tắt
@@ -84,9 +88,24 @@ export function GameStage({ game }: { game: GameState }) {
       </div>
 
       <div className="map-box">
-        <VietnamMap palette={theme.lit} lit={game.lit} visiting={game.visiting} lightDelayMs={SPARK_MS} onArrive={onArrive} />
+        <VietnamMap palette={theme.lit} lit={game.lit} heat={game.heat} visiting={game.visiting} lightDelayMs={SPARK_MS} onArrive={onArrive} />
       </div>
       <div className="map-box overlay">
+        {/* tên tỉnh to mờ dần giữa vùng bản đồ khi camera tới nơi */}
+        <AnimatePresence>
+          {big && pin?.v.id === big.id && (
+            <motion.div
+              key={big.id}
+              className="big-prov"
+              style={{ fontSize: Math.min(76, Math.floor(600 / Math.max(1, big.name.length))) }} // tên dài thì chữ nhỏ lại cho vừa 430px
+              initial={{ opacity: 0, scale: 1.25 }}
+              animate={{ opacity: [0, 0.9, 0.9, 0], scale: [1.25, 1, 1, 0.96] }}
+              transition={{ duration: 2.4, times: [0, 0.15, 0.6, 1] }}
+            >
+              {big.name}
+            </motion.div>
+          )}
+        </AnimatePresence>
         <AnimatePresence>
           {pin && (
             <motion.div key={pin.v.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
@@ -94,38 +113,30 @@ export function GameStage({ game }: { game: GameState }) {
             </motion.div>
           )}
         </AnimatePresence>
-        <Ticker game={game} hidden={!!visitingId} />
       </div>
 
-      <Called v={game.called} avRef={calledAvRef} title={L.called} />
-
-      <div className="panel gifts">
-        <h3>{L.gifts}</h3>
-        {GAME.giftTable.map(([k, v]) => (
-          <div key={k} className="g-row">
-            <span>{k}</span>
-            <b>{v}</b>
-          </div>
-        ))}
-      </div>
-
-      <div className="bottom">
+      <div className="side">
+        <Upcoming names={game.upcoming} />
+        <Ticker game={game} />
+        <GiftStrip title={L.gifts} />
         <Podium top={game.top} title={L.podium} />
         <div className="panel champ">
           <h3>{L.champ}</h3>
           {game.champion ? (
-            <>
-              <Avatar user={game.champion} size={104} className="champ-av" />
-              <div className="c-name">{game.champion.name}</div>
-              <div className="c-sub">
-                góp {game.champion.pts.toLocaleString('vi-VN')} điểm
+            <div className="champ-body">
+              <Avatar user={game.champion} size={84} className="champ-av" />
+              <div className="champ-txt">
+                <div className="c-name">{game.champion.name}</div>
+                <div className="c-sub">góp {game.champion.pts.toLocaleString('vi-VN')} điểm</div>
               </div>
-            </>
+            </div>
           ) : (
-            <div className="empty">Ai góp nhiều điểm nhất cho quê trong vòng sẽ lên đây</div>
+            <div className="empty">Góp nhiều điểm nhất cho quê là lên đây</div>
           )}
         </div>
       </div>
+      <Called v={game.called} avRef={calledAvRef} title={L.called} />
+      <FinalCountdown phase={game.phase} />
 
       <AnimatePresence>{spark && <Spark key={spark.id} from={spark.from} to={spark.to} />}</AnimatePresence>
 
@@ -142,7 +153,7 @@ export function GameStage({ game }: { game: GameState }) {
   );
 }
 
-const MAP_TOP = 310; // .map-box top trong khung 1080x1920
+const MAP_TOP = 316; // .map-box top trong khung 1080x1920
 const SPARK_MS = 750; // đốm sáng bay bao lâu; tỉnh sáng đúng lúc đốm chạm tới
 
 /** Tâm của phần tử con, tính theo toạ độ khung 1080x1920 (khung có thể đang thu nhỏ) */
@@ -187,15 +198,75 @@ function Spark({ from, to }: { from: [number, number]; to: [number, number] }) {
 }
 
 function Clock({ phase }: { phase: string }) {
+  const s = useSecondsLeft();
+  return (
+    <div className={`chip clock${phase === 'play' && s <= 10 ? ' hot' : ''}`}>
+      {String(Math.floor(s / 60)).padStart(2, '0')}:{String(s % 60).padStart(2, '0')}
+    </div>
+  );
+}
+
+/** 10 giây cuối vòng: số đếm to nháy đỏ trên đầu bản đồ, giục cả phòng kéo quê lên bục */
+function FinalCountdown({ phase }: { phase: string }) {
+  const s = useSecondsLeft();
+  const on = phase === 'play' && s <= 10 && s > 0;
+  return (
+    <AnimatePresence>
+      {on && (
+        <motion.div className="final" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.b key={s} initial={{ scale: 1.6, opacity: 0.4 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.35 }}>
+            {s}
+          </motion.b>
+          <span>Còn {s} giây, quê nào vượt lên?</span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function useSecondsLeft() {
   const [ms, setMs] = useState(() => roundClock().remainMs);
   useEffect(() => {
     const t = setInterval(() => setMs(roundClock().remainMs), 250);
     return () => clearInterval(t);
   }, []);
-  const s = Math.ceil(ms / 1000);
+  return Math.ceil(ms / 1000);
+}
+
+/** Tỉnh đang xếp hàng chờ ghé: người vừa comment thấy quê mình sắp tới lượt */
+function Upcoming({ names }: { names: string[] }) {
   return (
-    <div className={`chip clock${phase === 'play' && s <= 10 ? ' hot' : ''}`}>
-      {String(Math.floor(s / 60)).padStart(2, '0')}:{String(s % 60).padStart(2, '0')}
+    <div className="upcoming">
+      <span className="up-lbl">Sắp ghé</span>
+      {names.length ? (
+        names.map((n, i) => (
+          <span key={`${n}${i}`} className="up-name">
+            {n}
+          </span>
+        ))
+      ) : (
+        <span className="up-empty">gõ tên quê để xếp hàng</span>
+      )}
+    </div>
+  );
+}
+
+/** Bảng điểm quà thu thành 1 dòng, lần lượt đổi mức mỗi 2,5 giây */
+function GiftStrip({ title }: { title: string }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((x) => (x + 1) % GAME.giftTable.length), 2500);
+    return () => clearInterval(t);
+  }, []);
+  const [k, v] = GAME.giftTable[i];
+  return (
+    <div className="gift-strip">
+      <span className="gs-lbl">{title}</span>
+      <AnimatePresence mode="wait">
+        <motion.span key={i} className="gs-row" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.25 }}>
+          {k} <b>{v}</b>
+        </motion.span>
+      </AnimatePresence>
     </div>
   );
 }
@@ -207,13 +278,13 @@ function Called({ v, avRef, title }: { v: Visit | null; avRef: React.RefObject<H
       {v ? (
         <motion.div key={v.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="called-body">
           <div ref={avRef} className="called-av-wrap">
-            <Avatar user={v.user} size={112} className="called-av" />
+            <Avatar user={v.user} size={136} className="called-av" />
           </div>
           <div className="c-name">{v.user.name}</div>
           <div className="c-sub">
             {v.pid ? (
               <>
-                gọi tên <b>{PROVINCE_BY_ID.get(v.pid)?.name}</b>
+                gọi tên <b>{v.spot?.name ?? PROVINCE_BY_ID.get(v.pid)?.name}</b>
               </>
             ) : (
               <>tặng {v.xu} xu, chưa chọn quê</>
@@ -227,12 +298,12 @@ function Called({ v, avRef, title }: { v: Visit | null; avRef: React.RefObject<H
   );
 }
 
-function Ticker({ game, hidden }: { game: GameState; hidden: boolean }) {
+function Ticker({ game }: { game: GameState }) {
   return (
-    <div className="ticker" style={{ opacity: hidden ? 0 : 1 }}>
-      {game.feed.slice(-5).reverse().map((f) => (
+    <div className="ticker">
+      {game.feed.slice(-4).reverse().map((f) => (
         <div key={f.id} className={`tk${f.gift ? ' gift' : ''}`}>
-          <Avatar user={f} size={40} />
+          <Avatar user={f} size={44} />
           <span>
             <b>{f.name}</b> {f.text}
           </span>
@@ -242,25 +313,30 @@ function Ticker({ game, hidden }: { game: GameState; hidden: boolean }) {
   );
 }
 
+/** Bục quê nhà dạng cột 2 - 1 - 3: cột cao theo điểm, khung cao cố định nên cột không bao giờ tràn ra ngoài */
 function Podium({ top, title }: { top: GameState['top']; title: string }) {
   const max = top[0]?.pts || 1;
   return (
     <div className="panel podium">
       <h3>{title}</h3>
-      <div className="cols">
-        {[1, 0, 2].map((i) => {
-          const r = top[i];
-          return (
-            <div key={i} className={`col r${i + 1}`}>
-              <div className="p-name">{r?.name ?? '…'}</div>
-              <div className="p-pts">{r ? `${r.pts.toLocaleString('vi-VN')} điểm` : ''}</div>
-              <div className="p-bar" style={{ height: r ? 60 + 150 * Math.sqrt(r.pts / max) : 44 }}>
-                {i + 1}
+      {top.length ? (
+        <div className="cols">
+          {[1, 0, 2].map((i) => {
+            const r = top[i];
+            return (
+              <div key={i} className={`col r${i + 1}`}>
+                <div className="p-name">{r ? r.name.replace(/^TP\.\s*/, '') : '…'}</div>
+                <div className="p-pts">{r ? r.pts.toLocaleString('vi-VN') : ''}</div>
+                <div className="p-bar" style={{ height: r ? 46 + 104 * Math.sqrt(r.pts / max) : 30 }}>
+                  {i + 1}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="empty big">Quê nào lên bục đầu tiên?</div>
+      )}
     </div>
   );
 }

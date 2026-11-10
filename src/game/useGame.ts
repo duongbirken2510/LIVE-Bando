@@ -483,6 +483,10 @@ export function useGame() {
     // tỉnh đang chờ ghé thì chưa sáng, đợi camera tới mới thắp
     lit: rank.filter((r) => !waiting.has(r.id)).map((r) => r.id),
     litCount: rank.length,
+    // độ đậm màu tỉnh theo điểm (căn bậc 2 cho tỉnh ít điểm vẫn thấy rõ)
+    heat: Object.fromEntries(rank.map((r) => [r.id, Math.sqrt(r.pts / (rank[0]?.pts || 1))])) as Record<string, number>,
+    // tỉnh đang xếp hàng chờ ghé, không trùng, tối đa 4
+    upcoming: [...new Set(g.queue.filter((q) => q.pid).map((q) => q.spot?.name ?? PROVINCE_BY_ID.get(q.pid!)!.name))].slice(0, 4),
     visiting: g.visiting,
     called: g.called,
     feed: g.feed,
