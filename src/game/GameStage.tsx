@@ -269,7 +269,7 @@ function HeartBar({ hearts, lit }: { hearts: number; lit: boolean }) {
   return (
     <div className={`heart-bar${lit ? ' full' : ''}`}>
       <div className="hb-top">
-        <span>❤ Tim thắp sáng cả nước</span>
+        <span>❤ Thắp sáng cả nước</span>
       </div>
       <div className="hb-track">
         <div className="hb-fill" style={{ width: `${pct}%` }} />

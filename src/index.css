@@ -660,6 +660,8 @@ body,
   font-weight: 800;
   color: var(--accent);
   white-space: nowrap;
+  overflow: hidden; /* chữ dài (đổi giao diện font khác) cũng không tràn khỏi khung */
+  text-overflow: ellipsis;
 }
 .hb-track {
   position: relative;
