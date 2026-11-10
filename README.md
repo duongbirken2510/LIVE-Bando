@@ -114,6 +114,18 @@ Sau đó làm tiếp từ bước 4. Trang điều khiển ở `http://localhost
 - `src/game/provinces.ts`: cách gọi tỉnh, tên đảo, thành phố.
 - `src/game/themes.ts`: 20 giao diện màu.
 
+## Lưu ý, cảnh báo và trách nhiệm
+
+Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dùng cho buổi live của mình, đọc kỹ mấy điều sau:
+
+1. **Bản đồ là hình mô phỏng.** Hoàng Sa, Trường Sa được vẽ thu nhỏ, đặt gần bờ hơn thực tế cho vừa khung hình. Ranh giới 34 tỉnh, thành lấy từ bộ dữ liệu cộng đồng, không phải bản đồ chính thức của nhà nước. Trên màn hình đã có dòng ghi "Hình ảnh mô phỏng, vẽ thu nhỏ, không theo tỷ lệ", đừng xoá dòng này. Ai sửa bản đồ thì phải giữ đủ Hoàng Sa, Trường Sa.
+2. **Không dùng game để trao thưởng.** Game chỉ cộng điểm cho quê, không có giải thưởng. Nếu bạn tự đặt thêm thưởng tiền hay quà cho người đứng top hoặc tặng nhiều nhất, việc đó có thể bị coi là khuyến mại hoặc trò chơi có thưởng theo luật, phải làm thủ tục riêng, và bạn tự chịu trách nhiệm.
+3. **Tiền quà là thu nhập của bạn.** Quà người xem tặng là thu nhập của người live. Việc kê khai, nộp thuế thì bạn tự tìm hiểu theo quy định hiện hành.
+4. **Kết nối và giọng đọc dùng công cụ không chính thức.** Game nối vào phòng live và tạo giọng MC qua các công cụ bên ngoài, không phải công cụ chính thức của nền tảng hay của Microsoft, Google. Các công cụ này có thể ngừng chạy bất cứ lúc nào. Rủi ro với tài khoản của bạn (bị hạn chế, khoá tính năng) bạn tự cân nhắc.
+5. **Bộ lọc từ tục không bắt được hết.** Game đã chặn tên và comment tục, MC không bao giờ đọc nguyên văn comment. Dù vậy người xem luôn nghĩ ra cách viết mới, nên chủ kênh vẫn phải tự để mắt và chịu trách nhiệm về nội dung buổi live của mình.
+6. **Lời MC kể về các tỉnh** (món ngon, danh thắng) được soạn theo hiểu biết chung, có thể chưa chuẩn hết. Thấy chỗ nào sai thì sửa trong `src/game/provinceTalk.ts`.
+7. **Dùng game là bạn tự chịu trách nhiệm.** Game được chia sẻ nguyên trạng, không kèm cam kết gì. Tác giả không chịu trách nhiệm về thiệt hại hay rắc rối pháp lý phát sinh khi bạn sử dụng. Mấy điều trên là tự tìm hiểu, không phải tư vấn pháp lý. Ai live với mục đích kinh doanh thì nên hỏi luật sư.
+
 ## Nguồn bản đồ
 
 Ranh giới 34 tỉnh, thành (từ 2025) lấy từ [nguyenduy1133/Free-GIS-Data](https://github.com/nguyenduy1133/Free-GIS-Data), đã rút gọn và bổ sung đảo bằng `tools/prep-map.mjs`, `tools/add-islands.mjs`.
