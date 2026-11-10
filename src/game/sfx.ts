@@ -31,6 +31,36 @@ function tone(c: AudioContext, out: AudioNode, freq: number, start: number, dur:
   o.stop(start + dur + 0.02);
 }
 
+/** Âm thanh quà theo mức (2-5), phát lúc đốm sáng chạm tỉnh: xu leng keng -> kèn ngắn -> pháo nổ -> kèn lớn + pháo */
+export function playGift(tier: number, force = false) {
+  if (tier < 2 || (!force && !(IS_STAGE && voice.enabled && sound.on))) return;
+  try {
+    const c = audio();
+    const out = c.createGain();
+    out.gain.value = VOLUME * (tier >= 4 ? 1.2 : 1);
+    out.connect(c.destination);
+    const t = c.currentTime + 0.05;
+    // xu rơi leng keng: càng to càng nhiều tiếng
+    const coins = [0, 0, 6, 10, 14, 20][tier];
+    for (let i = 0; i < coins; i++) tone(c, out, 2400 + Math.random() * 1600, t + i * 0.07 + Math.random() * 0.04, 0.12, 'square', 0.05);
+    // kèn chào: rê - fa# - la - rê (lên quãng tám)
+    if (tier >= 3) {
+      const notes = tier === 5 ? [587.3, 740, 880, 1174.7, 1480, 1760] : [587.3, 740, 880, 1174.7];
+      notes.forEach((f, i) => tone(c, out, f, t + 0.1 + i * 0.12, i === notes.length - 1 ? 0.9 : 0.2, 'sawtooth', 0.09));
+    }
+    // pháo nổ: tiếng trầm "bụp" + tiếng rít
+    const pops = [0, 0, 0, 0, 3, 8][tier];
+    for (let i = 0; i < pops; i++) {
+      const at = t + 0.3 + i * (tier === 5 ? 0.45 : 0.35);
+      tone(c, out, 900, at - 0.25, 0.25, 'sine', 0.06, 2400);
+      tone(c, out, 120, at, 0.35, 'sine', 0.5, 40);
+      for (let k = 0; k < 4; k++) tone(c, out, 3000 + Math.random() * 2000, at + 0.05 + k * 0.05, 0.08, 'triangle', 0.05);
+    }
+  } catch {
+    // không có Web Audio: bỏ qua
+  }
+}
+
 /** Đốm sáng: tiếng vút lấp lánh trong lúc bay (flyMs), chạm tỉnh thì chuông "keng" */
 export function playSpark(flyMs: number, force = false) {
   if (!force && !(IS_STAGE && voice.enabled && sound.on)) return;

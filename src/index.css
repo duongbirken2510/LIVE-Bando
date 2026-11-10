@@ -164,6 +164,11 @@ body,
   position: absolute;
   inset: 0;
 }
+/* lớp ghim + dòng chạy: nổi trên các khung để ghim gần mép phải không bị che */
+.map-box.overlay {
+  z-index: 4;
+  pointer-events: none;
+}
 .prov {
   fill: var(--land);
   stroke: var(--map-line);
@@ -318,6 +323,13 @@ body,
     opacity: 0;
   }
 }
+.pin-sub {
+  margin: -6px 0 10px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--label);
+  text-shadow: 0 0 4px var(--bg1), 0 2px 0 var(--bg1);
+}
 .pin-av {
   border: 6px solid var(--pearl);
   outline: 4px solid var(--accent);
@@ -389,6 +401,90 @@ body,
 }
 .called-av-wrap {
   border-radius: 50%;
+}
+
+/* ---- Hiệu ứng quà theo mức xu ---- */
+.giftfx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  overflow: hidden;
+}
+.gfx-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, #fff, color-mix(in srgb, var(--accent) 60%, transparent) 40%, transparent 75%);
+}
+.gfx-coin {
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  color: #7a4b00;
+  background: radial-gradient(circle at 35% 30%, #fff6c4, #ffd23f 45%, #c98a00);
+  border: 2px solid #a86f00;
+}
+.gfx-fw {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.gfx-fw span {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px currentColor;
+}
+.gfx-banner {
+  position: absolute;
+  left: 50%;
+  top: 1150px; /* phía dưới bản đồ, trên bục: ghim luôn mọc lên trên điểm cắm nên chỗ này trống */
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 30px 16px 16px;
+  border-radius: calc(var(--r) * 1.5);
+  border: 3px solid var(--accent);
+  background: linear-gradient(135deg, var(--accent2), color-mix(in srgb, var(--accent2) 55%, #000));
+  color: #fff;
+  white-space: nowrap;
+}
+.gfx-banner.t5 {
+  top: 1110px;
+  padding: 26px 44px 26px 26px;
+  border-width: 5px;
+  background: linear-gradient(135deg, var(--accent2), var(--head1));
+}
+.gb-name {
+  font-size: 34px;
+  font-weight: 900;
+  max-width: 560px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.t5 .gb-name {
+  font-size: 48px;
+}
+.gb-text {
+  font-size: 26px;
+  font-weight: 600;
+}
+.gb-pts {
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--accent);
+}
+.t5 .gb-pts {
+  font-size: 56px;
 }
 
 /* ---- Khung ---- */

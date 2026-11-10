@@ -14,6 +14,7 @@ export const GAME = {
 
   // Giọng MC: 'F' = nữ HoaiMy (chủ kênh chọn), 'M' = nam NamMinh
   voice: 'F' as 'M' | 'F',
+  voiceRate: 1.1, // tốc độ đọc mặc định (chủ kênh chốt 1.1); nút tốc độ ở trang điều khiển vẫn đổi được
 
   // Chữ trên màn hình: mặc định, chủ kênh sửa được ở trang điều khiển (khung "Chữ trên màn hình & âm thanh")
   labels: {
@@ -52,6 +53,12 @@ export const GAME = {
     ['Gọi tên quê', '+1'],
   ],
 
+  // ---------- Hiệu ứng quà: tăng dần theo số xu ----------
+  // tier 1: đốm sáng | 2: + mưa xu | 3: + mưa xu dày, băng rôn | 4: + pháo hoa trên tỉnh, loé sáng | 5: pháo hoa cả màn hình, băng rôn lớn, kèn
+  giftTier: (xu: number) => (xu >= 1000 ? 5 : xu >= 100 ? 4 : xu >= 30 ? 3 : xu >= 5 ? 2 : 1),
+  giftTierDwellMs: [0, 3000, 3500, 4500, 6000, 8000], // đứng lại bao lâu theo tier (chỉ số = tier)
+  giftTierNames: ['', 'Quà nhỏ (1–4 xu)', 'Mưa xu (5–29 xu)', 'Băng rôn (30–99 xu)', 'Pháo hoa (100–999 xu)', 'Đại tiệc (từ 1.000 xu)'],
+
   // ---------- Bản đồ ghé thăm ----------
   priorityGiftCoins: 30, // quà từ 30 xu: "đọc trước", chen lên đầu hàng ghé thăm
   revisitMs: 30_000, // 1 tỉnh vừa ghé thì 30 giây sau mới ghé lại (trừ quà lớn)
@@ -68,6 +75,14 @@ export const GAME = {
     (name: string, prov: string) => `Bạn ${name} gọi ${prov}, mình ghé liền nè.`,
   ],
   calledWithOthers: (name: string, prov: string, others: number) => `Bạn ${name} với ${others} người nữa đang gọi ${prov}.`,
+  spotLine: (spot: string, prov: string, isCity: boolean) =>
+    isCity ? `${spot} thuộc ${prov} đó cả nhà.` : `Đảo ${spot} của ${prov}, biển xanh đẹp lắm cả nhà.`,
+  // đảo xa (Hoàng Sa, Trường Sa) và đảo nhỏ: nhiều bạn đi nghĩa vụ ở đó, xa nhà
+  farSpotLine: (spot: string, prov: string) => `${spot} thuộc ${prov}. | Gửi lời thương tới các anh đang giữ đảo, cả nước luôn nhớ các anh.`,
+  soldierLines: [
+    'Ai đang đi nghĩa vụ ngoài đảo thì giữ sức khỏe nha, ở nhà ai cũng nhớ.',
+    'Gửi lời thương tới các bạn đang giữ đảo, xa nhà mà vẫn vững vàng.',
+  ],
   giftLine: (name: string, gift: string, prov: string, pts: number) =>
     `Cảm ơn bạn ${name} tặng ${gift} cho ${prov}. | ${prov} được cộng ${pts} điểm.`,
   giftNoHome: (name: string, gift: string) =>

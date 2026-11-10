@@ -6,7 +6,8 @@ import { PROVINCE_BY_ID } from './provinces';
 import { VietnamMap, VisitPin } from './VietnamMap';
 import { Avatar } from './Avatar';
 import { themeById, themeVars } from './themes';
-import { playSpark, sound } from './sfx';
+import { playGift, playSpark, sound } from './sfx';
+import { GiftFx } from './GiftFx';
 import { setMusicVolume, startMusic, stopMusic } from './music';
 import { voice } from '../live/voice';
 import { IS_STAGE } from '../live/page';
@@ -34,7 +35,11 @@ export function GameStage({ game }: { game: GameState }) {
     const to: [number, number] = [at[0], at[1] + MAP_TOP];
     setSpark({ id: v.id, from: centerIn(stageRef.current, calledAvRef.current) ?? [845, 440], to });
     playSpark(SPARK_MS);
-    setTimeout(() => latest.current === v.id && setPin({ v, at }), SPARK_MS);
+    setTimeout(() => {
+      if (latest.current !== v.id) return;
+      setPin({ v, at });
+      if (v.kind === 'gift' && game.giftFx) playGift(GAME.giftTier(v.xu));
+    }, SPARK_MS);
     setTimeout(() => latest.current === v.id && setSpark(null), SPARK_MS + 600); // loé xong thì tắt
   };
   const fansHere = visitingId ? (game.fans[visitingId] ?? 0) : Object.values(game.fans).reduce((a, b) => a + b, 0);
@@ -123,6 +128,14 @@ export function GameStage({ game }: { game: GameState }) {
       </div>
 
       <AnimatePresence>{spark && <Spark key={spark.id} from={spark.from} to={spark.to} />}</AnimatePresence>
+
+      <AnimatePresence>
+        {pin && pin.v.kind === 'gift' && game.giftFx && (
+          <motion.div key={`g${pin.v.id}`} initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.4 } }}>
+            <GiftFx v={pin.v} at={[pin.at[0], pin.at[1] + MAP_TOP]} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <RoundBanner game={game} />
     </div>

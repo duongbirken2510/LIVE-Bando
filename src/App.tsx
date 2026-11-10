@@ -84,6 +84,12 @@ function TextAndSound({ game }: { game: GameState }) {
     const u = fakeUser();
     await emitTest('chat', { ...u, comment: provComment() });
   };
+  // 1 người giả chọn quê rồi tặng quà đúng số xu: thấy đủ đốm sáng + hiệu ứng mức đó + tiếng trên stage
+  const simulateGift = async (xu: number) => {
+    const u = fakeUser();
+    await emitTest('chat', { ...u, comment: provComment() });
+    setTimeout(() => emitTest('gift', { ...u, giftName: xu >= 1000 ? 'Vương miện' : xu >= 100 ? 'Xe thể thao' : 'Hoa hồng', giftId: 1, diamondCount: xu, repeatCount: 1 }), 600);
+  };
   const previewMusic = () => {
     setPreviewing(true);
     startMusic(game.music.volume / 100);
@@ -127,6 +133,7 @@ function TextAndSound({ game }: { game: GameState }) {
       <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl bg-slate-800/60 p-3 text-sm">
         <Switch on={game.soundOn} onChange={(on) => setPrefs({ soundOn: on ? '1' : '0' })} label="Âm thanh toàn bộ" />
         <Switch on={game.music.on} onChange={(on) => setPrefs({ musicOn: on ? '1' : '0' })} label="Nhạc nền" />
+        <Switch on={game.giftFx} onChange={(on) => setPrefs({ giftFx: on ? '1' : '0' })} label="Hiệu ứng quà" />
         <label className="flex items-center gap-2">
           Âm lượng nhạc
           <input
@@ -152,6 +159,14 @@ function TextAndSound({ game }: { game: GameState }) {
         <button className={btn} onClick={previewMusic} disabled={previewing}>
           🎵 {previewing ? 'Đang phát 8 giây...' : 'Nghe thử nhạc nền (máy này)'}
         </button>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+        <span className="text-slate-400">Thử hiệu ứng quà:</span>
+        {[3, 10, 50, 199, 1000].map((xu, i) => (
+          <button key={xu} className={btn} title={GAME.giftTierNames[i + 1]} onClick={() => simulateGift(xu)}>
+            {['🌹', '🪙', '🎉', '🎆', '👑'][i]} {xu.toLocaleString('vi-VN')} xu
+          </button>
+        ))}
       </div>
       <p className="mt-2 text-xs text-slate-500">
         Mô phỏng: 1 người giả gọi tên 1 tỉnh, stage chạy đủ đốm sáng, tích điểm, giọng MC và âm thanh (nếu đang bật). Nút "máy này" chỉ phát ở loa máy tính, không lên live.

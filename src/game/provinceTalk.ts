@@ -190,14 +190,21 @@ export const VIET_PRAISE = [
 ];
 
 const pick = <T,>(a: readonly T[]) => a[Math.floor(Math.random() * a.length)];
-const pickN = <T,>(a: readonly T[], n: number) => [...a].sort(() => Math.random() - 0.5).slice(0, n);
 
-/** "Hải Phòng có bánh đa cua, nem cua bể, có Cát Bà, Đồ Sơn. | Người Hải Phòng ..." */
+const PRAISE_CHANCE = 0.2; // 1/5 lượt mới khen người, nghe mới không nhàm
+
+/** Ngắn gọn: 1-2 đặc sản / danh thắng, thỉnh thoảng thêm 1 câu khen người */
 export function talkAbout(pid: string, prov: string) {
   const t = PROVINCE_TALK[pid];
   if (!t) return '';
-  const [f1, f2] = pickN(t.foods, 2);
-  const [p1, p2] = pickN(t.places, 2);
-  const praise = Math.random() < 0.3 ? pick(VIET_PRAISE) : pick(t.people);
-  return `${prov} có ${f1}, ${f2}, lại có ${p1} với ${p2}. | ${praise}`;
+  const food = pick(t.foods);
+  const r = Math.random();
+  let line =
+    r < 0.35
+      ? `Nhắc tới ${prov} là nhớ ${food}.`
+      : r < 0.6
+        ? `Về ${prov} nhớ ghé ${pick(t.places)} nha.`
+        : `${prov} có ${food}, lại có ${pick(t.places)}.`;
+  if (Math.random() < PRAISE_CHANCE) line += ` | ${Math.random() < 0.3 ? pick(VIET_PRAISE) : pick(t.people)}`;
+  return line;
 }

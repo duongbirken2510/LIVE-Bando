@@ -116,6 +116,7 @@ export function VietnamMap({
   const worldRef = useRef<SVGGElement>(null);
   const view = useRef<ZoomView>(HOME);
   const [arrived, setArrived] = useState<Visit | null>(null);
+  const [burstAt, setBurstAt] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     void mapData.then((fc) => setData(prepare(fc)));
@@ -135,12 +136,28 @@ export function VietnamMap({
     if (!data) return;
     camera(view.current);
     const p = target ? data.byId.get(target) : null;
+    const spot = visiting?.spot;
     let to = HOME;
-    if (p) {
+    let anchor: [number, number] | null = p ? p.c : null; // điểm ghim / đốm sáng rơi vào (toạ độ bản đồ)
+    let fixedAt: [number, number] | null = null; // đảo xa: ghim vào khung Hoàng Sa / Trường Sa
+    if (p && spot?.far) {
+      // cắm vào cụm đảo vẽ trên bản đồ chính (camera ở cả nước nên toạ độ bản đồ = toạ độ màn hình)
+      const box = data.onMain[spot.pid === 'da-nang' ? 'hoang-sa' : 'truong-sa'].box;
+      anchor = [(box[0][0] + box[1][0]) / 2, (box[0][1] + box[1][1]) / 2];
+      fixedAt = [Math.min(anchor[0], 560), anchor[1]]; // lệch trái chút cho tên đảo không chạm cột khung bên phải
+    } else if (p && spot) {
+      const [x, y] = data.at(spot.lon, spot.lat);
+      const h = Math.abs(data.at(spot.lon, spot.lat - spot.span / 2)[1] - data.at(spot.lon, spot.lat + spot.span / 2)[1]);
+      const size = Math.max(h * 1.6, MAP_H / 14);
+      // đặt điểm ghim thấp hơn giữa khung ~90px để chữ tên đảo phía trên không đè thanh "Đang ghé thăm"
+      to = [x, y - (90 * size) / MAP_H, size];
+      anchor = [x, y];
+    } else if (p) {
       const [[x0, y0], [x1, y1]] = p.b;
       const size = Math.max(y1 - y0, ((x1 - x0) * MAP_H) / FOCUS_W) * 1.55;
       to = [(x0 + x1) / 2, (y0 + y1) / 2 + size * 0.06, Math.max(size, MAP_H / 11)];
     }
+    setBurstAt(anchor);
     setArrived(null);
     onArrive?.(null, null);
     const i = interpolateZoom(view.current, to);
@@ -154,7 +171,7 @@ export function VietnamMap({
       const cam = camera(i(e));
       if (t < 1) raf = requestAnimationFrame(step);
       else if (p && visiting) {
-        onArrive?.(visiting, [p.c[0] * cam.k + cam.x, p.c[1] * cam.k + cam.y]);
+        onArrive?.(visiting, fixedAt ?? [anchor![0] * cam.k + cam.x, anchor![1] * cam.k + cam.y]);
         light = window.setTimeout(() => setArrived(visiting), lightDelayMs);
       }
     };
@@ -209,9 +226,7 @@ export function VietnamMap({
               </g>
             );
           })}
-          {arrived?.pid && (
-            <circle key={arrived.id} className="burst" cx={data.byId.get(arrived.pid)!.c[0]} cy={data.byId.get(arrived.pid)!.c[1]} />
-          )}
+          {arrived?.pid && burstAt && <circle key={arrived.id} className="burst" cx={burstAt[0]} cy={burstAt[1]} />}
           {data.provs
             .filter((p) => on(p.id) && arrived?.pid !== p.id)
             .map((p) => (
@@ -264,7 +279,8 @@ export function VisitPin({ v, at }: { v: Visit; at: [number, number] }) {
   return (
     <div className="pin" style={{ left: at[0], top: Math.max(at[1], 330) }}>
       {gained > 0 && <div className="pin-points">+{gained.toLocaleString('vi-VN')} điểm</div>}
-      <div className="pin-prov">{v.pid && provName(v.pid)}</div>
+      <div className="pin-prov">{v.spot ? v.spot.name : v.pid && provName(v.pid)}</div>
+      {v.spot && v.pid && <div className="pin-sub">thuộc {provName(v.pid)}</div>}
       <Avatar user={v.user} size={124} className="pin-av" />
       <div className="pin-name">{v.user.name}</div>
       {v.kind === 'gift' ? (

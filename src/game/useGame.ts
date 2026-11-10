@@ -7,12 +7,13 @@ import { NameBatcher } from '../live/scoreboard';
 import { detectWish, GiftThanker, makePicker, OncePerPerson, RecentPeople, WishLimiter } from '../live/chatter';
 import { IS_STAGE } from '../live/page';
 import { GAME } from './config';
-import { findProvince, PROVINCE_BY_ID } from './provinces';
+import { findProvince, findSpot, PROVINCE_BY_ID, type Spot } from './provinces';
 import { talkAbout } from './provinceTalk';
 
 const pick = makePicker();
 
 voice.defaultWho = GAME.voice; // server gửi lại giọng đã chọn (setVoice) ngay khi trang nối vào
+voice.rate = GAME.voiceRate;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export interface Person {
@@ -32,6 +33,7 @@ export interface Visit {
   others: number; // số người khác cùng gọi tỉnh này lúc đang chờ
   pri: boolean; // quà lớn: chen lên đầu hàng
   id: number;
+  spot?: Spot | null; // gõ tên đảo (Phú Quốc, Côn Đảo...): camera bay thẳng tới đảo
 }
 
 export interface FeedItem {
@@ -234,7 +236,7 @@ export function useGame() {
       .sort((a, b) => b.pts - a.pts || a.at - b.at); // bằng điểm: quê đạt mức điểm đó trước xếp trên
 
   const resetRound = () => {
-    g.queue.length = 0;
+    g.queue = g.queue.filter((q) => q.kind === 'gift'); // lượt quà giữ lại sang vòng mới, người tặng không mất khoảnh khắc
     g.visiting = null;
     for (const p of g.players.values()) Object.assign(p, { home: null, pts: 0, likes: 0, pendingXu: 0 });
     g.lastVisit.clear();
@@ -269,7 +271,19 @@ export function useGame() {
         pl.pendingXu = 0;
       }
       addFan(prov.id, e.username);
-      enqueue({ pid: prov.id, user: { username: e.username, name, avatar: pl.avatar }, kind: 'comment', xu: 0, pts: 0, gift: '', others: 0, pri: false, id: ++seq });
+      const spot = findSpot(e.comment);
+      enqueue({
+        pid: prov.id,
+        user: { username: e.username, name, avatar: pl.avatar },
+        kind: 'comment',
+        xu: 0,
+        pts: 0,
+        gift: '',
+        others: 0,
+        pri: false,
+        id: ++seq,
+        spot: spot?.pid === prov.id ? spot : null,
+      });
     },
 
     onGift: (e) => {
@@ -376,7 +390,7 @@ export function useGame() {
         const top = ranking().slice(0, 3);
         const champ = champion();
         g.summary = { no: g.round, top, champion: champ };
-        g.queue.length = 0;
+        g.queue = g.queue.filter((q) => q.kind === 'gift'); // bỏ lượt gọi tên, giữ lượt quà cho vòng sau
         g.visiting = null;
         voice.say(GAME.summary(g.round, top, champ && speakableName(champ.name), labelsOf(g.prefs).champ), true);
       } else if (c.phase === 'open' || g.phase === 'summary') {
@@ -416,7 +430,8 @@ export function useGame() {
         draw();
         voice.say(lineFor(v, g.queue.length), true);
         const start = Date.now();
-        await sleep(v.pri ? GAME.giftDwellMs : GAME.dwellMs);
+        // quà càng to đứng càng lâu cho người tặng thấy hiệu ứng của mình
+        await sleep(v.kind === 'gift' ? Math.max(GAME.dwellMs, GAME.giftTierDwellMs[GAME.giftTier(v.xu)]) : GAME.dwellMs);
         while (alive && voice.busy && Date.now() - start < 15_000) await sleep(150);
         idleSince = Date.now();
       }
@@ -454,6 +469,7 @@ export function useGame() {
     prefs,
     labels: labelsOf(prefs),
     soundOn: prefs.soundOn !== '0', // công tắc "Âm thanh toàn bộ"
+    giftFx: prefs.giftFx !== '0', // công tắc "Hiệu ứng quà"
     music: {
       on: prefs.musicOn ? prefs.musicOn === '1' : GAME.musicOn,
       volume: Math.min(100, Math.max(0, Number(prefs.musicVolume ?? GAME.musicVolume) || 0)),
@@ -486,14 +502,34 @@ export function labelsOf(prefs: Record<string, string>): Labels {
   return out;
 }
 
+// 6 thành phố trực thuộc trung ương, còn lại là tỉnh
+const CITIES = new Set(['ha-noi', 'hai-phong', 'hue', 'da-nang', 'can-tho', 'tp-ho-chi-minh']);
+/** Tên để MC đọc: "TP. Hồ Chí Minh" đọc thành "Thành phố Hồ Chí Minh" */
+const spokenProv = (pid: string) => PROVINCE_BY_ID.get(pid)!.name.replace(/^TP\.\s*/, 'Thành phố ');
+/** "tỉnh Quảng Ninh", "thành phố Đà Nẵng", "Thành phố Hồ Chí Minh" */
+const provUnit = (pid: string) => {
+  const n = spokenProv(pid);
+  return n.startsWith('Thành phố') ? n : `${CITIES.has(pid) ? 'thành phố' : 'tỉnh'} ${n}`;
+};
+
 function lineFor(v: Visit, waiting: number) {
   const name = speakableName(v.user.name);
-  const prov = v.pid ? PROVINCE_BY_ID.get(v.pid)!.name : '';
+  const prov = v.pid ? spokenProv(v.pid) : '';
   if (v.kind === 'gift') return v.pid ? GAME.giftLine(name, v.gift, prov, v.pts) : GAME.giftNoHome(name, v.gift);
-  const call = v.others > 0 ? GAME.calledWithOthers(name, prov, v.others) : pick(GAME.calledLines)!(name, prov);
-  // nhắc món ngon, danh thắng, khen người ở tỉnh đó (src/game/provinceTalk.ts).
-  // Phòng đông (còn từ 3 lượt chờ) thì chỉ gọi tên cho kịp, mỗi lượt kể chuyện dài ~15 giây.
-  const talk = v.pid && waiting < GAME.talkWhenQueueBelow ? talkAbout(v.pid, prov) : '';
+  const place = v.spot?.name ?? prov; // gõ tên đảo thì gọi tên đảo
+  const call = v.others > 0 ? GAME.calledWithOthers(name, place, v.others) : pick(GAME.calledLines)!(name, place);
+  // nhắc 1-2 đặc sản / danh thắng, thỉnh thoảng khen người (src/game/provinceTalk.ts).
+  // Phòng đông (còn từ 3 lượt chờ) thì chỉ gọi tên cho kịp.
+  const quiet = !v.pid || waiting >= GAME.talkWhenQueueBelow;
+  const s = v.spot;
+  // đảo xa luôn có lời thăm các anh giữ đảo, kể cả lúc đông; đảo nhỏ thì nửa số lượt
+  const talk = s?.far
+    ? GAME.farSpotLine(s.name, provUnit(v.pid!))
+    : quiet
+      ? ''
+      : s
+        ? GAME.spotLine(s.name, provUnit(v.pid!), !!s.city) + (!s.city && Math.random() < 0.5 ? ` | ${pick(GAME.soldierLines)}` : '')
+        : talkAbout(v.pid!, prov);
   return talk ? `${call} | ${talk}` : call;
 }
 
