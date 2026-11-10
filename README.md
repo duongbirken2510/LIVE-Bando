@@ -12,3 +12,7 @@ Game TikTok LIVE: người xem gõ tên tỉnh, thành quê mình, bản đồ V
 Chưa live mà muốn thử: dùng các nút trong khung **Thử game Việt Nam đất nước ta ơi** ở trang điều khiển.
 
 Giữ cửa sổ `BAT-LIVE.bat` mở suốt buổi live. Chỉ trang stage phát tiếng; đừng mở link `?view=stage` ở chỗ khác khi đang live (sẽ bị 2 giọng).
+
+## Nguồn bản đồ
+
+Ranh giới 34 tỉnh, thành (từ 2025) lấy từ [nguyenduy1133/Free-GIS-Data](https://github.com/nguyenduy1133/Free-GIS-Data), đã rút gọn và bổ sung đảo bằng `tools/prep-map.mjs`, `tools/add-islands.mjs`.
