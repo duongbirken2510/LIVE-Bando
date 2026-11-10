@@ -414,7 +414,7 @@ export function useGame() {
           g.lastVisit.set(v.pid, Date.now());
         }
         draw();
-        voice.say(lineFor(v), true);
+        voice.say(lineFor(v, g.queue.length), true);
         const start = Date.now();
         await sleep(v.pri ? GAME.giftDwellMs : GAME.dwellMs);
         while (alive && voice.busy && Date.now() - start < 15_000) await sleep(150);
@@ -486,13 +486,14 @@ export function labelsOf(prefs: Record<string, string>): Labels {
   return out;
 }
 
-function lineFor(v: Visit) {
+function lineFor(v: Visit, waiting: number) {
   const name = speakableName(v.user.name);
   const prov = v.pid ? PROVINCE_BY_ID.get(v.pid)!.name : '';
   if (v.kind === 'gift') return v.pid ? GAME.giftLine(name, v.gift, prov, v.pts) : GAME.giftNoHome(name, v.gift);
   const call = v.others > 0 ? GAME.calledWithOthers(name, prov, v.others) : pick(GAME.calledLines)!(name, prov);
-  // nhắc món ngon, danh thắng, khen người ở tỉnh đó (src/game/provinceTalk.ts)
-  const talk = v.pid ? talkAbout(v.pid, prov) : '';
+  // nhắc món ngon, danh thắng, khen người ở tỉnh đó (src/game/provinceTalk.ts).
+  // Phòng đông (còn từ 3 lượt chờ) thì chỉ gọi tên cho kịp, mỗi lượt kể chuyện dài ~15 giây.
+  const talk = v.pid && waiting < GAME.talkWhenQueueBelow ? talkAbout(v.pid, prov) : '';
   return talk ? `${call} | ${talk}` : call;
 }
 

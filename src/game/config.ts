@@ -59,6 +59,7 @@ export const GAME = {
   dwellMs: 3000, // đứng ở mỗi tỉnh ít nhất 3 giây
   giftDwellMs: 4500, // quà lớn đứng lâu hơn cho người tặng thấy mình
   homeAfterMs: 2500, // hết người gọi 2,5 giây thì bản đồ lùi về cả nước
+  talkWhenQueueBelow: 3, // MC kể món ngon, danh thắng, khen người khi hàng chờ ít hơn 3 lượt; đông hơn thì chỉ gọi tên
 
   // ---------- Câu đọc khi ghé thăm ----------
   calledLines: [
