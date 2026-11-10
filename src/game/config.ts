@@ -141,6 +141,5 @@ export const GAME = {
   idleLines: [
     'Ai mới vào thì gõ tên tỉnh, thành quê mình, bản đồ sẽ bay tới tận nơi.',
     'Quê mình đang đứng thứ mấy rồi? Cả nhà gõ tên quê để kéo lên top nha.',
-    'Hoàng Sa, Trường Sa là của Việt Nam. Cả nhà gõ tên quê mình để thắp sáng bản đồ nha.',
   ],
 };
