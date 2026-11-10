@@ -147,6 +147,24 @@ function TextAndSound({ game }: { game: GameState }) {
           />
           <span className="w-9 text-right tabular-nums">{game.music.volume}%</span>
         </label>
+        <label className="flex items-center gap-2">
+          Tốc độ giọng đọc
+          <span className="text-xs text-slate-400">chậm</span>
+          <input
+            type="range"
+            min={0.7}
+            max={1.5}
+            step={0.05}
+            value={game.voiceRate}
+            onChange={(e) => {
+              setPrefs({ voiceRate: e.target.value });
+              sendControl('setRate', e.target.value); // trang stage đổi ngay
+            }}
+            className="accent-amber-500"
+          />
+          <span className="text-xs text-slate-400">nhanh</span>
+          <span className="w-12 text-right tabular-nums">{game.voiceRate.toFixed(2)}×</span>
+        </label>
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2">

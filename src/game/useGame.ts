@@ -343,6 +343,7 @@ export function useGame() {
           const p = JSON.parse(c.text) as Record<string, string>;
           g.prefs = p;
           setPrefs(p);
+          if (IS_STAGE && p.voiceRate) voice.rate = rateOf(p); // tốc độ đã chọn, server nhớ qua lần bật lại
         } catch {
           // bỏ qua bộ cài đặt hỏng
         }
@@ -469,6 +470,7 @@ export function useGame() {
     theme,
     prefs,
     labels: labelsOf(prefs),
+    voiceRate: rateOf(prefs),
     soundOn: prefs.soundOn !== '0', // công tắc "Âm thanh toàn bộ"
     giftFx: prefs.giftFx !== '0', // công tắc "Hiệu ứng quà"
     music: {
@@ -492,6 +494,9 @@ export function useGame() {
 
 export type GameState = ReturnType<typeof useGame>;
 export type Labels = typeof GAME.labels;
+
+/** Tốc độ giọng đọc chủ kênh chọn (0.7–1.5), chưa chọn thì GAME.voiceRate */
+const rateOf = (prefs: Record<string, string>) => Math.min(1.5, Math.max(0.7, Number(prefs.voiceRate) || GAME.voiceRate));
 
 /** Chữ trên màn hình: chữ chủ kênh đặt (prefs.label_xxx), ô để trống thì dùng chữ mặc định */
 export function labelsOf(prefs: Record<string, string>): Labels {
