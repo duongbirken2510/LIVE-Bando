@@ -61,6 +61,38 @@ export function playGift(tier: number, force = false) {
   }
 }
 
+/** Đủ mốc tim, cả nước sáng đèn: chuỗi nốt ngũ cung đi lên + hợp âm chuông ngân + lấp lánh, khoảng 4 giây */
+export function playCelebrate(force = false) {
+  if (!force && !(IS_STAGE && voice.enabled && sound.on)) return;
+  try {
+    const c = audio();
+    const out = c.createGain();
+    out.gain.value = VOLUME * 1.1;
+    out.connect(c.destination);
+    const t = c.currentTime + 0.05;
+    // rê mi sol la si rê' mi' sol' la' rê'': lan theo đèn sáng từ Bắc vào Nam
+    const run = [293.7, 329.6, 392, 440, 493.9, 587.3, 659.3, 784, 880, 1174.7];
+    run.forEach((f, i) => {
+      tone(c, out, f, t + i * 0.12, 0.35, 'triangle', 0.22);
+      tone(c, out, f * 2, t + i * 0.12, 0.2, 'sine', 0.05);
+    });
+    // hợp âm Rê trưởng ngân dài khi cả nước đã sáng
+    const top = t + run.length * 0.12;
+    for (const [f, p] of [
+      [293.7, 0.2],
+      [370, 0.16],
+      [440, 0.16],
+      [587.3, 0.14],
+      [880, 0.08],
+    ] as const)
+      tone(c, out, f, top, 2.6, 'sine', p);
+    tone(c, out, 73.4, top, 1.2, 'sine', 0.45, 55); // trống trầm "bùm"
+    for (let i = 0; i < 18; i++) tone(c, out, 2000 + Math.random() * 2400, top + i * 0.14 + Math.random() * 0.05, 0.12, 'triangle', 0.06);
+  } catch {
+    // không có Web Audio: bỏ qua
+  }
+}
+
 /** Đốm sáng: tiếng vút lấp lánh trong lúc bay (flyMs), chạm tỉnh thì chuông "keng" */
 export function playSpark(flyMs: number, force = false) {
   if (!force && !(IS_STAGE && voice.enabled && sound.on)) return;

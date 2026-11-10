@@ -201,6 +201,12 @@ function TextAndSound({ game }: { game: GameState }) {
             {['🌹', '🪙', '🎉', '🎆', '👑'][i]} {xu.toLocaleString('vi-VN')} xu
           </button>
         ))}
+        <button className={btn} onClick={() => emitTest('like', { ...fakeUser(), likeCount: GAME.heartGoal })}>
+          ❤ Thử đủ {GAME.heartGoal.toLocaleString('vi-VN')} tim (thắp sáng cả nước)
+        </button>
+        <button className={btn} onClick={() => emitTest('like', { ...fakeUser(), likeCount: 300 })}>
+          ❤ +300 tim
+        </button>
       </div>
       <p className="mt-2 text-xs text-slate-500">
         Mô phỏng: 1 người giả gọi tên 1 tỉnh, stage chạy đủ đốm sáng, tích điểm, giọng MC và âm thanh (nếu đang bật). Nút "máy này" chỉ phát ở loa máy tính, không lên live.

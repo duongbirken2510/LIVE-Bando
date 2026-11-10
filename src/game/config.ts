@@ -41,6 +41,9 @@ export const GAME = {
   pointsPerComment: 1,
   commentCooldownMs: 10_000, // mỗi người gọi 1 tỉnh: tối đa 1 điểm / 10 giây
   likesPerPoint: 15, // thả 15 tim = +1 điểm cho quê
+  // Thanh tim chung cả phòng: đủ 2026 tim thì thắp sáng cả bản đồ 5 giây kèm nhạc, rồi đếm lại từ đầu
+  heartGoal: 2026,
+  heartLightMs: 5000,
   // Quà: xu -> điểm cho quê (tính theo tổng xu của lần tặng)
   giftPoints: (xu: number) => (xu >= 1000 ? 3000 : xu >= 100 ? 500 : xu >= 30 ? 100 : xu >= 5 ? 30 : xu >= 1 ? 3 : 0),
   giftTable: [

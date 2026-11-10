@@ -97,6 +97,7 @@ const HOME: ZoomView = [FOCUS_X, MAP_H / 2, MAP_H];
 export function VietnamMap({
   palette,
   lit,
+  allLit = false,
   heat,
   visiting,
   lightDelayMs = 0,
@@ -104,6 +105,8 @@ export function VietnamMap({
 }: {
   palette: readonly string[];
   lit: string[];
+  /** Đủ mốc tim: thắp sáng cả 34 tỉnh, lan từ Bắc vào Nam */
+  allLit?: boolean;
   /** 0..1 theo điểm: quê nhiều điểm thì màu đậm */
   heat: Record<string, number>;
   visiting: Visit | null;
@@ -190,7 +193,7 @@ export function VietnamMap({
 
   if (!data) return null;
   const litSet = new Set(lit);
-  const on = (id: string) => (litSet.has(id) && (id !== target || arrived?.pid === id)) || arrived?.pid === id;
+  const on = (id: string) => allLit || (litSet.has(id) && (id !== target || arrived?.pid === id)) || arrived?.pid === id;
   const sea = data.at(109.7, 8.9); // dưới Trường Sa, ngoài khơi Cà Mau: không chạm đất liền, không vướng thẻ
   const gulf = data.at(107.75, 19.9);
   const thai = data.at(102.5, 8.7);
@@ -209,7 +212,15 @@ export function VietnamMap({
               key={p.id}
               d={p.d}
               className={`prov${on(p.id) ? ' on' : ''}${arrived?.pid === p.id ? ' visit' : ''}`}
-              style={on(p.id) ? { fill: palette[p.color % palette.length], fillOpacity: 0.5 + 0.5 * (arrived?.pid === p.id ? 1 : (heat[p.id] ?? 0)) } : undefined}
+              style={
+                on(p.id)
+                  ? {
+                      fill: palette[p.color % palette.length],
+                      fillOpacity: allLit ? 1 : 0.5 + 0.5 * (arrived?.pid === p.id ? 1 : (heat[p.id] ?? 0)),
+                      transitionDelay: allLit ? `${((p.c[1] / MAP_H) * 1.2).toFixed(2)}s` : undefined, // lan từ Bắc vào Nam
+                    }
+                  : undefined
+              }
             />
           ))}
           {(

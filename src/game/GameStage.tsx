@@ -6,7 +6,7 @@ import { PROVINCE_BY_ID } from './provinces';
 import { VietnamMap, VisitPin } from './VietnamMap';
 import { Avatar } from './Avatar';
 import { themeById, themeVars } from './themes';
-import { playGift, playSpark, sound } from './sfx';
+import { playCelebrate, playGift, playSpark, sound } from './sfx';
 import { GiftFx } from './GiftFx';
 import { setMusicVolume, startMusic, stopMusic } from './music';
 import { voice } from '../live/voice';
@@ -58,6 +58,10 @@ export function GameStage({ game }: { game: GameState }) {
     setMusicVolume(game.music.volume / 100);
   }, [game.soundOn, game.music.on, game.music.volume]);
   useEffect(() => () => stopMusic(), []);
+  // đủ mốc tim: nhạc mừng 1 lần mỗi lần thắp sáng
+  useEffect(() => {
+    if (game.allLit) playCelebrate();
+  }, [game.allLit]);
 
   const theme = themeById(game.theme);
   return (
@@ -88,7 +92,7 @@ export function GameStage({ game }: { game: GameState }) {
       </div>
 
       <div className="map-box">
-        <VietnamMap palette={theme.lit} lit={game.lit} heat={game.heat} visiting={game.visiting} lightDelayMs={SPARK_MS} onArrive={onArrive} />
+        <VietnamMap palette={theme.lit} lit={game.lit} allLit={!!game.allLit} heat={game.heat} visiting={game.visiting} lightDelayMs={SPARK_MS} onArrive={onArrive} />
       </div>
       <div className="map-box overlay">
         {/* tên tỉnh to mờ dần giữa vùng bản đồ khi camera tới nơi */}
@@ -127,6 +131,7 @@ export function GameStage({ game }: { game: GameState }) {
 
       <div className="side">
         <Upcoming names={game.upcoming} />
+        <HeartBar hearts={game.hearts} lit={!!game.allLit} />
         <Ticker game={game} />
         {game.giftTable && <GiftStrip title={L.gifts} />}
         <Podium top={game.top} title={L.podium} />
@@ -146,6 +151,21 @@ export function GameStage({ game }: { game: GameState }) {
         </div>
       </div>
       <Called v={game.called} avRef={calledAvRef} title={L.called} />
+      <AnimatePresence>
+        {!!game.allLit && (
+          <motion.div
+            key={game.allLit}
+            className="all-lit"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+          >
+            <b>Cả nước sáng đèn!</b>
+            <span>Cảm ơn {GAME.heartGoal.toLocaleString('vi-VN')} tim của cả nhà</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <FinalCountdown phase={game.phase} />
 
       <AnimatePresence>{spark && <Spark key={spark.id} from={spark.from} to={spark.to} />}</AnimatePresence>
@@ -241,6 +261,24 @@ function useSecondsLeft() {
     return () => clearInterval(t);
   }, []);
   return Math.ceil(ms / 1000);
+}
+
+/** Thanh tim chung cả phòng: đủ mốc thì thắp sáng cả bản đồ */
+function HeartBar({ hearts, lit }: { hearts: number; lit: boolean }) {
+  const pct = lit ? 100 : Math.min(100, (hearts / GAME.heartGoal) * 100);
+  return (
+    <div className={`heart-bar${lit ? ' full' : ''}`}>
+      <div className="hb-top">
+        <span>❤ Tim thắp sáng cả nước</span>
+      </div>
+      <div className="hb-track">
+        <div className="hb-fill" style={{ width: `${pct}%` }} />
+        <span className="hb-num">
+          {lit ? GAME.heartGoal.toLocaleString('vi-VN') : hearts.toLocaleString('vi-VN')} / {GAME.heartGoal.toLocaleString('vi-VN')}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 /** Tỉnh đang xếp hàng chờ ghé: người vừa comment thấy quê mình sắp tới lượt */

@@ -149,6 +149,9 @@ export function useGame() {
     feed: [] as FeedItem[],
     prefs: {} as Record<string, string>,
     prefsLoaded: false,
+    hearts: 0, // tim cả phòng gom cho thanh "thắp sáng cả nước"
+    lightUntil: 0, // đang thắp sáng cả bản đồ tới lúc này
+    lightId: 0,
     summary: null as Summary | null,
     fans: loadFans(),
     saveTimer: 0,
@@ -328,6 +331,15 @@ export function useGame() {
 
     onLike: (e) => {
       const pl = player({ username: e.username, avatar: '' }, safeName(e.nickname, e.username));
+      // thanh tim chung: ai thả tim cũng góp, kể cả người chưa gõ quê
+      g.hearts += e.likeCount;
+      if (g.hearts >= GAME.heartGoal) {
+        g.hearts %= GAME.heartGoal;
+        g.lightUntil = Date.now() + GAME.heartLightMs;
+        g.lightId++;
+        setTimeout(draw, GAME.heartLightMs + 50); // hết 5 giây thì vẽ lại cho bản đồ tắt sáng
+      }
+      draw();
       pl.likes += e.likeCount;
       const n = Math.floor(pl.likes / GAME.likesPerPoint);
       if (n && pl.home) {
@@ -492,6 +504,8 @@ export function useGame() {
     giftFx: prefs.giftFx !== '0', // công tắc "Hiệu ứng quà"
     giftTable: prefs.giftTable === '1', // công tắc khung "Quà gửi về quê" (bảng điểm quà), mặc định tắt
     roundSec: roundSecOf(prefs),
+    hearts: g.hearts,
+    allLit: Date.now() < g.lightUntil ? g.lightId : 0, // khác 0: đang thắp sáng cả nước (số lần để phát nhạc đúng 1 lần)
     music: {
       on: prefs.musicOn ? prefs.musicOn === '1' : GAME.musicOn,
       volume: Math.min(100, Math.max(0, Number(prefs.musicVolume ?? GAME.musicVolume) || 0)),
