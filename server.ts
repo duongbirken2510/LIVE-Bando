@@ -414,6 +414,7 @@ function splitText(text: string, max = 190): string[] {
 
 async function edgeTts(text: string, rate: number, voiceName: string, hype: boolean): Promise<Buffer> {
   const tts = new MsEdgeTTS();
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     await tts.setMetadata(voiceName, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
     const { audioStream } = tts.toStream(escapeXml(text), {
@@ -425,11 +426,15 @@ async function edgeTts(text: string, rate: number, voiceName: string, hype: bool
     const read = (async () => {
       for await (const c of audioStream) chunks.push(c as Buffer);
     })();
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Edge TTS timeout')), 20000));
+    read.catch(() => {}); // tránh UnhandledPromiseRejection khi timeout huỷ stream trong finally
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error('Edge TTS timeout')), 20000);
+    });
     await Promise.race([read, timeout]);
     if (chunks.length === 0) throw new Error('Edge TTS không trả âm thanh');
     return Buffer.concat(chunks);
   } finally {
+    clearTimeout(timer);
     tts.close();
   }
 }
