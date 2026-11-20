@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1260" width="2400" height="1260">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140906"/>
+      <stop offset="45%" stop-color="#27120c"/>
+      <stop offset="100%" stop-color="#0f0705"/>
+    </linearGradient>
+    <radialGradient id="goldGlow" cx="28%" cy="48%" r="52%">
+      <stop offset="0%" stop-color="#e0b452" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#b3261e" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#140906" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rightGlow" cx="76%" cy="32%" r="48%">
+      <stop offset="0%" stop-color="#d2452f" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#e0b452" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#140906" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a160e"/>
+      <stop offset="50%" stop-color="#220d08"/>
+      <stop offset="100%" stop-color="#140704"/>
+    </linearGradient>
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe49e"/>
+      <stop offset="50%" stop-color="#e0b452"/>
+      <stop offset="100%" stop-color="#9e7324"/>
+    </linearGradient>
+    <linearGradient id="crimsonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8a1912"/>
+      <stop offset="50%" stop-color="#c92a1d"/>
+      <stop offset="100%" stop-color="#911b14"/>
+    </linearGradient>
+    <linearGradient id="pillBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2c160f" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1b0d09" stop-opacity="0.95"/>
+    </linearGradient>
+    <filter id="dropShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="20" stdDeviation="28" flood-color="#000000" flood-opacity="0.65"/>
+    </filter>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="2400" height="1260" fill="url(#bgGrad)"/>
+  <rect width="2400" height="1260" fill="url(#goldGlow)"/>
+  <rect width="2400" height="1260" fill="url(#rightGlow)"/>
+
+  <!-- Decorative Lacquer Gold Dust & Bronze Drum Concentric Circles -->
+  <g opacity="0.11" stroke="#e0b452" fill="none">
+    <circle cx="420" cy="600" r="390" stroke-width="2" stroke-dasharray="10 14"/>
+    <circle cx="420" cy="600" r="450" stroke-width="1.5"/>
+    <circle cx="420" cy="600" r="510" stroke-width="1" stroke-dasharray="4 18"/>
+    <line x1="80" y1="88" x2="2320" y2="88" stroke-width="1.5"/>
+    <line x1="80" y1="1172" x2="2320" y2="1172" stroke-width="1.5"/>
+  </g>
+
+  <!-- Outer Golden Frame Border -->
+  <rect x="44" y="44" width="2312" height="1172" rx="36" fill="none" stroke="url(#goldStroke)" stroke-width="3" opacity="0.55"/>
+  <rect x="60" y="60" width="2280" height="1140" rx="28" fill="none" stroke="#e0b452" stroke-width="1" stroke-dasharray="12 10" opacity="0.35"/>
+
+  <!-- LEFT: 3D Lacquer Squircle Emblem with S-Shaped Vietnam Map & Islands -->
+  <g transform="translate(135, 225)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="570" height="720" rx="110" fill="url(#iconBg)" stroke="url(#goldStroke)" stroke-width="6"/>
+    <rect x="18" y="18" width="534" height="684" rx="94" fill="none" stroke="#e0b452" stroke-width="1.5" opacity="0.35"/>
+
+    <!-- Top Mini Header inside Squircle -->
+    <rect x="105" y="42" width="360" height="48" rx="24" fill="url(#crimsonGrad)" stroke="#ffd27a" stroke-width="2"/>
+    <text x="285" y="74" font-family="'Segoe UI', Arial, sans-serif" font-size="21" font-weight="800" fill="#fff4d6" text-anchor="middle" letter-spacing="1.5">BẢN ĐỒ 34 TỈNH · 9:16</text>
+
+    <!-- Stylized S-Shaped Vietnam Map Silhouette (North -> Central -> South) -->
+    <path d="M 190 130 L 265 118 L 330 142 L 352 185 L 315 232 L 268 258 L 222 250 L 165 215 L 155 165 Z"
+          fill="#d2452f" stroke="#ffe49e" stroke-width="4" filter="url(#softGlow)"/>
+    <path d="M 222 250 L 268 258 L 335 335 L 368 388 L 330 410 L 272 345 Z"
+          fill="#e3b04b" stroke="#ffe49e" stroke-width="3.5"/>
+    <path d="M 330 410 L 368 388 L 402 455 L 395 525 L 335 552 L 302 490 L 312 435 Z"
+          fill="#3fa58a" stroke="#ffe49e" stroke-width="3.5"/>
+    <path d="M 302 490 L 335 552 L 362 575 L 315 628 L 225 655 L 195 620 L 235 560 L 275 535 Z"
+          fill="#e07a8f" stroke="#ffe49e" stroke-width="3.5"/>
+
+    <!-- Capital Star in Hanoi -->
+    <polygon points="258,170 265,186 283,188 270,200 273,217 258,208 243,217 246,200 233,188 251,186"
+             fill="#ffdd00" stroke="#7d1812" stroke-width="2" filter="url(#softGlow)"/>
+
+    <!-- Da Nang / Central Glow Pin -->
+    <circle cx="364" cy="392" r="14" fill="#ffdd00" stroke="#ffffff" stroke-width="3" filter="url(#softGlow)"/>
+    <circle cx="364" cy="392" r="28" fill="none" stroke="#ffdd00" stroke-width="2.5" opacity="0.7"/>
+
+    <!-- Hoang Sa & Truong Sa Archipelagos -->
+    <g fill="#ffdd00" stroke="#ffe49e" stroke-width="1.5">
+      <circle cx="445" cy="365" r="5.5"/>
+      <circle cx="464" cy="358" r="4.5"/>
+      <circle cx="458" cy="376" r="4.5"/>
+      <circle cx="478" cy="370" r="3.5"/>
+      <text x="462" y="402" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" fill="#ffe49e" text-anchor="middle" stroke="none">QĐ. Hoàng Sa</text>
+
+      <circle cx="450" cy="520" r="5.5"/>
+      <circle cx="472" cy="512" r="4.5"/>
+      <circle cx="488" cy="528" r="5"/>
+      <circle cx="465" cy="536" r="4"/>
+      <circle cx="442" cy="542" r="3.5"/>
+      <text x="465" y="566" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" fill="#ffe49e" text-anchor="middle" stroke="none">QĐ. Trường Sa</text>
+    </g>
+
+    <!-- Parabolic Spark Flight Arc from Caller Card to Province -->
+    <path d="M 105 470 Q 195 290 360 390" fill="none" stroke="#ffdd00" stroke-width="4.5" stroke-dasharray="10 8" filter="url(#softGlow)"/>
+    <circle cx="105" cy="470" r="26" fill="#7d1812" stroke="#e0b452" stroke-width="4"/>
+    <text x="105" y="479" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="900" fill="#fff3dc" text-anchor="middle">V</text>
+
+    <!-- Bottom Badge inside Squircle -->
+    <rect x="65" y="662" width="440" height="36" rx="18" fill="#1a0c08" stroke="#8f6c33" stroke-width="1.5"/>
+    <text x="285" y="686" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" fill="#e0b452" text-anchor="middle">❤ 2.026 TIM THẮP SÁNG CẢ NƯỚC · MC AI</text>
+  </g>
+
+  <!-- RIGHT: Brand Typography, Tagline & 4 Feature Pills -->
+  <g transform="translate(775, 215)">
+    <!-- Top Category Pill (generous 780px width) -->
+    <rect x="0" y="0" width="780" height="54" rx="27" fill="url(#crimsonGrad)" stroke="#e0b452" stroke-width="2.5"/>
+    <text x="390" y="35" font-family="'Segoe UI', Arial, sans-serif" font-size="22" font-weight="800" fill="#fff3dc" text-anchor="middle" letter-spacing="1.2">
+      TIKTOK LIVE INTERACTIVE GIS GAME SHOW (1080 × 1920)
+    </text>
+
+    <!-- Main Two-Tone Title using Segoe UI for 100% native Vietnamese diacritic kerning -->
+    <text x="0" y="152" font-family="'Segoe UI', Arial, sans-serif" font-size="82" font-weight="900" fill="#fff3dc">
+      VIỆT NAM <tspan font-style="italic" font-weight="800" fill="#e0b452">Đất Nước Ta Ơi</tspan>
+    </text>
+
+    <!-- Subtitle / Project Code -->
+    <text x="0" y="218" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="700" fill="#ff9e80">
+      LIVE-BANDO v1.0 · Gõ Tên Quê Hương — Bản Đồ Bay Tới &amp; Thắp Sáng Tự Động 100%
+    </text>
+
+    <!-- Description Paragraph -->
+    <text x="0" y="278" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="600" fill="#dfd2bc">
+      Bản đồ 34 tỉnh, thành mới (Nghị quyết 202/2025/QH15), quần đảo Hoàng Sa, Trường Sa &amp; 125+ đảo.
+    </text>
+    <text x="0" y="318" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="600" fill="#dfd2bc">
+      Camera zoom cận cảnh · Đốm sáng bay vòng cung · MC AI đọc tên, kể món ngon &amp; danh thắng quê nhà.
+    </text>
+
+    <!-- 4 Feature Pills (2x2 Grid, generous width 725px each, text-anchor="middle") -->
+    <g transform="translate(0, 375)">
+      <rect x="0" y="0" width="725" height="92" rx="22" fill="url(#pillBg)" stroke="url(#goldStroke)" stroke-width="2.5"/>
+      <text x="362" y="42" font-family="'Segoe UI', Arial, sans-serif" font-size="25" font-weight="800" fill="#ffe49e" text-anchor="middle">
+        🗺️ Bản Đồ 34 Tỉnh Mới + Hoàng Sa &amp; Trường Sa
+      </text>
+      <text x="362" y="74" font-family="'Segoe UI', Arial, sans-serif" font-size="19" font-weight="600" fill="#c9b69c" text-anchor="middle">
+        Nhận diện tên tỉnh cũ trước sáp nhập, thành phố &amp; 125+ đảo
+      </text>
+    </g>
+
+    <g transform="translate(755, 375)">
+      <rect x="0" y="0" width="725" height="92" rx="22" fill="url(#pillBg)" stroke="url(#goldStroke)" stroke-width="2.5"/>
+      <text x="362" y="42" font-family="'Segoe UI', Arial, sans-serif" font-size="25" font-weight="800" fill="#ffe49e" text-anchor="middle">
+        🎙️ Giọng MC AI Kể Đặc Sản &amp; Danh Thắng Quê
+      </text>
+      <text x="362" y="74" font-family="'Segoe UI', Arial, sans-serif" font-size="19" font-weight="600" fill="#c9b69c" text-anchor="middle">
+        Hoài My / Nam Minh · Gửi lời thương chiến sĩ giữ đảo xa
+      </text>
+    </g>
+
+    <g transform="translate(0, 492)">
+      <rect x="0" y="0" width="725" height="92" rx="22" fill="url(#pillBg)" stroke="url(#goldStroke)" stroke-width="2.5"/>
+      <text x="362" y="42" font-family="'Segoe UI', Arial, sans-serif" font-size="25" font-weight="800" fill="#ffe49e" text-anchor="middle">
+        🎨 20 Giao Diện Sơn Mài &amp; Văn Hóa Việt Nam
+      </text>
+      <text x="362" y="74" font-family="'Segoe UI', Arial, sans-serif" font-size="19" font-weight="600" fill="#c9b69c" text-anchor="middle">
+        Sơn mài, Lụa đỏ, Biển đêm, Gốm Chu Đậu, Cờ đỏ sao vàng...
+      </text>
+    </g>
+
+    <g transform="translate(755, 492)">
+      <rect x="0" y="0" width="725" height="92" rx="22" fill="url(#pillBg)" stroke="url(#goldStroke)" stroke-width="2.5"/>
+      <text x="362" y="42" font-family="'Segoe UI', Arial, sans-serif" font-size="25" font-weight="800" fill="#ffe49e" text-anchor="middle">
+        ❤️ 2.026 Tim Sáng Cả Nước &amp; Bộ Cài .EXE 1-Click
+      </text>
+      <text x="362" y="74" font-family="'Segoe UI', Arial, sans-serif" font-size="19" font-weight="600" fill="#c9b69c" text-anchor="middle">
+        5 tầng pháo hoa quà tặng · Nhạc ngũ cung WebAudio 0% bản quyền
+      </text>
+    </g>
+
+    <!-- Call To Action Bar inside Brand Banner -->
+    <g transform="translate(0, 620)">
+      <rect x="0" y="0" width="1480" height="88" rx="24" fill="url(#crimsonGrad)" stroke="#ffdd00" stroke-width="3"/>
+      <text x="740" y="55" font-family="'Segoe UI', Arial, sans-serif" font-size="28" font-weight="800" fill="#fff8e6" text-anchor="middle">
+        💿 TẢI BỘ CÀI WINDOWS 1-CLICK (.EXE) · CHẠY NGAY KHÔNG CẦN CÀI NODE.JS · PORT 3000
+      </text>
+    </g>
+  </g>
+
+  <!-- Footer Author Attribution -->
+  <g transform="translate(1200, 1130)">
+    <text x="0" y="0" font-family="'Segoe UI', Arial, sans-serif" font-size="25" font-weight="700" fill="#e0b452" text-anchor="middle" letter-spacing="0.8">
+      Designed &amp; Engineered by Duong Birken  •  https://duongbirken.deta.vn  •  github.com/duongbirken2510/LIVE-Bando
+    </text>
+  </g>
+</svg>

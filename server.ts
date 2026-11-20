@@ -486,6 +486,24 @@ app.get('/api/tts', async (req, res) => {
 });
 
 // ---------- API riêng của game: thêm bên dưới ----------
+app.post('/api/server/shutdown', (_req, res) => {
+  res.json({ success: true, message: 'Đang tắt server...' });
+  setTimeout(() => {
+    try {
+      activeConn?.disconnect();
+    } catch {
+      // bỏ qua
+    }
+    for (const c of sseClients) {
+      try {
+        c.end();
+      } catch {
+        // bỏ qua
+      }
+    }
+    process.exit(0);
+  }, 150);
+});
 
 // ---------- Khởi động ----------
 const PORT_TRIES = 20; // cổng bận (game khác đang chạy) thì thử cổng kế tiếp, tối đa 20 lần

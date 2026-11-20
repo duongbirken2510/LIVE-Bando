@@ -1,14 +1,27 @@
-# Việt Nam đất nước ta ơi
+# 🗺️ Việt Nam Đất Nước Ta Ơi (`LIVE-BANDO`)
 
-Game cho buổi TikTok LIVE. Người xem gõ tên tỉnh, thành quê mình vào comment, bản đồ Việt Nam bay tới tỉnh đó, tỉnh sáng lên kèm tên và avatar người gọi, MC đọc tên bạn ấy và nhắc một hai món ngon, danh thắng của quê đó.
+<div align="center">
+  <img src="./docs/media/live_bando_brand_banner.png" alt="Việt Nam Đất Nước Ta Ơi — LIVE-BANDO Brand Banner" width="100%" />
+  <br /><br />
+  <h3>
+    💿 👉 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[TẢI NGAY BỘ CÀI ĐẶT WINDOWS 1-CLICK: Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe]</b></a> 👈
+  </h3>
+  <p><i>(Đã nhúng sẵn Node.js Runtime + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay, KHÔNG cần cài đặt Node.js!)</i></p>
+</div>
 
-Bản đồ 34 tỉnh, thành mới từ 2025, có Hoàng Sa, Trường Sa và các đảo. Gõ tên tỉnh cũ trước sáp nhập, tên thành phố (Hạ Long, Nha Trang, Đà Lạt...) hay tên đảo (Phú Quốc, Côn Đảo, Lý Sơn...) đều nhận đúng tỉnh.
+> **Game Bản Đồ Việt Nam 34 Tỉnh Thành & Biển Đảo Tương Tác Thời Gian Thực Cho TikTok LIVE (`1080 × 1920`)**  
+> Người xem gõ tên tỉnh, thành phố hoặc hòn đảo quê mình vào bình luận, bản đồ Việt Nam bay camera cận cảnh tới tỉnh đó, đốm sáng bay vòng cung thắp sáng tỉnh kèm Avatar và tên người gọi, MC AI đọc tên bạn ấy và nhắc 1–2 món ngon, danh thắng của quê nhà (hoặc gửi lời thương tới các anh chiến sĩ đang giữ đảo Hoàng Sa, Trường Sa).  
+> **Tác giả:** **Duong Birken** — [https://duongbirken.deta.vn](https://duongbirken.deta.vn)  
+> **Kho mã nguồn:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
+> **Tải bộ cài đặt `.EXE` 1-Click:** [GitHub Releases v1.0.0](https://github.com/duongbirken2510/LIVE-Bando/releases/latest) · [`DOWNLOAD_APP.md`](./DOWNLOAD_APP.md)
+
+---
 
 ## ⚠️ Đọc trước khi dùng: lưu ý, cảnh báo và trách nhiệm
 
 Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dùng cho buổi live của mình, đọc kỹ mấy điều sau:
 
-1. **Bản đồ là hình mô phỏng.** Hoàng Sa, Trường Sa được vẽ thu nhỏ, đặt gần bờ hơn thực tế cho vừa khung hình. Ranh giới 34 tỉnh, thành lấy từ bộ dữ liệu cộng đồng, không phải bản đồ chính thức của nhà nước. Trên màn hình đã có dòng ghi "Hình ảnh mô phỏng, vẽ thu nhỏ, không theo tỷ lệ", đừng xoá dòng này. Ai sửa bản đồ thì phải giữ đủ Hoàng Sa, Trường Sa.
+1. **Bản đồ là hình mô phỏng.** Hoàng Sa, Trường Sa được vẽ thu nhỏ, đặt gần bờ hơn thực tế cho vừa khung hình. Ranh giới 34 tỉnh, thành lấy từ bộ dữ liệu cộng đồng, không phải bản đồ chính thức của nhà nước. Trên màn hình đã có dòng ghi *"Hình ảnh mô phỏng, vẽ thu nhỏ, không theo tỷ lệ"*, đừng xoá dòng này. Ai sửa bản đồ thì phải giữ đủ Hoàng Sa, Trường Sa.
 2. **Không dùng game để trao thưởng.** Game chỉ cộng điểm cho quê, không có giải thưởng. Nếu bạn tự đặt thêm thưởng tiền hay quà cho người đứng top hoặc tặng nhiều nhất, việc đó có thể bị coi là khuyến mại hoặc trò chơi có thưởng theo luật, phải làm thủ tục riêng, và bạn tự chịu trách nhiệm.
 3. **Tiền quà là thu nhập của bạn.** Quà người xem tặng là thu nhập của người live. Việc kê khai, nộp thuế thì bạn tự tìm hiểu theo quy định hiện hành.
 4. **Kết nối và giọng đọc dùng công cụ không chính thức.** Game nối vào phòng live và tạo giọng MC qua các công cụ bên ngoài, không phải công cụ chính thức của nền tảng hay của Microsoft, Google. Các công cụ này có thể ngừng chạy bất cứ lúc nào. Rủi ro với tài khoản của bạn (bị hạn chế, khoá tính năng) bạn tự cân nhắc.
@@ -16,116 +29,143 @@ Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dù
 6. **Lời MC kể về các tỉnh** (món ngon, danh thắng) được soạn theo hiểu biết chung, có thể chưa chuẩn hết. Thấy chỗ nào sai thì sửa trong `src/game/provinceTalk.ts`.
 7. **Dùng game là bạn tự chịu trách nhiệm.** Game được chia sẻ nguyên trạng, không kèm cam kết gì. Tác giả không chịu trách nhiệm về thiệt hại hay rắc rối pháp lý phát sinh khi bạn sử dụng. Mấy điều trên là tự tìm hiểu, không phải tư vấn pháp lý. Ai live với mục đích kinh doanh thì nên hỏi luật sư.
 
-## Cần có
+---
 
-- Máy tính Windows 10 hoặc 11. Mac/Linux xem cuối trang.
-- Mạng internet: giọng MC được tạo qua mạng, không có mạng thì MC im.
-- Node.js (miễn phí, cài một lần, hướng dẫn ở bước 2).
+## 🖼️ Giao Diện Thực Tế (Trang Điều Khiển Admin & Sân Khấu `1080 × 1920`)
 
-## Cài đặt lần đầu
+### 1. Trang Quản Trị Admin, Bảng Chọn 20 Giao Diện & Khung Xem Trước (`http://localhost:3000`)
+<div align="center">
+  <img src="./docs/screenshots/01-admin-dashboard.png" alt="Trang Quản Trị Admin & Bàn Điều Khiển Việt Nam Đất Nước Ta Ơi" width="100%" />
+</div>
 
-### Bước 1: Tải game về
+### 2. Sân Khấu Dọc Chuẩn TikTok LIVE Studio (`1080 × 1920` Vertical Stage)
 
-1. Trên trang GitHub này, bấm nút xanh **Code** rồi chọn **Download ZIP**.
-2. Mở thư mục Downloads, chuột phải vào file `viet-nam-dat-nuoc-ta-oi-master.zip`, chọn **Extract All...** (Giải nén tất cả), bấm **Extract**.
-3. Chép thư mục vừa giải nén ra chỗ dễ tìm, ví dụ `D:\Game\viet-nam-dat-nuoc-ta-oi`.
+| 🗺️ **Sơn Mài Toàn Cảnh 34 Tỉnh & Biển Đảo** | 📍 **Camera Zoom Cận Cảnh & Ghim Quê Hương** | ❤️ **2.026 Tim — Cả Nước Sáng Đèn!** | 🌙 **Giao Diện Biển Đêm & Tổng Kết Vòng** |
+| :---: | :---: | :---: | :---: |
+| <img src="./docs/screenshots/02-stage-son-mai-toan-canh.png" alt="Sân khấu Sơn mài toàn cảnh" width="100%" /> | <img src="./docs/screenshots/03-stage-zoom-tinh-que-huong.png" alt="Camera zoom cận cảnh tỉnh quê hương" width="100%" /> | <img src="./docs/screenshots/04-stage-2026-tim-thap-sang-ca-nuoc.png" alt="2026 tim thắp sáng cả nước" width="100%" /> | <img src="./docs/screenshots/05-stage-bien-dem-tong-ket-vong.png" alt="Giao diện Biển đêm và Tổng kết vòng" width="100%" /> |
 
-Phải giải nén ra hẳn. Bấm đúp mở thẳng trong file zip thì game không chạy.
+---
 
-Biết dùng git thì gõ:
+## 📚 Tài Liệu Chi Tiết Dự Án
 
-```bash
-git clone https://github.com/workaipvlinh-byte/viet-nam-dat-nuoc-ta-oi.git
-```
+| Tài liệu | Đường dẫn | Nội dung chính |
+| :--- | :--- | :--- |
+| 💿 **Tải Bộ Cài Đặt Windows 1-Click (`.EXE`)** | [**`DOWNLOAD_APP.md`**](./DOWNLOAD_APP.md) | Link tải trực tiếp `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (tích hợp sẵn Node.js, tự tạo biểu tượng Desktop) và `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`. |
+| 🗺️ **Hồ Sơ Giới Thiệu Sản Phẩm & Công Nghệ (10 Chương)** | [**`info/Introduce_VietNamDatNuocTaOi.md`**](./info/Introduce_VietNamDatNuocTaOi.md) | Định nghĩa sản phẩm, ma trận 8 nhóm tính năng, thuật toán nhận diện 34 tỉnh + tỉnh cũ + 125 đảo, kiến trúc D3-Geo & WebAudio chuyên sâu. |
+| 📖 **Cẩm Nang Hướng Dẫn Sử Dụng Toàn Tập (A–Z · VI/EN)** | [**`docs/USER_GUIDE.md`**](./docs/USER_GUIDE.md) | Hướng dẫn cài đặt `.exe` 1-Click, chạy `.bat`, nhúng Browser Source `1080 × 1920` vào TikTok LIVE Studio, đổi 20 giao diện sơn mài và xử lý sự cố. |
 
-### Bước 2: Cài Node.js
+---
 
-1. Vào https://nodejs.org, tải bản có chữ **LTS**.
-2. Mở file vừa tải, bấm **Next** liên tục rồi **Install**, để nguyên các lựa chọn mặc định.
-3. Cài xong thì khởi động lại máy cho chắc.
+## 🚀 Cài Đặt & Khởi Chạy Nhanh
 
-### Bước 3: Chạy game
+### Cách 1: Cài đặt bằng Bộ Cài `.EXE` 1-Click (Khuyên dùng — Không cần cài Node.js)
+1. Tải file **[`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)**.
+2. Nhấp đúp mở file vừa tải (nếu Windows hiện bảng xanh *Windows protected your PC*, bấm **More info** ➔ **Run anyway**) rồi bấm nút **`🚀 CÀI ĐẶT NGAY (1-CLICK)`**.
+3. Phần mềm tự động tạo biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài màn hình Desktop và mở ngay **Trang điều khiển** (`http://localhost:3000`).
 
-1. Mở thư mục game, bấm đúp file `BAT-LIVE.bat`.
-2. Nếu Windows hiện bảng xanh "Windows protected your PC", bấm **More info** rồi **Run anyway**. Bảng này hiện vì file tải từ mạng về, không phải lỗi.
-3. Lần đầu game tự cài thư viện, mất khoảng 1–2 phút, cửa sổ đen chạy nhiều chữ là bình thường.
-4. Xong thì trình duyệt tự mở **trang điều khiển** (`http://localhost:3000`). Trong cửa sổ đen có dòng `Link LIVE Studio`, đó là link cho bước 4.
+### Cách 2: Chạy từ mã nguồn bằng `BAT-LIVE.bat` (Dành cho người dùng tải ZIP / Git Clone)
 
-Từ lần sau chỉ cần bấm đúp `BAT-LIVE.bat` là chạy ngay.
+#### Bước 1: Tải game về
+1. Trên trang GitHub này, bấm nút xanh **Code** rồi chọn **Download ZIP** (hoặc `git clone https://github.com/duongbirken2510/LIVE-Bando.git`).
+2. Giải nén hoàn toàn thư mục ra ổ đĩa, ví dụ `D:\Game\LIVE-BANDO` *(phải giải nén ra hẳn, không bấm đúp mở trực tiếp trong file ZIP)*.
 
-**Giữ cửa sổ đen mở suốt buổi live.** Đóng nó là game tắt.
+#### Bước 2: Cài Node.js (nếu chưa dùng bản `.EXE` 1-Click)
+1. Vào [https://nodejs.org](https://nodejs.org), tải bản **LTS**, bấm **Next** liên tục rồi **Install**.
 
-### Bước 4: Đưa màn hình game vào TikTok LIVE Studio
+#### Bước 3: Chạy game
+1. Mở thư mục game, bấm đúp file [`BAT-LIVE.bat`](./BAT-LIVE.bat) (hoặc [`Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](./Viet-Nam-Dat-Nuoc-Ta-Oi.exe)).
+2. Nếu Windows hiện bảng xanh *"Windows protected your PC"*, bấm **More info** rồi **Run anyway**.
+3. Lần đầu game tự cài thư viện (`1–2 phút`), xong trình duyệt tự mở **Trang điều khiển** (`http://localhost:3000`).
+4. Khi muốn tắt hoàn toàn server và giải phóng cổng `3000`, bấm đúp file [`TAT-LIVE.bat`](./TAT-LIVE.bat).
 
-1. Trong TikTok LIVE Studio, thêm nguồn **Link** (nguồn trang web).
-2. Dán link: `http://lvh.me:3000/?view=stage`
-3. Đặt kích thước **1080 × 1920** (màn hình dọc).
+#### Bước 4: Đưa màn hình game vào TikTok LIVE Studio
+1. Trong **TikTok LIVE Studio**, thêm nguồn **Link** (nguồn trang web / Browser Source).
+2. Dán link: **`http://lvh.me:3000/?view=stage`**
+3. Đặt kích thước **`1080 × 1920`** (màn hình dọc).
+*(Nếu cửa sổ đen báo cổng 3000 đang bận nên dùng cổng 3001 thì đổi link theo đúng cổng in trên Trang điều khiển).*
 
-Nếu cửa sổ đen báo "cổng 3000 đang bận nên dùng cổng 3001" thì link phải đổi số theo, ví dụ `http://lvh.me:3001/?view=stage`. Lấy đúng link in trong cửa sổ đen.
+#### Bước 5: Kết nối với buổi live
+1. Bấm **Phát trực tiếp** trên TikTok trước.
+2. Ở trang điều khiển, khung **Kết nối TikTok LIVE**, gõ `username` TikTok của kênh (không cần chữ `@`), bấm **Kết nối**.
 
-### Bước 5: Kết nối với buổi live
+---
 
-1. Bấm bắt đầu live trên TikTok trước.
-2. Ở trang điều khiển, khung **Kết nối TikTok LIVE**, gõ username TikTok của kênh (không cần chữ @), bấm **Kết nối**.
-3. Thấy báo đã kết nối là xong. Người xem comment tên quê là bản đồ chạy.
+## 🎨 Chỉnh Game Trên Trang Điều Khiển (Không Cần Đụng Code)
 
-## Chỉnh game trên trang điều khiển
+Mọi thiết lập dưới đây đều chỉnh bằng chuột và tự động lưu vào `settings.json`:
+- **Chọn giao diện (20 bộ màu văn hóa Việt):** *Sơn mài, Lụa đỏ, Biển đêm, Ngọc bích, Hoa sen, Thu Hà Nội, Tre xanh, Gốm Chu Đậu, Giấy dó, Hoàng hôn, Cờ đỏ sao vàng, Đêm trăng, Phố cổ Hội An, Ruộng bậc thang, Tím Huế, Cà phê sữa, Sương sớm, Neon Sài Gòn, Đồng cổ, Mực tàu*.
+- **Giọng đọc trên stage:** Chọn MC nữ (**Hoài My**) hoặc nam (**Nam Minh**), bấm **Nghe thử**; đổi tên kênh MC xưng hô; gõ câu bất kỳ để MC đọc ngay trên sóng live.
+- **Chữ trên màn hình & âm thanh:**
+  - Sửa toàn bộ 9 nhãn chữ hiển thị trên sân khấu (ô nào để trống sẽ dùng chữ mặc định).
+  - Chọn **Thời gian 1 vòng** từ `1 phút` tới `10 phút` (mặc định `2 phút 30 giây`).
+  - Công tắc **Âm thanh toàn bộ**, **Nhạc nền** (ngũ cung 116 BPM tự tổng hợp 0% bản quyền), **Hiệu ứng quà**, thanh kéo âm lượng nhạc và tốc độ giọng đọc (`0.7× – 1.5×`).
+- **Thử trước khi live:**
+  - Khung **Thử game Việt Nam đất nước ta ơi**: nút mô phỏng lượt gọi tên tỉnh, gõ tỉnh cũ (*Kiên Giang*), gõ *Hoàng Sa*, 60 người gọi liền, 5 nút thử hiệu ứng quà theo mức xu và nút **❤ Thử đủ 2.026 tim (thắp sáng cả nước)**.
+  - Khung **Giả lập & Live tự động**: chạy tự động trọn 1 vòng với **10**, **50** hoặc **100 người chơi ảo**.
 
-Mọi thứ dưới đây chỉnh bằng chuột, không cần đụng code. Chỉnh xong được lưu lại, lần sau bật vẫn giữ.
+---
 
-- **Chọn giao diện** (ngay dưới khung Kết nối): 20 bộ màu như Sơn mài, Lụa đỏ, Biển đêm, Hoa sen, Tím Huế, Neon Sài Gòn. Bấm vào là ô xem trước đổi theo.
-- **Giọng đọc trên stage**: chọn MC nữ (Hoài My) hoặc nam (Nam Minh), bấm Nghe thử. Ô đổi tên kênh: tên MC xưng khi chào, cảm ơn. Ô gõ câu bất kỳ để MC đọc ngay.
-- **Chữ trên màn hình & âm thanh**:
-  - Sửa chữ: tên game (2 dòng), dòng hướng dẫn, tên các bảng "Vừa gọi tên quê", "Quà gửi về quê", "Người giữ lửa quê", "Bục quê nhà", "Đang ghé thăm", "Đồng hương các buổi live". Để trống ô nào thì ô đó dùng chữ mặc định.
-  - Công tắc: Âm thanh toàn bộ, Nhạc nền, Hiệu ứng quà.
-  - Thanh kéo âm lượng nhạc nền.
-  - Thanh kéo tốc độ giọng đọc, từ 0.7 (chậm) tới 1.5 (nhanh).
+## 🏆 Luật Chơi Tóm Tắt
 
-## Thử trước khi live
+- **Gõ tên tỉnh, thành, đảo** (có dấu, không dấu, viết tắt `HN/SG/HCM`, tên tỉnh cũ trước sáp nhập, tên thành phố thuộc tỉnh đều nhận): **`+1 điểm`** cho quê (mỗi người tối đa 1 điểm / 10 giây cho 1 tỉnh).
+- **Thả tim:** `15 tim = +1 điểm` cho quê. Cả phòng chung tay đủ **`2.026 tim`** thì kích hoạt **"Cả nước sáng đèn!"** thắp sáng toàn bộ 34 tỉnh thành trong 5 giây kèm nhạc mừng.
+- **Tặng quà:** `1–4 xu (+3)` · `5–29 xu (+30)` · `30–99 xu (+100, ưu tiên đọc trước)` · `100–999 xu (+500)` · `Từ 1.000 xu (+3.000)`. Tặng khi chưa gõ quê thì gõ quê lúc nào được cộng bù lúc đó.
+- **Mỗi vòng `2 phút 30 giây`, tổng kết `15 giây`:** 3 quê nhiều điểm nhất lên **Bục quê nhà**, người góp nhiều điểm nhất được vinh danh **"Người giữ lửa quê"**.
 
-Chưa live vẫn thử được, ở trang điều khiển:
+---
 
-- Khung **Thử game Việt Nam đất nước ta ơi**: nút mô phỏng một lượt gọi tên, 5 nút thử hiệu ứng quà theo mức xu.
-- Khung **Giả lập**: thêm người vào, comment, tặng quà, thả tim từng cái một. Mục **Live tự động** cho 10, 50 hoặc 100 người giả chơi trọn một vòng.
+## 🧪 Bảng Cổng HTTP / SSE API (`Port 3000`)
 
-Muốn nghe tiếng khi thử thì mở link `?view=stage` trong trình duyệt và bấm vào trang một lần (trình duyệt chặn tự phát tiếng khi chưa bấm). Thử xong nhớ đóng tab đó trước khi live thật.
+| HTTP / SSE Endpoint (`Port 3000`) | Phương thức | Chức năng |
+| :--- | :---: | :--- |
+| `/` | `GET` | Trang Quản trị Admin + Bảng chọn 20 giao diện & Khung xem trước Stage `9:16` |
+| `/?view=stage` | `GET` | Màn hình Sân khấu độc lập `1080 × 1920` cho TikTok LIVE Studio / OBS |
+| `/api/tiktok/events` | `GET (SSE)` | Luồng sự kiện thời gian thực (`status`, `speaker`, `chat`, `gift`, `like`, `member`, `follow`, `control`) |
+| `/api/tiktok/connect` & `/disconnect` | `POST` | Kết nối / Ngắt kết nối trực tiếp phòng TikTok LIVE qua `@username` |
+| `/api/control` | `POST` | Đồng bộ giao diện (`setTheme`), chữ & âm thanh (`setPrefs`), giọng MC (`setVoice`, `setRate`, `speak`) |
+| `/api/tts` | `GET` | Tổng hợp giọng đọc tiếng Việt `MsEdgeTTS` (*Hoài My / Nam Minh*) + `Google TTS` dự phòng |
+| `/api/test/emit` | `POST` | Giả lập bình luận, quà tặng, thả tim, người vào phòng ngay khi chưa mở Live |
+| `/api/server/shutdown` | `POST` | Ngắt kết nối và giải phóng hoàn toàn cổng `3000` |
 
-## Luật chơi
+---
 
-- Gõ tên tỉnh, thành (có dấu, không dấu, viết tắt HN, SG, HCM đều được): +1 điểm cho quê, mỗi người tối đa 1 điểm mỗi 10 giây cho 1 tỉnh.
-- Thả tim: 15 tim = +1 điểm.
-- Tặng quà: 1–4 xu +3, 5–29 xu +30, 30–99 xu +100, 100–999 xu +500, từ 1.000 xu +3.000. Quà càng to hiệu ứng càng lớn. Tặng khi chưa gõ quê thì gõ quê lúc nào được cộng bù lúc đó.
-- Mỗi vòng 2 phút 30 giây, tổng kết 15 giây: ba quê nhiều điểm nhất lên bục, người góp nhiều nhất là "Người giữ lửa quê". Sang vòng mới điểm về 0.
+## 🛠️ Chỉnh Sâu Hơn (Mã Nguồn) & Nguồn Bản Đồ
 
-## Gặp lỗi
+- `src/game/config.ts`: Mọi câu MC đọc, điểm từng mức quà, mốc 2.026 tim, thời gian vòng.
+- `src/game/provinceTalk.ts`: Món ngon, danh thắng, lời khen của từng tỉnh trong 34 tỉnh thành.
+- `src/game/provinces.ts`: Cách gọi 34 tỉnh, tên tỉnh cũ sáp nhập, thành phố trực thuộc và hơn 125 đảo.
+- `src/game/themes.ts`: 20 bộ giao diện màu.
+- **Nguồn bản đồ:** Ranh giới 34 tỉnh, thành (từ 2025) lấy từ [nguyenduy1133/Free-GIS-Data](https://github.com/nguyenduy1133/Free-GIS-Data), đã rút gọn và bổ sung đảo bằng `tools/prep-map.mjs`, `tools/add-islands.mjs`.
 
-- **Bấm `BAT-LIVE.bat` báo "npm is not recognized"**: chưa cài Node.js, hoặc cài rồi mà chưa khởi động lại máy.
-- **Nghe 2 giọng MC hoặc 2 lớp nhạc**: đang mở trang `?view=stage` ở 2 chỗ. Chỉ để lại trang trong LIVE Studio, đóng các tab khác.
-- **MC không nói**: kiểm tra mạng, công tắc Âm thanh toàn bộ, và link trong LIVE Studio có đúng cổng in trong cửa sổ đen không.
-- **Không kết nối được**: phải đang live rồi mới kết nối, username gõ đúng và không có @.
-- **Màn hình trong LIVE Studio trắng**: cửa sổ đen đã bị đóng, bấm lại `BAT-LIVE.bat`.
+---
 
-## Mac / Linux
+## 🎯 Kêu Gọi Hành Động / Call To Action (CTA)
 
-Cài Node.js bản LTS, mở Terminal trong thư mục game rồi gõ:
+<div align="center">
+  <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest">
+    <img src="./docs/media/live_bando_cta_banner.png" alt="Kêu gọi hành động - Tải Bộ Cài 1-Click, Tặng Star GitHub & Kết Nối Duong Birken" width="100%" />
+  </a>
+  <br /><br />
+  <h3>
+    💿 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[1. TẢI NGAY BỘ CÀI WINDOWS 1-CLICK (.EXE)]</b></a>
+    &nbsp;·&nbsp;
+    ⭐ <a href="https://github.com/duongbirken2510/LIVE-Bando"><b>[2. TẶNG 1 STAR TRÊN GITHUB]</b></a>
+    &nbsp;·&nbsp;
+    🌐 <a href="https://duongbirken.deta.vn"><b>[3. GHÉ THĂM DUONGBIRKEN.DETA.VN]</b></a>
+  </h3>
+</div>
 
-```bash
-npm install
-```
+---
 
-```bash
-LIVE_MODE=1 npm run dev
-```
+## 👨‍💻 Tác Giả & Liên Hệ / Author & Contact
 
-Sau đó làm tiếp từ bước 4. Trang điều khiển ở `http://localhost:3000`.
+| 🇻🇳 Lời nhắn từ Tác giả | 🇬🇧 Note from the Author |
+| :--- | :--- |
+| **LIVE-BANDO (`Việt Nam Đất Nước Ta Ơi`)** là dự án tâm huyết được phát triển và hoàn thiện bởi **Duong Birken**. Nếu dự án hữu ích với bạn, hãy tặng một ngôi sao (**⭐ Star**) trên GitHub hoặc ghé thăm website chính thức để kết nối, khám phá thêm các công cụ livestream tương tác tự động và góp ý nhé! | **LIVE-BANDO (`Việt Nam Đất Nước Ta Ơi`)** is crafted with passion by **Duong Birken**. If you find this project helpful, please consider giving it a **⭐ Star** on GitHub or visiting the official website to connect and share your feedback! |
 
-## Chỉnh sâu hơn (cần sửa code)
-
-- `src/game/config.ts`: mọi câu MC đọc, điểm từng mức quà, thời gian vòng.
-- `src/game/provinceTalk.ts`: món ngon, danh thắng, lời khen của từng tỉnh.
-- `src/game/provinces.ts`: cách gọi tỉnh, tên đảo, thành phố.
-- `src/game/themes.ts`: 20 giao diện màu.
-
-## Nguồn bản đồ
-
-Ranh giới 34 tỉnh, thành (từ 2025) lấy từ [nguyenduy1133/Free-GIS-Data](https://github.com/nguyenduy1133/Free-GIS-Data), đã rút gọn và bổ sung đảo bằng `tools/prep-map.mjs`, `tools/add-islands.mjs`.
+- **🌐 Website chính thức & Liên hệ tác giả:** [**https://duongbirken.deta.vn**](https://duongbirken.deta.vn)
+- **🐙 GitHub Profile:** [**https://github.com/duongbirken2510**](https://github.com/duongbirken2510)
+- **📦 Kho mã nguồn dự án:** [**https://github.com/duongbirken2510/LIVE-Bando**](https://github.com/duongbirken2510/LIVE-Bando)
+- **💿 Hướng dẫn Tải Bộ Cài `.EXE` 1-Click:** [**`DOWNLOAD_APP.md`**](./DOWNLOAD_APP.md)
+- **🗺️ Hồ sơ Giới thiệu Sản phẩm & Công nghệ 10 Chương (`info/`):** [**`info/Introduce_VietNamDatNuocTaOi.md`**](./info/Introduce_VietNamDatNuocTaOi.md)
+- **📖 Cẩm nang Hướng dẫn Sử dụng A–Z (`docs/USER_GUIDE.md`):** [**`docs/USER_GUIDE.md`**](./docs/USER_GUIDE.md)

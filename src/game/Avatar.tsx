@@ -6,7 +6,9 @@ export function Avatar({ user, size, className = '' }: { user: { name: string; a
   const ok = user.avatar && broken !== user.avatar;
   let hue = 0;
   for (const c of user.name) hue = (hue * 31 + c.charCodeAt(0)) % 360;
-  const letter = (user.name.trim().split(/\s+/).pop() ?? '?').slice(0, 1).toUpperCase() || '?';
+  const clean = user.name.replace(/[^\p{L}\p{N}\s]/gu, '').trim();
+  const lastWord = (clean || user.name.trim()).split(/\s+/).pop() ?? '?';
+  const letter = Array.from(lastWord)[0]?.toUpperCase() || '?';
   return (
     <div
       className={`avatar ${className}`}
