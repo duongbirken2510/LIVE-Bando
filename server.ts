@@ -23,7 +23,7 @@ dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 4012;
 
 // Giọng đọc. MC chính (câu không ghi gì hoặc "M:") là giọng nam; câu "F:" là MC nữ HoaiMy.
 // Đổi cao độ không cần sửa code: đặt biến môi trường TTS_PITCH (vd "+6%", "-4%") trong .env hoặc BAT-LIVE.bat

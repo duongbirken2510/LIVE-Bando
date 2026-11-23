@@ -123,7 +123,7 @@ class VietNamDatNuocTaOiLauncher
             return;
         }
 
-        if (!IsPortListening(3000))
+        if (!IsPortListening(4012))
         {
             string nodeExe = ResolveNodeExe(appDir);
             string args = File.Exists(tsxCli)
@@ -141,7 +141,7 @@ class VietNamDatNuocTaOiLauncher
                     UseShellExecute = false,
                     WindowStyle = ProcessWindowStyle.Hidden
                 };
-                psi.EnvironmentVariables["PORT"] = "3000";
+                psi.EnvironmentVariables["PORT"] = "4012";
                 psi.EnvironmentVariables["LIVE_MODE"] = "1";
                 Process.Start(psi);
             }
@@ -153,12 +153,12 @@ class VietNamDatNuocTaOiLauncher
 
             for (int i = 0; i < 35; i++)
             {
-                if (IsPortListening(3000)) break;
+                if (IsPortListening(4012)) break;
                 Thread.Sleep(200);
             }
         }
 
-        OpenAppWindow("http://localhost:3000");
+        OpenAppWindow("http://localhost:4012");
     }
 }
 `;
@@ -310,7 +310,7 @@ public class SetupForm : Form
         this.Controls.Add(chkDesktopShortcut);
 
         chkLaunchNow = new CheckBox();
-        chkLaunchNow.Text = "Mở ngay Việt Nam Đất Nước Ta Ơi (Port 3000) sau khi cài đặt xong";
+        chkLaunchNow.Text = "Mở ngay Việt Nam Đất Nước Ta Ơi (Port 4012) sau khi cài đặt xong";
         chkLaunchNow.Checked = true;
         chkLaunchNow.ForeColor = Color.FromArgb(243, 233, 210);
         chkLaunchNow.Location = new Point(30, 200);
@@ -522,7 +522,7 @@ public class SetupForm : Form
                     Path.Combine(desktopDir, "Việt Nam Đất Nước Ta Ơi - TikTok LIVE.lnk"),
                     launcherExe,
                     targetDir,
-                    "Game Bản Đồ Việt Nam 34 Tỉnh Thành & Đảo Cho TikTok LIVE (Port 3000)"
+                    "Game Bản Đồ Việt Nam 34 Tỉnh Thành & Đảo Cho TikTok LIVE (Port 4012)"
                 );
 
                 string startMenuDir = Environment.GetFolderPath(Environment.SpecialFolder.Programs);
@@ -530,7 +530,7 @@ public class SetupForm : Form
                     Path.Combine(startMenuDir, "Việt Nam Đất Nước Ta Ơi - TikTok LIVE.lnk"),
                     launcherExe,
                     targetDir,
-                    "Game Bản Đồ Việt Nam 34 Tỉnh Thành & Đảo Cho TikTok LIVE (Port 3000)"
+                    "Game Bản Đồ Việt Nam 34 Tỉnh Thành & Đảo Cho TikTok LIVE (Port 4012)"
                 );
             }
 
@@ -551,7 +551,7 @@ public class SetupForm : Form
                 MessageBox.Show(
                     "🎉 Đã cài đặt thành công Việt Nam Đất Nước Ta Ơi (LIVE-BANDO v1.0)!\\n\\n" +
                     "👉 Biểu tượng 'Việt Nam Đất Nước Ta Ơi - TikTok LIVE' đã được tạo ngoài màn hình Desktop.\\n" +
-                    "👉 Link gắn vào TikTok LIVE Studio (1080x1920): http://lvh.me:3000/?view=stage",
+                    "👉 Link gắn vào TikTok LIVE Studio (1080x1920): http://lvh.me:4012/?view=stage",
                     "Cài Đặt Hoàn Tất",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
