@@ -976,6 +976,9 @@ function main() {
   execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' });
 
   console.log('  [+] Đang biên dịch Launcher + System Tray Guardian v2: Viet-Nam-Dat-Nuoc-Ta-Oi.exe ...');
+  try {
+    execSync('taskkill /F /IM Viet-Nam-Dat-Nuoc-Ta-Oi.exe >nul 2>&1', { stdio: 'ignore' });
+  } catch {}
   const rootLauncherExe = path.join(ROOT_DIR, 'Viet-Nam-Dat-Nuoc-Ta-Oi.exe');
   compileAppLauncherExe(cscPath, rootLauncherExe);
   fs.copyFileSync(rootLauncherExe, path.join(STAGE_DIR, 'Viet-Nam-Dat-Nuoc-Ta-Oi.exe'));

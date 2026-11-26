@@ -578,7 +578,8 @@ async function listenFree(server: http.Server, port: number, what: string): Prom
 async function start() {
   // giữ cổng chính TRƯỚC, rồi mới chọn cổng tự tải lại: 2 game bật cùng lúc không giành nhau
   const port = await listenFree(http.createServer(app), PORT, 'Server');
-  if (process.env.NODE_ENV !== 'production') {
+  const hasProdDist = fs.existsSync(path.join(__dirname, 'dist', 'index.html'));
+  if (process.env.NODE_ENV !== 'production' || !hasProdDist) {
     const { createServer } = await import('vite');
     const live = process.env.LIVE_MODE === '1';
     // Lúc sửa code: kênh tự tải lại dùng cổng riêng từ 24680 (Đi Chùa giữ 24678), bận thì lùi sang cổng kế.
