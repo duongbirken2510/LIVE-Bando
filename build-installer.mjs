@@ -376,14 +376,18 @@ public class VietNamDatNuocTaOiLauncher
         });
     }
 
-    public static bool EnsureServerRunning(string appDir)
+    public static bool EnsureServerRunning(string appDir, bool forceRestartIfOccupied = false)
     {
-        if (IsHealthyServerRunning(4012)) return true;
+        if (!forceRestartIfOccupied && IsHealthyServerRunning(4012)) return true;
 
         if (IsPortListening(4012))
         {
             KillServerProcesses(appDir);
-            Thread.Sleep(350);
+            for (int w = 0; w < 15; w++)
+            {
+                if (!IsPortListening(4012)) break;
+                Thread.Sleep(150);
+            }
         }
 
         string serverTs = Path.Combine(appDir, "server.ts");
@@ -493,16 +497,17 @@ public class VietNamDatNuocTaOiLauncher
         Application.SetCompatibleTextRenderingDefault(false);
 
         string appDir = AppDomain.CurrentDomain.BaseDirectory;
-        if (!EnsureServerRunning(appDir))
-        {
-            return;
-        }
-
-        OpenAppWindow("http://localhost:4012");
-
         bool createdNew = false;
         using (Mutex trayMutex = new Mutex(true, "Local\\\\VietNamDatNuocTaOiTrayGuardian_4012", out createdNew))
         {
+            // Khi mo app lan dau (createdNew == true): luon kiem tra neu port 4012 dang bi chiem thi kill port cu roi khoi chay server moi
+            if (!EnsureServerRunning(appDir, createdNew))
+            {
+                return;
+            }
+
+            OpenAppWindow("http://localhost:4012");
+
             if (!createdNew)
             {
                 return;
@@ -773,6 +778,23 @@ public class SetupForm : Form
             foreach (Process p in Process.GetProcessesByName("Viet-Nam-Dat-Nuoc-Ta-Oi"))
             {
                 try { p.Kill(); p.WaitForExit(1500); } catch { }
+            }
+        }
+        catch { }
+
+        try
+        {
+            ProcessStartInfo killerPsi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c \\"for /f \\"tokens=5\\" %a in ('netstat -aon ^| findstr :4012 ^| findstr LISTENING') do taskkill /F /PID %a >nul 2>&1\\"",
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            using (Process kp = Process.Start(killerPsi))
+            {
+                if (kp != null) kp.WaitForExit(1500);
             }
         }
         catch { }

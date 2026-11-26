@@ -8,21 +8,26 @@ if not exist "node_modules" (
     call npm install
 )
 
-:: Neu da co Viet-Nam-Dat-Nuoc-Ta-Oi.exe (tich hop System Tray Guardian + cho Server san sang), chay truc tiep
+:: Kiem tra xem cong 4012 co bi tien trinh cu chiem khong; neu co thi kill cong cu truoc khi mo moi
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":4012 " ^| findstr "LISTENING"') do (
+    if not "%%a"=="0" (
+        echo Dang giai phong tien trinh cu tren cong 4012 (PID %%a)...
+        taskkill /F /PID %%a >nul 2>&1
+    )
+)
+timeout /t 1 /nobreak >nul
+
+:: Neu da co Viet-Nam-Dat-Nuoc-Ta-Oi.exe (tich hop System Tray Guardian + Port Guard), chay truc tiep
 if exist "%~dp0Viet-Nam-Dat-Nuoc-Ta-Oi.exe" (
     start "" "%~dp0Viet-Nam-Dat-Nuoc-Ta-Oi.exe"
     exit /b 0
 )
 
-:: Fallback khi khong co file .exe: chay node truc tiep voi tsx cli.mjs (khong dung Start-Process npx vi npx la .cmd)
-netstat -ano | findstr ":4012 " | findstr "LISTENING" >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Dang khoi dong Server Viet Nam Dat Nuoc Ta Oi tren cong 4012...
-    if exist "%~dp0runtime\node.exe" (
-        start "" /b "%~dp0runtime\node.exe" "%~dp0node_modules\tsx\dist\cli.mjs" "%~dp0server.ts"
-    ) else (
-        start "" /b node "%~dp0node_modules\tsx\dist\cli.mjs" "%~dp0server.ts"
-    )
+echo Dang khoi dong Server Viet Nam Dat Nuoc Ta Oi tren cong 4012...
+if exist "%~dp0runtime\node.exe" (
+    start "" /b "%~dp0runtime\node.exe" "%~dp0node_modules\tsx\dist\cli.mjs" "%~dp0server.ts"
+) else (
+    start "" /b node "%~dp0node_modules\tsx\dist\cli.mjs" "%~dp0server.ts"
 )
 
 :: Cho Server san sang tren cong 4012 (toi da 15 giay) truoc khi mo cua so App

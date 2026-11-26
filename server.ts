@@ -41,6 +41,50 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+function resolveStaticFile(relPath: string): string | null {
+  for (const base of [__dirname, process.cwd()]) {
+    const candidate = path.join(base, relPath);
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) return candidate;
+  }
+  return null;
+}
+
+app.get('/favicon.ico', (_req, res) => {
+  const p = resolveStaticFile(path.join('public', 'favicon.ico')) || resolveStaticFile(path.join('public', 'assets', 'app-icon.ico'));
+  if (!p) return res.status(404).end();
+  res.setHeader('Content-Type', 'image/x-icon');
+  res.send(fs.readFileSync(p));
+});
+
+app.get('/vn34.json', (_req, res) => {
+  const p = resolveStaticFile(path.join('public', 'vn34.json')) || resolveStaticFile(path.join('dist', 'vn34.json'));
+  if (!p) return res.status(404).end();
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.send(fs.readFileSync(p));
+});
+
+app.get('/assets/:file', (req, res, next) => {
+  const safeName = path.basename(String(req.params.file || ''));
+  const p = resolveStaticFile(path.join('public', 'assets', safeName)) || resolveStaticFile(path.join('dist', 'assets', safeName));
+  if (!p) return next();
+  const ext = path.extname(p).toLowerCase();
+  const mime =
+    ext === '.png'
+      ? 'image/png'
+      : ext === '.ico'
+        ? 'image/x-icon'
+        : ext === '.svg'
+          ? 'image/svg+xml'
+          : ext === '.js'
+            ? 'application/javascript; charset=utf-8'
+            : ext === '.css'
+              ? 'text/css; charset=utf-8'
+              : 'application/octet-stream';
+  res.setHeader('Content-Type', mime);
+  res.send(fs.readFileSync(p));
+});
+
 app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')));
 
 // ---------- SSE ----------
@@ -610,8 +654,8 @@ async function start() {
     app.use(express.static(distDir));
     app.use(express.static(path.join(__dirname, 'public')));
     app.get('*', (_req, res) => {
-      const indexHtml = path.join(distDir, 'index.html');
-      if (fs.existsSync(indexHtml)) {
+      const indexHtml = resolveStaticFile(path.join('dist', 'index.html')) || resolveStaticFile('index.html');
+      if (indexHtml) {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.send(fs.readFileSync(indexHtml, 'utf8'));
       } else {
