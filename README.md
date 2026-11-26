@@ -6,14 +6,15 @@
   <h3>
     💿 👉 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[TẢI NGAY BỘ CÀI ĐẶT WINDOWS 1-CLICK: Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe]</b></a> 👈
   </h3>
-  <p><i>(Đã nhúng sẵn Node.js Runtime + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay, KHÔNG cần cài đặt Node.js!)</i></p>
+  <p><i>(Đã nhúng sẵn Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay trên cổng 4012, KHÔNG cần cài đặt Node.js!)</i></p>
 </div>
 
 > **Game Bản Đồ Việt Nam 34 Tỉnh Thành & Biển Đảo Tương Tác Thời Gian Thực Cho TikTok LIVE (`1080 × 1920`)**  
 > Người xem gõ tên tỉnh, thành phố hoặc hòn đảo quê mình vào bình luận, bản đồ Việt Nam bay camera cận cảnh tới tỉnh đó, đốm sáng bay vòng cung thắp sáng tỉnh kèm Avatar và tên người gọi, MC AI đọc tên bạn ấy và nhắc 1–2 món ngon, danh thắng của quê nhà (hoặc gửi lời thương tới các anh chiến sĩ đang giữ đảo Hoàng Sa, Trường Sa).  
 > **Tác giả:** **Duong Birken** — [https://duongbirken.deta.vn](https://duongbirken.deta.vn)  
 > **Kho mã nguồn:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
-> **Tải bộ cài đặt `.EXE` 1-Click:** [GitHub Releases v1.0.0](https://github.com/duongbirken2510/LIVE-Bando/releases/latest) · [`DOWNLOAD_APP.md`](./DOWNLOAD_APP.md)
+> **Tải bộ cài đặt `.EXE` 1-Click:** [GitHub Releases v1.0.0](https://github.com/duongbirken2510/LIVE-Bando/releases/latest) · [`DOWNLOAD_APP.md`](./DOWNLOAD_APP.md)  
+> **Cổng vận hành mặc định:** `http://localhost:4012` (Admin) · `http://lvh.me:4012/?view=stage` (Sân khấu TikTok LIVE Studio `1080 × 1920`)
 
 ---
 
@@ -33,7 +34,7 @@ Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dù
 
 ## 🖼️ Giao Diện Thực Tế (Trang Điều Khiển Admin & Sân Khấu `1080 × 1920`)
 
-### 1. Trang Quản Trị Admin, Bảng Chọn 20 Giao Diện & Khung Xem Trước (`http://localhost:3000`)
+### 1. Trang Quản Trị Admin, Bảng Chọn 20 Giao Diện & Khung Xem Trước (`http://localhost:4012`)
 <div align="center">
   <img src="./docs/screenshots/01-admin-dashboard.png" alt="Trang Quản Trị Admin & Bàn Điều Khiển Việt Nam Đất Nước Ta Ơi" width="100%" />
 </div>
@@ -50,18 +51,18 @@ Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dù
 
 | Tài liệu | Đường dẫn | Nội dung chính |
 | :--- | :--- | :--- |
-| 💿 **Tải Bộ Cài Đặt Windows 1-Click (`.EXE`)** | [**`DOWNLOAD_APP.md`**](./DOWNLOAD_APP.md) | Link tải trực tiếp `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (tích hợp sẵn Node.js, tự tạo biểu tượng Desktop) và `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`. |
+| 💿 **Tải Bộ Cài Đặt Windows 1-Click (`.EXE`)** | [**`DOWNLOAD_APP.md`**](./DOWNLOAD_APP.md) | Link tải trực tiếp `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (tích hợp sẵn Node.js, System Tray Guardian v2, tự tạo biểu tượng Desktop) và `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`. |
 | 🗺️ **Hồ Sơ Giới Thiệu Sản Phẩm & Công Nghệ (10 Chương)** | [**`info/Introduce_VietNamDatNuocTaOi.md`**](./info/Introduce_VietNamDatNuocTaOi.md) | Định nghĩa sản phẩm, ma trận 8 nhóm tính năng, thuật toán nhận diện 34 tỉnh + tỉnh cũ + 125 đảo, kiến trúc D3-Geo & WebAudio chuyên sâu. |
 | 📖 **Cẩm Nang Hướng Dẫn Sử Dụng Toàn Tập (A–Z · VI/EN)** | [**`docs/USER_GUIDE.md`**](./docs/USER_GUIDE.md) | Hướng dẫn cài đặt `.exe` 1-Click, chạy `.bat`, nhúng Browser Source `1080 × 1920` vào TikTok LIVE Studio, đổi 20 giao diện sơn mài và xử lý sự cố. |
 
 ---
 
-## 🚀 Cài Đặt & Khởi Chạy Nhanh
+## 🚀 Cài Đặt & Khởi Chạy Nhanh (`Port 4012`)
 
 ### Cách 1: Cài đặt bằng Bộ Cài `.EXE` 1-Click (Khuyên dùng — Không cần cài Node.js)
 1. Tải file **[`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)**.
 2. Nhấp đúp mở file vừa tải (nếu Windows hiện bảng xanh *Windows protected your PC*, bấm **More info** ➔ **Run anyway**) rồi bấm nút **`🚀 CÀI ĐẶT NGAY (1-CLICK)`**.
-3. Phần mềm tự động tạo biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài màn hình Desktop và mở ngay **Trang điều khiển** (`http://localhost:3000`).
+3. Phần mềm tự động tạo biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài màn hình Desktop, đặt biểu tượng **System Tray Guardian** ở góc đồng hồ Windows và mở ngay **Trang điều khiển** ở chế độ Desktop App (`http://localhost:4012`).
 
 ### Cách 2: Chạy từ mã nguồn bằng `BAT-LIVE.bat` (Dành cho người dùng tải ZIP / Git Clone)
 
@@ -73,16 +74,16 @@ Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dù
 1. Vào [https://nodejs.org](https://nodejs.org), tải bản **LTS**, bấm **Next** liên tục rồi **Install**.
 
 #### Bước 3: Chạy game
-1. Mở thư mục game, bấm đúp file [`BAT-LIVE.bat`](./BAT-LIVE.bat) (hoặc [`Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](./Viet-Nam-Dat-Nuoc-Ta-Oi.exe)).
+1. Mở thư mục game, bấm đúp file [`Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](./Viet-Nam-Dat-Nuoc-Ta-Oi.exe) hoặc [`BAT-LIVE.bat`](./BAT-LIVE.bat).
 2. Nếu Windows hiện bảng xanh *"Windows protected your PC"*, bấm **More info** rồi **Run anyway**.
-3. Lần đầu game tự cài thư viện (`1–2 phút`), xong trình duyệt tự mở **Trang điều khiển** (`http://localhost:3000`).
-4. Khi muốn tắt hoàn toàn server và giải phóng cổng `3000`, bấm đúp file [`TAT-LIVE.bat`](./TAT-LIVE.bat).
+3. Lần đầu game tự cài thư viện (`1–2 phút`), xong tự mở **Trang điều khiển** ở chế độ cửa sổ ứng dụng (`http://localhost:4012`).
+4. Khi muốn tắt hoàn toàn server và giải phóng cổng `4012`: bấm nút đỏ **`🔌 Tắt Server (Port 4012)`** ở góc trên bên phải trang điều khiển, hoặc click vào biểu tượng góc đồng hồ Windows chọn **`🔌 Thoát Hẳn & Tắt Server (Port 4012)`**, hoặc bấm đúp file [`TAT-LIVE.bat`](./TAT-LIVE.bat).
 
 #### Bước 4: Đưa màn hình game vào TikTok LIVE Studio
 1. Trong **TikTok LIVE Studio**, thêm nguồn **Link** (nguồn trang web / Browser Source).
-2. Dán link: **`http://lvh.me:3000/?view=stage`**
+2. Dán link: **`http://lvh.me:4012/?view=stage`** (hoặc bấm nút **`📋 Copy link LIVE Studio`** trên thanh đầu trang điều khiển).
 3. Đặt kích thước **`1080 × 1920`** (màn hình dọc).
-*(Nếu cửa sổ đen báo cổng 3000 đang bận nên dùng cổng 3001 thì đổi link theo đúng cổng in trên Trang điều khiển).*
+*(Khi TikTok LIVE Studio đã mở trang Stage, trang điều khiển sẽ tự động bật chế độ **⚡ Tiết kiệm GPU / GPU Saver** tạm ẩn khung xem trước phụ để dành 100% tài nguyên đồ họa cho buổi Live).*
 
 #### Bước 5: Kết nối với buổi live
 1. Bấm **Phát trực tiếp** trên TikTok trước.
@@ -114,18 +115,19 @@ Mọi thiết lập dưới đây đều chỉnh bằng chuột và tự động
 
 ---
 
-## 🧪 Bảng Cổng HTTP / SSE API (`Port 3000`)
+## 🧪 Bảng Cổng HTTP / SSE API (`Port 4012`)
 
-| HTTP / SSE Endpoint (`Port 3000`) | Phương thức | Chức năng |
+| HTTP / SSE Endpoint (`Port 4012`) | Phương thức | Chức năng |
 | :--- | :---: | :--- |
-| `/` | `GET` | Trang Quản trị Admin + Bảng chọn 20 giao diện & Khung xem trước Stage `9:16` |
+| `/` | `GET` | Trang Quản trị Admin + Bảng chọn 20 giao diện, GPU Saver & Khung xem trước Stage `9:16` |
 | `/?view=stage` | `GET` | Màn hình Sân khấu độc lập `1080 × 1920` cho TikTok LIVE Studio / OBS |
 | `/api/tiktok/events` | `GET (SSE)` | Luồng sự kiện thời gian thực (`status`, `speaker`, `chat`, `gift`, `like`, `member`, `follow`, `control`) |
 | `/api/tiktok/connect` & `/disconnect` | `POST` | Kết nối / Ngắt kết nối trực tiếp phòng TikTok LIVE qua `@username` |
 | `/api/control` | `POST` | Đồng bộ giao diện (`setTheme`), chữ & âm thanh (`setPrefs`), giọng MC (`setVoice`, `setRate`, `speak`) |
 | `/api/tts` | `GET` | Tổng hợp giọng đọc tiếng Việt `MsEdgeTTS` (*Hoài My / Nam Minh*) + `Google TTS` dự phòng |
 | `/api/test/emit` | `POST` | Giả lập bình luận, quà tặng, thả tim, người vào phòng ngay khi chưa mở Live |
-| `/api/server/shutdown` | `POST` | Ngắt kết nối và giải phóng hoàn toàn cổng `3000` |
+| `/api/system/tray-ping` | `GET` | Tín hiệu watchdog & phát hiện đóng cửa sổ Admin (`closeSeq`) cho System Tray Guardian v2 |
+| `/api/system/shutdown` & `/api/server/shutdown` | `POST` | Ngắt kết nối và giải phóng hoàn toàn cổng `4012` |
 
 ---
 

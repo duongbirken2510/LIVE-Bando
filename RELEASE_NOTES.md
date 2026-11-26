@@ -1,4 +1,4 @@
-# 🗺️ Việt Nam Đất Nước Ta Ơi (`LIVE-BANDO`) v1.0.0 — Official Release
+# 🗺️ Việt Nam Đất Nước Ta Ơi (`LIVE-BANDO`) v1.0.0 — Official Release (Port `4012` + System Tray Guardian v2)
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/duongbirken2510/LIVE-Bando/master/docs/media/live_bando_brand_banner.png" alt="Việt Nam Đất Nước Ta Ơi Brand Banner" width="100%" />
@@ -8,8 +8,8 @@
 
 ## 💿 Tải Bộ Cài Đặt Windows 1-Click (`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`)
 
-- 👉 **[Tải ngay `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (1-Click Windows Setup)](https://github.com/duongbirken2510/LIVE-Bando/releases/download/v1.0.0/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)** *(Đã tích hợp sẵn toàn bộ Node.js Runtime + Bản đồ 34 Tỉnh Thành & Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp cài đặt là chạy ngay, không cần cài Node.js!)*
-- 👉 **[Tải Launcher rời `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/download/v1.0.0/Viet-Nam-Dat-Nuoc-Ta-Oi.exe)** *(File chạy trực tiếp từ thư mục mã nguồn không hiện cửa sổ CMD đen).*
+- 👉 **[Tải ngay `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (1-Click Windows Setup)](https://github.com/duongbirken2510/LIVE-Bando/releases/download/v1.0.0/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)** *(Đã tích hợp sẵn toàn bộ Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành & Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp cài đặt là chạy ngay trên cổng `4012`, không cần cài Node.js!)*
+- 👉 **[Tải Launcher rời `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/download/v1.0.0/Viet-Nam-Dat-Nuoc-Ta-Oi.exe)** *(File chạy trực tiếp từ thư mục mã nguồn ở chế độ Desktop App `--app` kèm biểu tượng Khay hệ thống góc đồng hồ Windows).*
 
 ---
 
@@ -28,6 +28,9 @@
 5. **Thanh Tim Chung `2.026 Tim — Cả Nước Sáng Đèn!` & 5 Tầng Hiệu Ứng Quà Tặng:**
    - Cả phòng chung tay thả đủ **2.026 tim**, toàn bộ 34 tỉnh thành cùng thắp sáng lan từ Bắc vào Nam trong 5 giây kèm nhạc mừng ngũ cung.
    - 5 tầng hiệu ứng quà tặng (*Đốm sáng ➔ Mưa xu ➔ Băng rôn ➔ Pháo hoa trên tỉnh ➔ Đại tiệc pháo hoa toàn màn hình & kèn chào*), hỗ trợ giữ xu cộng bù (`pendingXu`) cho người tặng quà trước khi gõ tên quê.
+6. **System Tray Guardian v2, Cổng Mặc Định `4012` & Chế Độ Tiết Kiệm GPU (`GPU Saver`):**
+   - Chạy trên cổng mặc định **`4012`** (`http://localhost:4012` & `http://lvh.me:4012/?view=stage`) để không bao giờ xung đột cổng với các công cụ livestream khác.
+   - Tích hợp **System Tray Guardian v2** ở góc đồng hồ Windows (hiện thông báo Balloon tức thì khi đóng cửa sổ điều khiển, click chuột trái/phải mở menu nhanh hoặc **`🔌 Thoát Hẳn & Tắt Server (Port 4012)`**), cùng chế độ **GPU Saver** tự động nhường 100% hiệu năng đồ họa cho TikTok LIVE Studio.
 
 ---
 

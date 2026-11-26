@@ -52,6 +52,34 @@ export function Dashboard({
   const [msg, setMsg] = useState('');
   const [speakText, setSpeakText] = useState('');
   const [busy, setBusy] = useState(false);
+  const [forcePreview, setForcePreview] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [shuttingDown, setShuttingDown] = useState(false);
+
+  const currentPort = typeof window !== 'undefined' ? window.location.port || '4012' : '4012';
+  const stageUrl = `http://lvh.me:${currentPort}/?view=stage`;
+  const gpuSaverActive = (status?.stages ?? 0) > 0 && !forcePreview;
+
+  const copyStageUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(stageUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2200);
+    } catch {
+      setMsg(`Link LIVE Studio: ${stageUrl}`);
+    }
+  };
+
+  const shutdownServer = async () => {
+    setShuttingDown(true);
+    try {
+      await fetch('/api/system/shutdown', { method: 'POST' });
+      setMsg('Đã gửi lệnh tắt Server & giải phóng cổng ' + currentPort);
+    } catch (e) {
+      setMsg(String(e));
+      setShuttingDown(false);
+    }
+  };
 
   const connect = async () => {
     setBusy(true);
@@ -86,6 +114,53 @@ export function Dashboard({
 
   return (
     <div className="min-h-screen bg-slate-950 p-4 text-slate-100 md:p-6">
+      <header className="mx-auto mb-5 flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-slate-900/95 px-4 py-3 shadow-lg">
+        <div className="flex items-center gap-3">
+          <img
+            src="/assets/app-icon.png"
+            alt="Việt Nam Đất Nước Ta Ơi"
+            className="h-11 w-11 rounded-xl border border-amber-400/50 object-cover shadow"
+            onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
+          />
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-base font-extrabold tracking-wide text-amber-300 md:text-lg">
+                🗺️ VIỆT NAM ĐẤT NƯỚC TA ƠI
+              </h1>
+              <span className="rounded-full border border-amber-400/40 bg-amber-500/15 px-2.5 py-0.5 text-xs font-bold text-amber-300">
+                Port {currentPort}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              Bản đồ 34 tỉnh thành &amp; biển đảo tương tác thời gian thực cho TikTok LIVE (1080 × 1920)
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={copyStageUrl}
+            className="rounded-lg border border-amber-400/40 bg-slate-800 px-3 py-2 text-xs font-semibold text-amber-200 transition hover:bg-slate-700"
+          >
+            {copiedLink ? '✅ Đã copy link Stage!' : '📋 Copy link LIVE Studio'}
+          </button>
+          <a
+            href={stageUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-700"
+          >
+            🎬 Mở Stage 9:16 ↗
+          </a>
+          <button
+            onClick={shutdownServer}
+            disabled={shuttingDown}
+            className="rounded-lg bg-rose-700 px-3 py-2 text-xs font-bold text-white transition hover:bg-rose-600 disabled:opacity-40"
+          >
+            {shuttingDown ? '⏳ Đang tắt...' : `🔌 Tắt Server (Port ${currentPort})`}
+          </button>
+        </div>
+      </header>
+
       <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-[1fr_auto]">
         <div className="space-y-4">
           <Card title="Kết nối TikTok LIVE">
@@ -231,8 +306,36 @@ export function Dashboard({
         </div>
 
         <div className="justify-self-center">
-          <div className="mb-2 text-center text-sm text-slate-400">Xem trước (im lặng)</div>
-          <div className="overflow-hidden rounded-2xl ring-1 ring-slate-700">{preview}</div>
+          <div className="mb-2 flex items-center justify-between gap-2 text-sm text-slate-400">
+            <span>Xem trước (im lặng)</span>
+            {(status?.stages ?? 0) > 0 && (
+              <button
+                onClick={() => setForcePreview((v) => !v)}
+                className="rounded-md bg-slate-800 px-2 py-0.5 text-xs text-amber-300 hover:bg-slate-700"
+              >
+                {forcePreview ? '⚡ Bật GPU Saver' : '👁️ Hiện xem trước'}
+              </button>
+            )}
+          </div>
+          {gpuSaverActive ? (
+            <div className="flex h-[720px] w-[405px] flex-col items-center justify-center rounded-2xl border border-emerald-500/30 bg-slate-900/90 p-6 text-center shadow-xl">
+              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15 text-2xl">
+                ⚡
+              </div>
+              <h3 className="text-base font-bold text-emerald-300">Chế Độ Tiết Kiệm GPU Đang Bật</h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-400">
+                Đang phát hiện <b>{status?.stages}</b> màn hình Sân khấu (<code>?view=stage</code>) mở trong TikTok LIVE Studio / Trình duyệt. Khung xem trước tại trang điều khiển tự động tạm ẩn để dành 100% hiệu năng đồ họa cho buổi Live.
+              </p>
+              <button
+                onClick={() => setForcePreview(true)}
+                className="mt-4 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-slate-950 hover:bg-amber-400"
+              >
+                👁️ Vẫn bật xem Sân khấu trực tiếp tại đây
+              </button>
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-2xl ring-1 ring-slate-700">{preview}</div>
+          )}
         </div>
       </div>
     </div>

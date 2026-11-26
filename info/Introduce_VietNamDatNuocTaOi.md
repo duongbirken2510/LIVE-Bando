@@ -6,12 +6,12 @@
   <h3>
     💿 👉 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[TẢI NGAY BỘ CÀI ĐẶT WINDOWS 1-CLICK: Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe]</b></a> 👈
   </h3>
-  <p><i>(Tích hợp sẵn Node.js Runtime + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay!)</i></p>
+  <p><i>(Tích hợp sẵn Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay trên cổng 4012!)</i></p>
 </div>
 
 > **Khẩu hiệu (Tagline):** *"Gõ Tên Tỉnh Thành Quê Hương — Bản Đồ Việt Nam 34 Tỉnh & Biển Đảo Bay Tới, Thắp Sáng & Kể Chuyện Đặc Sản Quê Nhà Tự Động 100% Cho TikTok LIVE"*  
 > **Nền tảng hỗ trợ:** Windows 10/11 · macOS · Linux (Node.js + Express + React 19 + D3-Geo + Motion + TikTok LIVE Studio / OBS `1080 × 1920`)  
-> **Cổng vận hành mặc định:** `http://localhost:3000` (Trang điều khiển Admin) · `http://lvh.me:3000/?view=stage` (Sân khấu TikTok LIVE Studio `1080 × 1920`)  
+> **Cổng vận hành mặc định:** `http://localhost:4012` (Trang điều khiển Admin) · `http://lvh.me:4012/?view=stage` (Sân khấu TikTok LIVE Studio `1080 × 1920`)  
 > **Tác giả & Website chính thức:** **Duong Birken** — [https://duongbirken.deta.vn](https://duongbirken.deta.vn)  
 > **Kho mã nguồn & Tải về:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
 > **Bộ cài đặt Windows 1-Click (`.EXE`):** [`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe) · [`../DOWNLOAD_APP.md`](../DOWNLOAD_APP.md)  
@@ -55,7 +55,7 @@ Khán giả xem phiên livestream chỉ cần **gõ tên tỉnh, thành phố ho
 | **5. Thanh Tim Chung `2.026 Tim — Cả Nước Sáng Đèn!` & 5 Tầng Quà Tặng** | • Mọi lượt thả tim trong phòng đều gom vào thanh **❤ Thắp sáng cả nước**: cứ đủ **2.026 tim**, toàn bộ 34 tỉnh thành bừng sáng tuần tự từ Bắc vào Nam trong 5 giây kèm bản hòa âm ngũ cung [`playCelebrate()`](../src/game/sfx.ts).<br>• 5 tầng hiệu ứng quà tặng [`GiftFx.tsx`](../src/game/GiftFx.tsx): `1–4 xu` (+3đ, đốm sáng) · `5–29 xu` (+30đ, mưa xu) · `30–99 xu` (+100đ, mưa xu dày + băng rôn + ưu tiên chen lên đầu hàng) · `100–999 xu` (+500đ, pháo hoa trên tỉnh) · `Từ 1.000 xu` (+3.000đ, đại tiệc pháo hoa toàn màn hình + kèn fanfare).<br>• Cơ chế **cộng bù xu thông minh (`pendingXu`)**: khán giả tặng quà khi chưa kịp gõ tên quê thì số xu vẫn được giữ nguyên qua các vòng, gõ tên quê lúc nào được cộng bù điểm ngay lúc đó! |
 | **6. Đếm Đồng Hương Các Buổi Live & Bục Quê Nhà Top 3** | • Mỗi vòng kéo dài `2 phút 30 giây` (tùy chỉnh được từ `1` đến `10 phút`), kết thúc bằng `15 giây Tổng kết vòng` vinh danh Top 3 trên **Bục quê nhà** (cột `2 - 1 - 3`) và danh hiệu **Người giữ lửa quê** (MVP góp nhiều điểm nhất).<br>• Bộ đếm **Đồng hương các buổi live** (`localStorage` key `vndnto:fans`) lưu tích lũy số tài khoản duy nhất từng gọi tên mỗi tỉnh qua mọi buổi phát sóng. |
 | **7. Bộ Lọc Từ Tục 3 Lớp & Nhận Diện Lời Cầu Chúc 7 Chủ Đề** | • MC **không bao giờ đọc nguyên văn bình luận tự do** của người xem để tránh rủi ro vi phạm tiêu chuẩn cộng đồng.<br>• Tuy nhiên, bộ nhận diện [`detectWish()`](../src/live/chatter.ts) hiểu được lời cầu chúc trong bình luận theo 7 chủ đề (*Thi cử, Sức khỏe, Tình duyên, Gia đình, Công việc, Tài lộc, Bình an*) để MC gửi lời chúc ấm áp đúng tên người xem. |
-| **8. Bàn Điều Khiển Admin Trực Quan & Giả Lập Live Tự Động (10/50/100 Người)** | • Chỉnh toàn bộ 9 nhãn chữ hiển thị trên màn hình, tốc độ giọng đọc (`0.7× – 1.5×`), âm lượng nhạc nền ngũ cung 116 BPM ngay bằng chuột.<br>• Tích hợp khung **Giả lập & Live tự động** chạy trọn 1 vòng với `10`, `50` hoặc `100` người chơi ảo để chủ kênh kiểm tra hiệu ứng trước khi lên sóng. |
+| **8. System Tray Guardian v2, Chế Độ Tiết Kiệm GPU (`GPU Saver`) & Giả Lập Live Tự Động** | • Launcher [`Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](../build-installer.mjs) mở bảng điều khiển ở chế độ Desktop App (`--app`) và ghim biểu tượng **System Tray Guardian v2** ở góc đồng hồ Windows (hiện thông báo Balloon tức thì khi đóng cửa sổ điều khiển, click chuột trái/phải mở menu nhanh hoặc **`🔌 Thoát Hẳn & Tắt Server (Port 4012)`**).<br>• Khi phát hiện đã mở Stage trong TikTok LIVE Studio (`stages > 0`), trang Admin tự động kích hoạt **GPU Saver** ẩn khung xem trước phụ để dành 100% tài nguyên đồ họa cho buổi Live.<br>• Tích hợp khung **Giả lập & Live tự động** chạy trọn 1 vòng với `10`, `50` hoặc `100` người chơi ảo. |
 
 ---
 
@@ -80,10 +80,10 @@ Khán giả xem phiên livestream chỉ cần **gõ tên tỉnh, thành phố ho
 
 | Thời điểm / Bước | Tình huống thực tế của Chủ kênh (Host) | Cách `LIVE-BANDO` phản hồi thông minh |
 | :--- | :--- | :--- |
-| **Bước 1: Mở game 1-Click (5 giây)** | Chủ kênh nhấp đúp biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài Desktop (hoặc file `BAT-LIVE.bat`). | Server khởi động trên cổng `3000` (nếu bận tự động dò cổng trống kế tiếp `3001..3019`), mở trang điều khiển Admin `http://localhost:3000`. |
-| **Bước 2: Chọn giao diện & Lên sóng** | Chủ kênh gắn nguồn Link `http://lvh.me:3000/?view=stage` (`1080 × 1920`) vào TikTok LIVE Studio, chọn giao diện **Sơn mài** hoặc **Cờ đỏ sao vàng**, nhập `@username` và bấm **Kết nối**. | Hệ thống kiểm tra tài khoản đã mở live chưa (`fetchIsLive()`), kết nối Webcast Proto v3, đồng bộ mắt xem, lượt tim, bình luận, quà tặng và khóa chống đè 2 giọng đọc (`announceSpeaker`). |
+| **Bước 1: Mở game 1-Click (5 giây)** | Chủ kênh nhấp đúp biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài Desktop (hoặc file `BAT-LIVE.bat`). | Server khởi động trên cổng `4012`, ghim biểu tượng **System Tray Guardian** ở góc đồng hồ Windows và mở trang điều khiển Admin ở chế độ App Mode `http://localhost:4012`. |
+| **Bước 2: Chọn giao diện & Lên sóng** | Chủ kênh bấm **`📋 Copy link LIVE Studio`**, gắn nguồn Link `http://lvh.me:4012/?view=stage` (`1080 × 1920`) vào TikTok LIVE Studio, chọn giao diện **Sơn mài**, nhập `@username` và bấm **Kết nối**. | Hệ thống kiểm tra `fetchIsLive()`, kết nối Webcast Proto v3, tự động bật chế độ **⚡ GPU Saver** trên trang Admin để nhường 100% GPU cho LIVE Studio và khóa chống đè 2 giọng đọc (`announceSpeaker`). |
 | **Bước 3: Cao trào gọi tên quê & Thắp sáng cả nước** | Hàng trăm khán giả gõ tên tỉnh/đảo, thả tim và tặng quà kéo quê hương lên Top 3 Bục quê nhà. | Camera bay liên hoàn giữa các tỉnh, đốm sáng bay vòng cung, tỉnh nào nhiều điểm càng sáng đậm (`heat`); khi thanh tim chạm mốc **2.026 tim**, cả 34 tỉnh bừng sáng từ Bắc vào Nam kèm nhạc mừng. |
-| **Bước 4: Tổng kết vòng & Xoay vòng tự động** | Đồng hồ đếm ngược 10 giây cuối nháy lớn *"Còn N giây, quê nào vượt lên?"* rồi về `00:00`. | Bảng **Tổng kết vòng** hiện Top 3 quê hương và vinh danh **Người giữ lửa quê** trong 15 giây (quà tặng trong lúc tổng kết vẫn được giữ sang vòng mới), sau đó tự động bước sang vòng kế tiếp. |
+| **Bước 4: Tổng kết vòng & Tắt server gọn gàng** | Đồng hồ đếm ngược 10 giây cuối nháy lớn *"Còn N giây, quê nào vượt lên?"* rồi về `00:00`; cuối buổi chủ kênh bấm **`🔌 Tắt Server (Port 4012)`**. | Bảng **Tổng kết vòng** hiện Top 3 quê hương và vinh danh **Người giữ lửa quê** trong 15 giây rồi xoay vòng mới; khi bấm tắt, server ngắt sạch kết nối và giải phóng cổng `4012` ngay lập tức. |
 
 ---
 
@@ -118,7 +118,7 @@ Khán giả xem phiên livestream chỉ cần **gõ tên tỉnh, thành phố ho
 | **Nhận diện ngôn ngữ tự nhiên** | Bỏ dấu đơn giản, dễ nhận nhầm *"chị Huệ"* thành *Huế* | **Thuật toán Xét Dấu Trước + hỗ trợ gõ tắt, không dấu, gõ dính liền (`thanhhoa`, `danang`), vượt qua 85 câu test** |
 | **Chiều sâu văn hóa & cảm xúc** | Chỉ đọc tên tỉnh khô khan | **MC kể món ngon, danh thắng từng vùng và gửi lời thương tới các chiến sĩ đang giữ đảo Hoàng Sa – Trường Sa** |
 | **Tùy biến thẩm mỹ sân khấu** | 1 giao diện cố định | **20 giao diện mỹ thuật Việt Nam (*Sơn mài, Lụa đỏ, Gốm Chu Đậu, Giấy dó, Cờ đỏ sao vàng...*) đổi tức thì 1 chạm** |
-| **Âm thanh & Bản quyền** | Dùng file MP3 dễ bị TikTok tắt tiếng vì bản quyền | **100% WebAudio tự tổng hợp nhạc ngũ cung 116 BPM & hiệu ứng đốm sáng / pháo hoa 5 tầng, tự hạ nhạc khi MC nói** |
+| **Hiệu năng & Vận hành Desktop** | Ngốn GPU gấp đôi khi mở cả Admin lẫn Stage, khó tắt tiến trình ngầm | **Tự động bật `GPU Saver` khi mở Stage + `System Tray Guardian v2` ở góc đồng hồ Windows** |
 
 ---
 
@@ -139,14 +139,14 @@ Khán giả xem phiên livestream chỉ cần **gõ tên tỉnh, thành phố ho
 
 ```mermaid
 flowchart LR
-    A["📱 Khán giả TikTok LIVE<br/>(Comment tên quê / Thả tim / Tặng quà)"] --> B["⚡ Node.js Express Server (Port 3000)<br/>tiktok-live-connector v2 + Edge/Google TTS"]
-    B -->|SSE /api/tiktok/events| C["🎛️ Trang Điều Khiển Admin<br/>(Chọn 20 Giao diện · Sửa chữ · Giả lập)"]
+    A["📱 Khán giả TikTok LIVE<br/>(Comment tên quê / Thả tim / Tặng quà)"] --> B["⚡ Node.js Express Server (Port 4012)<br/>tiktok-live-connector v2 + Edge/Google TTS"]
+    B -->|SSE /api/tiktok/events| C["🎛️ Trang Điều Khiển Admin (GPU Saver)<br/>(Chọn 20 Giao diện · Sửa chữ · Giả lập)"]
     B -->|SSE /api/tiktok/events| D["🗺️ Sân Khấu 1080×1920 (?view=stage)<br/>D3-Geo 34 Tỉnh + Hoàng Sa & Trường Sa"]
     C -->|POST /api/control| B
     D --> E["✨ Camera Zoom + Đốm Sáng Vòng Cung<br/>+ MC AI Kể Đặc Sản & Nhạc Ngũ Cung"]
 ```
 
-### 8.1. Toàn Cảnh Trang Điều Khiển Quản Trị Admin & Khung Xem Trước Sân Khấu (`http://localhost:3000`)
+### 8.1. Toàn Cảnh Trang Điều Khiển Quản Trị Admin & Khung Xem Trước Sân Khấu (`http://localhost:4012`)
 ![Trang điều khiển Admin Việt Nam Đất Nước Ta Ơi](../docs/screenshots/01-admin-dashboard.png)
 
 ### 8.2. Thư Viện Hình Ảnh Sân Khấu `1080 × 1920` Thực Tế Trên TikTok LIVE Studio
@@ -167,11 +167,11 @@ flowchart LR
   - Nếu dùng **Bộ cài 1-Click [`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest)**: **Không cần cài đặt Node.js** (đã nhúng sẵn Node Runtime bên trong).
   - Nếu chạy từ mã nguồn (`BAT-LIVE.bat` / `npm run dev`): Node.js `v18+` (khuyên dùng `v20+` hoặc `v22+` LTS), kết nối mạng Internet để tạo giọng MC AI và phần mềm **TikTok LIVE Studio** hoặc **OBS Studio**.
 
-### 🔌 Bảng Cổng HTTP / SSE API (`Port 3000`)
+### 🔌 Bảng Cổng HTTP / SSE API (`Port 4012`)
 
-| Endpoint (`Port 3000`) | Phương thức | Chức năng |
+| Endpoint (`Port 4012`) | Phương thức | Chức năng |
 | :--- | :---: | :--- |
-| `/` | `GET` | Giao diện Trang điều khiển Admin + Bảng chọn 20 giao diện + Khung xem trước Stage `9:16` |
+| `/` | `GET` | Giao diện Trang điều khiển Admin + Bảng chọn 20 giao diện, GPU Saver + Khung xem trước Stage `9:16` |
 | `/?view=stage` | `GET` | Màn hình Sân khấu độc lập `1080 × 1920` gắn vào nguồn Link của TikTok LIVE Studio / OBS |
 | `/api/tiktok/events` | `GET (SSE)` | Luồng sự kiện thời gian thực (`status`, `speaker`, `chat`, `gift`, `like`, `member`, `follow`, `control`) |
 | `/api/tiktok/status` | `GET` | Truy vấn trạng thái kết nối phòng live, số mắt xem, tổng tim và số tab Stage đang mở |
@@ -179,10 +179,11 @@ flowchart LR
 | `/api/control` | `POST` | Đồng bộ lệnh điều khiển (`setTheme`, `setPrefs`, `setName`, `setVoice`, `setRate`, `speak`, `reset`, `custom`) và lưu vào `settings.json` |
 | `/api/tts` | `GET` | Tổng hợp giọng đọc tiếng Việt `MsEdgeTTS` (*Hoài My / Nam Minh*) kèm tự động chuyển đổi dự phòng sang `Google TTS` và bộ nhớ đệm 200 câu |
 | `/api/test/emit` | `POST` | Giả lập sự kiện `chat`, `gift`, `like`, `member`, `follow`, `share` để thử nghiệm ngay khi chưa bật Live |
-| `/api/server/shutdown` | `POST` | Đóng kết nối TikTok LIVE, ngắt luồng SSE và giải phóng hoàn toàn cổng `3000` |
+| `/api/system/tray-ping` | `GET` | Watchdog kiểm tra trạng thái server & phát hiện sự kiện đóng cửa sổ Admin (`closeSeq`) cho System Tray Guardian |
+| `/api/system/shutdown` & `/api/server/shutdown` | `POST` | Đóng kết nối TikTok LIVE, ngắt luồng SSE và giải phóng hoàn toàn cổng `4012` |
 
 ### ❓ Câu Hỏi Thường Gặp (FAQ)
-- **Hỏi: Vì sao nên dán link `http://lvh.me:3000/?view=stage` vào TikTok LIVE Studio thay vì `localhost`?**
+- **Hỏi: Vì sao nên dán link `http://lvh.me:4012/?view=stage` vào TikTok LIVE Studio thay vì `localhost`?**
   - *Đáp:* Một số phiên bản TikTok LIVE Studio chặn từ khóa `localhost` trong nguồn Link. Tên miền `lvh.me` luôn phân giải trực tiếp về `127.0.0.1` trên máy tính của bạn nên vượt qua bộ lọc hoàn toàn hợp lệ và không tốn băng thông mạng.
 - **Hỏi: Làm sao để tránh nghe 2 giọng MC hoặc 2 lớp nhạc đè nhau?**
   - *Đáp:* Hệ thống đã có cơ chế `announceSpeaker` tự động chỉ cho phép **trang `?view=stage` mở sau cùng** phát tiếng. Khi đã gắn link vào TikTok LIVE Studio, bạn nhớ đóng các tab `?view=stage` mở thử ngoài trình duyệt Chrome/Edge.

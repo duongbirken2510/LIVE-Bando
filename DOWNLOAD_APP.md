@@ -7,7 +7,7 @@
   <h3>
     👉 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[TẢI NGAY BỘ CÀI ĐẶT 1-CLICK: Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe]</b></a> 👈
   </h3>
-  <p><i>(Đã tích hợp sẵn toàn bộ Node.js Runtime + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về bấm đúp là chạy ngay, KHÔNG cần cài đặt Node.js hay gõ lệnh!)</i></p>
+  <p><i>(Đã tích hợp sẵn toàn bộ Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về bấm đúp là chạy ngay, KHÔNG cần cài đặt Node.js hay gõ lệnh!)</i></p>
 </div>
 
 ---
@@ -20,10 +20,11 @@
    - Mở file `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` vừa tải về.
    - *(Nếu Windows hiện bảng xanh **Windows protected your PC / SmartScreen**: Bấm vào chữ **More info** (Thông tin thêm) ➔ bấm nút **Run anyway** (Vẫn chạy)).*
 3. **Bước 3 — Bấm nút `🚀 CÀI ĐẶT NGAY (1-CLICK)`:**
-   - Bộ cài đặt sẽ tự động giải nén, **tạo biểu tượng `Việt Nam Đất Nước Ta Ơi - TikTok LIVE` ngoài màn hình Desktop** và tự động mở bảng điều khiển game ở địa chỉ `http://localhost:3000`!
-4. **Bước 4 — Những lần mở sau:**
+   - Bộ cài đặt sẽ tự động giải nén, **tạo biểu tượng `Việt Nam Đất Nước Ta Ơi - TikTok LIVE` ngoài màn hình Desktop**, hiển thị biểu tượng **System Tray Guardian** ở góc đồng hồ Windows và tự động mở bảng điều khiển game ở chế độ Desktop App (`http://localhost:4012`)!
+4. **Bước 4 — Những lần mở sau & Cách thoát hẳn:**
    - Bạn chỉ cần nhấp đúp vào biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài màn hình Desktop (hoặc chạy trực tiếp file **`Viet-Nam-Dat-Nuoc-Ta-Oi.exe`** hay **`BAT-LIVE.bat`** trong thư mục dự án).
-   - Khi muốn tắt hoàn toàn Server để giải phóng cổng `3000`, chỉ cần nhấp đúp vào file **`TAT-LIVE.bat`**.
+   - Khi bấm dấu `X` đóng cửa sổ điều khiển, phần mềm tự động thu gọn xuống **Khay Hệ Thống (góc đồng hồ Windows)** để không làm tắt sân khấu đang phát trên TikTok LIVE Studio.
+   - Khi kết thúc buổi Live và muốn tắt hoàn toàn Server để giải phóng cổng `4012`: bấm nút đỏ **`🔌 Tắt Server (Port 4012)`** ở góc trên bên phải trang điều khiển, hoặc click chuột trái/phải vào biểu tượng ở góc đồng hồ Windows chọn **`🔌 Thoát Hẳn & Tắt Server (Port 4012)`**, hoặc chạy file **`TAT-LIVE.bat`**.
 
 ---
 
@@ -31,8 +32,8 @@
 
 1. **Download:** Click **[`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)** from **[GitHub Releases](https://github.com/duongbirken2510/LIVE-Bando/releases/latest)**.
 2. **Run Installer:** Double-click `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (if Windows SmartScreen prompts, click **More info** ➔ **Run anyway**) and click **`🚀 CÀI ĐẶT NGAY (1-CLICK)`**.
-3. **Play & Stream:** The installer includes a self-contained Node.js runtime and all dependencies, creates a **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** shortcut on your Desktop, and launches the Admin Dashboard at `http://localhost:3000` automatically.
-4. **Add to TikTok LIVE Studio (`1080 × 1920`):** Add a **Link (Browser Source)** with URL `http://lvh.me:3000/?view=stage` and resolution `1080 × 1920`.
+3. **Play & Stream:** The installer includes a self-contained Node.js runtime, custom `.ICO` icon, and **System Tray Guardian v2**, creates a **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** shortcut on your Desktop, and launches the Admin Dashboard in App Mode at `http://localhost:4012` automatically.
+4. **Add to TikTok LIVE Studio (`1080 × 1920`):** Add a **Link (Browser Source)** with URL `http://lvh.me:4012/?view=stage` and resolution `1080 × 1920`.
 
 ---
 

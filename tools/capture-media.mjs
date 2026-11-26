@@ -123,7 +123,7 @@ async function main() {
   const tsxCli = path.join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs');
   const serverProc = spawn(process.execPath, [tsxCli, 'server.ts'], {
     cwd: ROOT,
-    env: { ...process.env, PORT: '4019', LIVE_MODE: '1' },
+    env: { ...process.env, PORT: '4012', LIVE_MODE: '1' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
@@ -169,23 +169,7 @@ async function main() {
   await waitForHttp(`http://127.0.0.1:${debugPort}/json/version`);
 
   try {
-    // A. Render SVG Brand Banner (2400 x 1260) & CTA Banner (2400 x 760)
-    console.log('3. Kết xuất Brand Banner & CTA Banner...');
-    {
-      const brandSvgUrl = pathToFileURL(path.join(MEDIA_DIR, 'live_bando_brand_banner.svg')).href;
-      const { cdp } = await openTab(debugPort, brandSvgUrl, 2400, 1260, 1);
-      await sleep(700);
-      await capturePng(cdp, path.join(MEDIA_DIR, 'live_bando_brand_banner.png'), { x: 0, y: 0, width: 2400, height: 1260 });
-      cdp.close();
-    }
-    {
-      const ctaSvgUrl = pathToFileURL(path.join(MEDIA_DIR, 'live_bando_cta_banner.svg')).href;
-      const { cdp } = await openTab(debugPort, ctaSvgUrl, 2400, 760, 1);
-      await sleep(700);
-      await capturePng(cdp, path.join(MEDIA_DIR, 'live_bando_cta_banner.png'), { x: 0, y: 0, width: 2400, height: 760 });
-      cdp.close();
-    }
-
+    // Brand Banner & CTA Banner 3D được kết xuất riêng qua tools/render-3d-banners.mjs
     // Đặt cấu hình mặc định chuẩn: Sơn mài, 150s (2 phút 30 giây), tốc độ 1.1x
     await postJson(baseUrl, '/api/control', { action: 'setTheme', text: 'son-mai' });
     await postJson(baseUrl, '/api/control', { action: 'setName', text: 'Duong Birken Live' });
@@ -281,6 +265,9 @@ async function main() {
 
     // SHOT 03: Bắn quà tặng 199 xu vào Đà Nẵng -> Camera bay cận cảnh tới Đà Nẵng + Ghim Avatar + Pháo hoa
     console.log('7. Chụp 03-stage-zoom-tinh-que-huong.png & 01-admin-dashboard.png...');
+    await adminTab.cdp.send('Runtime.evaluate', {
+      expression: `Array.from(document.querySelectorAll('button')).find(b => b.textContent?.includes('Vẫn bật xem'))?.click()`,
+    });
     await postJson(baseUrl, '/api/test/emit', {
       type: 'gift',
       data: { username: 'lananh_dn', nickname: 'Lan Anh', giftName: 'Pháo hoa', giftId: 2, diamondCount: 199, repeatCount: 1 },

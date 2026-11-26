@@ -1,7 +1,7 @@
 /**
- * TRÌNH ĐÓNG GÓI BỘ CÀI ĐẶT .EXE 1-CLICK CHO NGƯỜI DÙNG KHÔNG RÀNH GITHUB / NODE.JS
+ * TRÌNH ĐÓNG GÓI BỘ CÀI ĐẶT .EXE 1-CLICK + SYSTEM TRAY GUARDIAN V2 CHO NGƯỜI DÙNG KHÔNG RÀNH GITHUB / NODE.JS
  * Xuất bản:
- *  1) Viet-Nam-Dat-Nuoc-Ta-Oi.exe                            --> File chạy trực tiếp không hiện CMD đen
+ *  1) Viet-Nam-Dat-Nuoc-Ta-Oi.exe                            --> Launcher App-Mode + System Tray Guardian v2 (NotifyIcon góc đồng hồ Windows)
  *  2) release/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe         --> 1 FILE CÀI ĐẶT .EXE DUY NHẤT (nhúng sẵn Node.js + node_modules + public/vn34.json + dist + tạo icon Desktop)
  */
 
@@ -44,14 +44,260 @@ function compileAppLauncherExe(cscPath, outputExePath) {
   const csSource = `
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-class VietNamDatNuocTaOiLauncher
+public class TrayGuardianContext : ApplicationContext
 {
-    static bool IsPortListening(int port)
+    private readonly string _appDir;
+    private readonly NotifyIcon _trayIcon;
+    private readonly ContextMenuStrip _menu;
+    private readonly System.Windows.Forms.Timer _watchdogTimer;
+    private readonly System.Windows.Forms.Timer _leftClickTimer;
+    private int _offlineChecks = 0;
+    private int _lastCloseSeq = -1;
+
+    public TrayGuardianContext(string appDir)
+    {
+        _appDir = appDir;
+
+        Icon appIcon = SystemIcons.Application;
+        try
+        {
+            string customIco = Path.Combine(_appDir, "public", "assets", "app-icon.ico");
+            if (File.Exists(customIco))
+            {
+                appIcon = new Icon(customIco);
+            }
+            else
+            {
+                Icon extracted = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+                if (extracted != null) appIcon = extracted;
+            }
+        }
+        catch { }
+
+        _menu = new ContextMenuStrip();
+
+        ToolStripMenuItem itemOpenAdmin = new ToolStripMenuItem("🗺️ Mở Bàn Điều Khiển (Port 4012)");
+        itemOpenAdmin.Font = new Font(_menu.Font, FontStyle.Bold);
+        itemOpenAdmin.Click += (s, e) =>
+        {
+            VietNamDatNuocTaOiLauncher.EnsureServerRunning(_appDir);
+            VietNamDatNuocTaOiLauncher.OpenAppWindow("http://localhost:4012");
+        };
+        _menu.Items.Add(itemOpenAdmin);
+
+        ToolStripMenuItem itemOpenStage = new ToolStripMenuItem("🎬 Mở Sân Khấu 9:16 (Xem Trước)");
+        itemOpenStage.Click += (s, e) =>
+        {
+            VietNamDatNuocTaOiLauncher.EnsureServerRunning(_appDir);
+            VietNamDatNuocTaOiLauncher.OpenAppWindow("http://lvh.me:4012/?view=stage");
+        };
+        _menu.Items.Add(itemOpenStage);
+
+        ToolStripMenuItem itemCopyLink = new ToolStripMenuItem("📋 Copy Link Gắn TikTok LIVE Studio");
+        itemCopyLink.Click += (s, e) =>
+        {
+            try
+            {
+                Clipboard.SetText("http://lvh.me:4012/?view=stage");
+                _trayIcon.ShowBalloonTip(
+                    2500,
+                    "📋 Đã sao chép Link Sân Khấu 9:16",
+                    "http://lvh.me:4012/?view=stage - Hãy dán vào nguồn Liên kết (Link) trong TikTok LIVE Studio!",
+                    ToolTipIcon.Info
+                );
+            }
+            catch { }
+        };
+        _menu.Items.Add(itemCopyLink);
+
+        _menu.Items.Add(new ToolStripSeparator());
+
+        ToolStripMenuItem itemExit = new ToolStripMenuItem("🔌 Thoát Hẳn & Tắt Server (Port 4012)");
+        itemExit.Font = new Font(_menu.Font, FontStyle.Bold);
+        itemExit.ForeColor = Color.FromArgb(185, 28, 28);
+        itemExit.Click += (s, e) => ShutdownAndExit();
+        _menu.Items.Add(itemExit);
+
+        _trayIcon = new NotifyIcon
+        {
+            Icon = appIcon,
+            Text = "Việt Nam Đất Nước Ta Ơi (Port 4012) - Click trái/phải để Mở lại hoặc Thoát hẳn",
+            ContextMenuStrip = _menu,
+            Visible = true
+        };
+
+        _leftClickTimer = new System.Windows.Forms.Timer();
+        _leftClickTimer.Interval = 220;
+        _leftClickTimer.Tick += (s, e) =>
+        {
+            _leftClickTimer.Stop();
+            ShowTrayMenu();
+        };
+
+        _trayIcon.MouseClick += (s, e) =>
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _leftClickTimer.Stop();
+                _leftClickTimer.Start();
+            }
+        };
+
+        _trayIcon.DoubleClick += (s, e) =>
+        {
+            _leftClickTimer.Stop();
+            VietNamDatNuocTaOiLauncher.EnsureServerRunning(_appDir);
+            VietNamDatNuocTaOiLauncher.OpenAppWindow("http://localhost:4012");
+        };
+
+        _trayIcon.BalloonTipClicked += (s, e) =>
+        {
+            VietNamDatNuocTaOiLauncher.EnsureServerRunning(_appDir);
+            VietNamDatNuocTaOiLauncher.OpenAppWindow("http://localhost:4012");
+        };
+
+        _trayIcon.ShowBalloonTip(
+            3200,
+            "🗺️ Việt Nam Đất Nước Ta Ơi đang chạy (Port 4012)",
+            "Click chuột trái hoặc phải vào biểu tượng góc đồng hồ này bất cứ lúc nào để Mở lại hoặc Thoát hẳn!",
+            ToolTipIcon.Info
+        );
+
+        _watchdogTimer = new System.Windows.Forms.Timer();
+        _watchdogTimer.Interval = 1500;
+        _watchdogTimer.Tick += WatchdogTimer_Tick;
+        _watchdogTimer.Start();
+    }
+
+    private void ShowTrayMenu()
+    {
+        try
+        {
+            MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (mi != null)
+            {
+                mi.Invoke(_trayIcon, null);
+                return;
+            }
+        }
+        catch { }
+
+        try
+        {
+            _menu.Show(Cursor.Position);
+        }
+        catch { }
+    }
+
+    private void WatchdogTimer_Tick(object sender, EventArgs e)
+    {
+        int closeSeq;
+        bool alive = PollServerTrayPing(out closeSeq);
+        if (alive)
+        {
+            _offlineChecks = 0;
+            if (_lastCloseSeq < 0)
+            {
+                _lastCloseSeq = closeSeq;
+            }
+            else if (closeSeq > _lastCloseSeq)
+            {
+                _lastCloseSeq = closeSeq;
+                _trayIcon.ShowBalloonTip(
+                    4500,
+                    "🗺️ Đã thu gọn xuống Khay Hệ Thống (Port 4012)",
+                    "Sân khấu TikTok LIVE vẫn đang phát bình thường! Click chuột trái vào biểu tượng góc đồng hồ này để Mở lại hoặc chọn 'Thoát Hẳn & Tắt Server'.",
+                    ToolTipIcon.Info
+                );
+            }
+        }
+        else
+        {
+            _offlineChecks++;
+            if (_offlineChecks >= 2)
+            {
+                CleanupAndExit();
+            }
+        }
+    }
+
+    private bool PollServerTrayPing(out int closeSeq)
+    {
+        closeSeq = _lastCloseSeq < 0 ? 0 : _lastCloseSeq;
+        try
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:4012/api/system/tray-ping");
+            req.Method = "GET";
+            req.Host = "localhost:4012";
+            req.Timeout = 700;
+            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
+            using (StreamReader reader = new StreamReader(resp.GetResponseStream()))
+            {
+                string json = reader.ReadToEnd();
+                string marker = "\\"closeSeq\\":";
+                int idx = json.IndexOf(marker);
+                if (idx >= 0)
+                {
+                    int start = idx + marker.Length;
+                    while (start < json.Length && (json[start] == ' ' || json[start] == '\\t')) start++;
+                    int end = start;
+                    while (end < json.Length && char.IsDigit(json[end])) end++;
+                    if (end > start)
+                    {
+                        int parsed;
+                        if (int.TryParse(json.Substring(start, end - start), out parsed))
+                        {
+                            closeSeq = parsed;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        catch
+        {
+            return VietNamDatNuocTaOiLauncher.IsPortListening(4012);
+        }
+    }
+
+    private void ShutdownAndExit()
+    {
+        try
+        {
+            _watchdogTimer.Stop();
+            _leftClickTimer.Stop();
+        }
+        catch { }
+
+        VietNamDatNuocTaOiLauncher.KillServerProcesses(_appDir);
+        CleanupAndExit();
+    }
+
+    private void CleanupAndExit()
+    {
+        try
+        {
+            _watchdogTimer.Stop();
+            _leftClickTimer.Stop();
+            _trayIcon.Visible = false;
+            _trayIcon.Dispose();
+        }
+        catch { }
+        Application.Exit();
+    }
+}
+
+public class VietNamDatNuocTaOiLauncher
+{
+    public static bool IsPortListening(int port)
     {
         try
         {
@@ -70,7 +316,27 @@ class VietNamDatNuocTaOiLauncher
         }
     }
 
-    static string ResolveNodeExe(string appDir)
+    public static bool IsHealthyServerRunning(int port)
+    {
+        if (!IsPortListening(port)) return false;
+        try
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + port + "/api/tiktok/status");
+            req.Method = "GET";
+            req.Host = "localhost:" + port;
+            req.Timeout = 1200;
+            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
+            {
+                return (int)resp.StatusCode == 200;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static string ResolveNodeExe(string appDir)
     {
         string bundledNode = Path.Combine(appDir, "runtime", "node.exe");
         if (File.Exists(bundledNode)) return bundledNode;
@@ -79,7 +345,7 @@ class VietNamDatNuocTaOiLauncher
         return "node";
     }
 
-    static void OpenAppWindow(string url)
+    public static void OpenAppWindow(string url)
     {
         string[] browserPaths = new string[]
         {
@@ -110,68 +376,158 @@ class VietNamDatNuocTaOiLauncher
         });
     }
 
-    [STAThread]
-    static void Main()
+    public static bool EnsureServerRunning(string appDir)
     {
-        string appDir = AppDomain.CurrentDomain.BaseDirectory;
+        if (IsHealthyServerRunning(4012)) return true;
+
+        if (IsPortListening(4012))
+        {
+            KillServerProcesses(appDir);
+            Thread.Sleep(350);
+        }
+
         string serverTs = Path.Combine(appDir, "server.ts");
         string tsxCli = Path.Combine(appDir, "node_modules", "tsx", "dist", "cli.mjs");
 
         if (!File.Exists(serverTs))
         {
             MessageBox.Show("Không tìm thấy file server.ts tại: " + appDir, "Việt Nam Đất Nước Ta Ơi - LIVE-BANDO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        string nodeExe = ResolveNodeExe(appDir);
+        string args = File.Exists(tsxCli)
+            ? "\\"" + tsxCli + "\\" \\"server.ts\\""
+            : "\\"server.ts\\"";
+
+        try
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = nodeExe,
+                Arguments = args,
+                WorkingDirectory = appDir,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            psi.EnvironmentVariables["PORT"] = "4012";
+            psi.EnvironmentVariables["NODE_ENV"] = "production";
+            psi.EnvironmentVariables["LIVE_MODE"] = "1";
+            Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Không thể khởi động Node Runtime: " + ex.Message + "\\n\\nVui lòng chạy bản cài đặt Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe hoặc cài đặt Node.js từ https://nodejs.org", "Việt Nam Đất Nước Ta Ơi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        for (int i = 0; i < 40; i++)
+        {
+            if (IsHealthyServerRunning(4012)) return true;
+            Thread.Sleep(200);
+        }
+        return IsPortListening(4012);
+    }
+
+    public static void KillServerProcesses(string appDir)
+    {
+        string[] shutdownPaths = new string[] { "/api/system/shutdown", "/api/server/shutdown" };
+        foreach (string sp in shutdownPaths)
+        {
+            try
+            {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:4012" + sp);
+                req.Method = "POST";
+                req.Host = "localhost:4012";
+                req.Timeout = 1000;
+                req.ContentLength = 0;
+                using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse()) { }
+            }
+            catch { }
+        }
+
+        try
+        {
+            ProcessStartInfo killerPsi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c \\"for /f \\"tokens=5\\" %a in ('netstat -aon ^| findstr :4012 ^| findstr LISTENING') do taskkill /F /PID %a >nul 2>&1\\"",
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            using (Process kp = Process.Start(killerPsi))
+            {
+                if (kp != null) kp.WaitForExit(1500);
+            }
+        }
+        catch { }
+
+        string normTarget = "";
+        try { normTarget = Path.GetFullPath(appDir).ToLowerInvariant(); } catch { normTarget = appDir.ToLowerInvariant(); }
+
+        try
+        {
+            foreach (Process p in Process.GetProcessesByName("node"))
+            {
+                try
+                {
+                    string exePath = p.MainModule.FileName.ToLowerInvariant();
+                    if ((!string.IsNullOrEmpty(normTarget) && exePath.StartsWith(normTarget)) || exePath.Contains("viet-nam-dat-nuoc-ta-oi"))
+                    {
+                        p.Kill();
+                        p.WaitForExit(1200);
+                    }
+                }
+                catch { }
+            }
+        }
+        catch { }
+    }
+
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        string appDir = AppDomain.CurrentDomain.BaseDirectory;
+        if (!EnsureServerRunning(appDir))
+        {
             return;
         }
 
-        if (!IsPortListening(4012))
-        {
-            string nodeExe = ResolveNodeExe(appDir);
-            string args = File.Exists(tsxCli)
-                ? "\\"" + tsxCli + "\\" \\"server.ts\\""
-                : "\\"server.ts\\"";
+        OpenAppWindow("http://localhost:4012");
 
-            try
+        bool createdNew = false;
+        using (Mutex trayMutex = new Mutex(true, "Local\\\\VietNamDatNuocTaOiTrayGuardian_4012", out createdNew))
+        {
+            if (!createdNew)
             {
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = nodeExe,
-                    Arguments = args,
-                    WorkingDirectory = appDir,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-                psi.EnvironmentVariables["PORT"] = "4012";
-                psi.EnvironmentVariables["LIVE_MODE"] = "1";
-                Process.Start(psi);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Không thể khởi động Node Runtime: " + ex.Message + "\\n\\nVui lòng chạy bản cài đặt Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe hoặc cài đặt Node.js từ https://nodejs.org", "Việt Nam Đất Nước Ta Ơi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            for (int i = 0; i < 35; i++)
-            {
-                if (IsPortListening(4012)) break;
-                Thread.Sleep(200);
-            }
+            Application.Run(new TrayGuardianContext(appDir));
         }
-
-        OpenAppWindow("http://localhost:4012");
     }
 }
 `;
   const tempCs = path.join(RELEASE_ROOT, '_TempBandoLauncher.cs');
   fs.writeFileSync(tempCs, csSource, 'utf8');
-  execFileSync(cscPath, [
+  const iconPath = path.join(ROOT_DIR, 'public', 'assets', 'app-icon.ico');
+  const cscArgs = [
     '/target:winexe',
     '/optimize+',
     `/out:${outputExePath}`,
     '/r:System.dll',
+    '/r:System.Drawing.dll',
     '/r:System.Windows.Forms.dll',
-    tempCs,
-  ]);
+  ];
+  if (fs.existsSync(iconPath)) {
+    cscArgs.push(`/win32icon:${iconPath}`);
+  }
+  cscArgs.push(tempCs);
+  execFileSync(cscPath, cscArgs);
   fs.unlinkSync(tempCs);
 }
 
@@ -259,7 +615,7 @@ public class SetupForm : Form
 
     public SetupForm()
     {
-        this.Text = "Cài Đặt Việt Nam Đất Nước Ta Ơi (LIVE-BANDO v1.0) - Duong Birken";
+        this.Text = "Cài Đặt Việt Nam Đất Nước Ta Ơi (LIVE-BANDO) - Duong Birken";
         this.Size = new Size(595, 415);
         this.FormBorderStyle = FormBorderStyle.FixedDialog;
         this.MaximizeBox = false;
@@ -269,7 +625,7 @@ public class SetupForm : Form
         this.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
 
         lblTitle = new Label();
-        lblTitle.Text = "🗺️ VIỆT NAM ĐẤT NƯỚC TA ƠI — LIVE-BANDO v1.0";
+        lblTitle.Text = "🗺️ VIỆT NAM ĐẤT NƯỚC TA ƠI — LIVE-BANDO";
         lblTitle.Font = new Font("Segoe UI", 14.5f, FontStyle.Bold);
         lblTitle.ForeColor = Color.FromArgb(224, 180, 82);
         lblTitle.Location = new Point(28, 20);
@@ -277,7 +633,7 @@ public class SetupForm : Form
         this.Controls.Add(lblTitle);
 
         lblSub = new Label();
-        lblSub.Text = "Game Bản Đồ Việt Nam 34 Tỉnh Thành & Đảo Tương Tác Thời Gian Thực Cho TikTok LIVE\\nTích hợp sẵn Node.js Runtime, 20 Giao Diện Sơn Mài, Giọng MC AI & Hoàng Sa - Trường Sa.";
+        lblSub.Text = "Game Bản Đồ Việt Nam 34 Tỉnh Thành & Đảo Tương Tác Thời Gian Thực Cho TikTok LIVE\\nTích hợp sẵn Node.js Runtime, System Tray Guardian, 20 Giao Diện Sơn Mài & Giọng MC AI.";
         lblSub.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
         lblSub.ForeColor = Color.FromArgb(243, 233, 210);
         lblSub.Location = new Point(30, 58);
@@ -402,7 +758,9 @@ public class SetupForm : Form
             scType.InvokeMember("TargetPath", BindingFlags.SetProperty, null, shortcut, new object[] { targetExe });
             scType.InvokeMember("WorkingDirectory", BindingFlags.SetProperty, null, shortcut, new object[] { workingDir });
             scType.InvokeMember("Description", BindingFlags.SetProperty, null, shortcut, new object[] { description });
-            scType.InvokeMember("IconLocation", BindingFlags.SetProperty, null, shortcut, new object[] { targetExe + ",0" });
+            string customIco = Path.Combine(workingDir, "public", "assets", "app-icon.ico");
+            string iconLoc = File.Exists(customIco) ? customIco : (targetExe + ",0");
+            scType.InvokeMember("IconLocation", BindingFlags.SetProperty, null, shortcut, new object[] { iconLoc });
             scType.InvokeMember("Save", BindingFlags.InvokeMethod, null, shortcut, null);
         }
         catch { }
@@ -549,8 +907,9 @@ public class SetupForm : Form
             this.BeginInvoke(new Action(() =>
             {
                 MessageBox.Show(
-                    "🎉 Đã cài đặt thành công Việt Nam Đất Nước Ta Ơi (LIVE-BANDO v1.0)!\\n\\n" +
+                    "🎉 Đã cài đặt thành công Việt Nam Đất Nước Ta Ơi (LIVE-BANDO)!\\n\\n" +
                     "👉 Biểu tượng 'Việt Nam Đất Nước Ta Ơi - TikTok LIVE' đã được tạo ngoài màn hình Desktop.\\n" +
+                    "👉 Biểu tượng Khay Hệ Thống (System Tray) đã xuất hiện ở góc đồng hồ Windows.\\n" +
                     "👉 Link gắn vào TikTok LIVE Studio (1080x1920): http://lvh.me:4012/?view=stage",
                     "Cài Đặt Hoàn Tất",
                     MessageBoxButtons.OK,
@@ -581,7 +940,8 @@ public class SetupForm : Form
 `;
   const tempCs = path.join(RELEASE_ROOT, '_TempBandoSetupStub.cs');
   fs.writeFileSync(tempCs, csSource, 'utf8');
-  execFileSync(cscPath, [
+  const iconPath = path.join(ROOT_DIR, 'public', 'assets', 'app-icon.ico');
+  const cscArgs = [
     '/target:winexe',
     '/optimize+',
     `/out:${outputStubPath}`,
@@ -590,14 +950,18 @@ public class SetupForm : Form
     '/r:System.Windows.Forms.dll',
     '/r:System.IO.Compression.dll',
     '/r:System.IO.Compression.FileSystem.dll',
-    tempCs,
-  ]);
+  ];
+  if (fs.existsSync(iconPath)) {
+    cscArgs.push(`/win32icon:${iconPath}`);
+  }
+  cscArgs.push(tempCs);
+  execFileSync(cscPath, cscArgs);
   fs.unlinkSync(tempCs);
 }
 
 function main() {
   console.log('======================================================================');
-  console.log('  🗺️ ĐANG ĐÓNG GÓI BỘ CÀI ĐẶT .EXE 1-CLICK: VIỆT NAM ĐẤT NƯỚC TA ƠI (v1.0)');
+  console.log('  🗺️ ĐANG ĐÓNG GÓI BỘ CÀI ĐẶT .EXE 1-CLICK + TRAY GUARDIAN: VIỆT NAM ĐẤT NƯỚC TA ƠI');
   console.log('======================================================================');
 
   fs.mkdirSync(RELEASE_ROOT, { recursive: true });
@@ -611,7 +975,7 @@ function main() {
   console.log('  [+] Đang đóng gói giao diện Production (vite build -> dist/) ...');
   execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' });
 
-  console.log('  [+] Đang biên dịch Launcher: Viet-Nam-Dat-Nuoc-Ta-Oi.exe ...');
+  console.log('  [+] Đang biên dịch Launcher + System Tray Guardian v2: Viet-Nam-Dat-Nuoc-Ta-Oi.exe ...');
   const rootLauncherExe = path.join(ROOT_DIR, 'Viet-Nam-Dat-Nuoc-Ta-Oi.exe');
   compileAppLauncherExe(cscPath, rootLauncherExe);
   fs.copyFileSync(rootLauncherExe, path.join(STAGE_DIR, 'Viet-Nam-Dat-Nuoc-Ta-Oi.exe'));

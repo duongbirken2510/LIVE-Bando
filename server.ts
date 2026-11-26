@@ -68,6 +68,10 @@ const emptyStats = (): LiveStats => ({
 
 let liveStats = emptyStats();
 let sseClients: express.Response[] = [];
+let adminSseCount = 0;
+let lastAdminCloseSeq = 0;
+let adminCloseTimer: ReturnType<typeof setTimeout> | null = null;
+let isShuttingDownServer = false;
 // Các trang stage đang mở (theo thứ tự mở). Chỉ trang mở SAU CÙNG được phát tiếng, tránh 2 giọng đọc đè nhau
 // khi lỡ có 2 nguồn Link trong LIVE Studio hoặc mở thêm ?view=stage ở trình duyệt khác.
 let stageIds: string[] = [];
@@ -144,10 +148,14 @@ app.get('/api/tiktok/events', (req, res) => {
   if (stageId) {
     stageIds = [...stageIds.filter((x) => x !== stageId), stageId];
     announceSpeaker();
-  } else res.write(`event: speaker
-data: ${JSON.stringify(speakerInfo())}
-
-`);
+  } else {
+    adminSseCount++;
+    if (adminCloseTimer) {
+      clearTimeout(adminCloseTimer);
+      adminCloseTimer = null;
+    }
+    res.write(`event: speaker\ndata: ${JSON.stringify(speakerInfo())}\n\n`);
+  }
 
   const heartbeat = setInterval(() => {
     try {
@@ -163,6 +171,16 @@ data: ${JSON.stringify(speakerInfo())}
     if (stageId) {
       stageIds = stageIds.filter((x) => x !== stageId);
       announceSpeaker();
+    } else {
+      adminSseCount = Math.max(0, adminSseCount - 1);
+      if (adminSseCount === 0 && !isShuttingDownServer) {
+        if (adminCloseTimer) clearTimeout(adminCloseTimer);
+        adminCloseTimer = setTimeout(() => {
+          if (adminSseCount === 0 && !isShuttingDownServer) {
+            lastAdminCloseSeq++;
+          }
+        }, 850);
+      }
     }
   });
 });
@@ -486,7 +504,21 @@ app.get('/api/tts', async (req, res) => {
 });
 
 // ---------- API riêng của game: thêm bên dưới ----------
-app.post('/api/server/shutdown', (_req, res) => {
+app.get('/api/system/tray-ping', (_req, res) => {
+  res.json({
+    ok: true,
+    port: PORT,
+    adminCount: adminSseCount,
+    closeSeq: lastAdminCloseSeq,
+  });
+});
+
+const handleGracefulShutdown = (_req: express.Request, res: express.Response) => {
+  isShuttingDownServer = true;
+  if (adminCloseTimer) {
+    clearTimeout(adminCloseTimer);
+    adminCloseTimer = null;
+  }
   res.json({ success: true, message: 'Đang tắt server...' });
   setTimeout(() => {
     try {
@@ -503,7 +535,10 @@ app.post('/api/server/shutdown', (_req, res) => {
     }
     process.exit(0);
   }, 150);
-});
+};
+
+app.post('/api/server/shutdown', handleGracefulShutdown);
+app.post('/api/system/shutdown', handleGracefulShutdown);
 
 // ---------- Khởi động ----------
 const PORT_TRIES = 20; // cổng bận (game khác đang chạy) thì thử cổng kế tiếp, tối đa 20 lần
@@ -552,15 +587,36 @@ async function start() {
     const hmrPort = live ? 0 : await listenFree(hmrServer, 24680, 'Tự tải lại (HMR)');
     const vite = await createServer({
       server: live
-        ? { middlewareMode: true, hmr: false, ws: false }
-        : { middlewareMode: true, ws: { server: hmrServer, clientPort: hmrPort } },
+        ? {
+            middlewareMode: true,
+            hmr: false,
+            ws: false,
+            allowedHosts: ['lvh.me', '.lvh.me', 'localhost', '127.0.0.1'],
+            watch: { ignored: ['**/settings.json', '**/release/**', '**/dist/**', '**/runtime/**', '**/*.exe', '**/*.bat'] },
+          }
+        : {
+            middlewareMode: true,
+            ws: { server: hmrServer, clientPort: hmrPort },
+            allowedHosts: ['lvh.me', '.lvh.me', 'localhost', '127.0.0.1'],
+            watch: { ignored: ['**/settings.json', '**/release/**', '**/dist/**', '**/runtime/**', '**/*.exe', '**/*.bat'] },
+          },
       appType: 'spa',
     });
     app.use(vite.middlewares);
     if (!live) console.log(`Cổng tự tải lại (HMR): ${hmrPort}`);
   } else {
-    app.use(express.static(path.join(__dirname, 'dist')));
-    app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'dist', 'index.html')));
+    const distDir = path.join(__dirname, 'dist');
+    app.use(express.static(distDir));
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.get('*', (_req, res) => {
+      const indexHtml = path.join(distDir, 'index.html');
+      if (fs.existsSync(indexHtml)) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.send(fs.readFileSync(indexHtml, 'utf8'));
+      } else {
+        res.status(404).send('Chưa build dist/index.html');
+      }
+    });
   }
 
   const dashboard = `http://localhost:${port}`;

@@ -7,14 +7,14 @@
   <h3>
     💿 👉 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[TẢI NGAY BỘ CÀI ĐẶT WINDOWS 1-CLICK: Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe]</b></a> 👈
   </h3>
-  <p><i>(Đã nhúng sẵn Node.js Runtime + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay, KHÔNG cần cài đặt Node.js!)</i></p>
+  <p><i>(Đã nhúng sẵn Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay trên cổng 4012, KHÔNG cần cài đặt Node.js!)</i></p>
 </div>
 
 > **Tác giả / Author:** **Duong Birken** — [https://duongbirken.deta.vn](https://duongbirken.deta.vn)  
 > **Kho mã nguồn chính thức / Official GitHub Repository:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
 > **Tải bộ cài đặt `.EXE` 1-Click / 1-Click Installer:** [GitHub Releases v1.0.0](https://github.com/duongbirken2510/LIVE-Bando/releases/latest) · [`../DOWNLOAD_APP.md`](../DOWNLOAD_APP.md)  
 > **Hồ sơ Giới thiệu Sản phẩm & Công nghệ (10 Chương):** [`../info/Introduce_VietNamDatNuocTaOi.md`](../info/Introduce_VietNamDatNuocTaOi.md)  
-> **Cổng vận hành mặc định / Default Ports:** Admin `http://localhost:3000` · TikTok LIVE Studio Stage `http://lvh.me:3000/?view=stage` (`1080 × 1920`)
+> **Cổng vận hành mặc định / Default Ports:** Admin `http://localhost:4012` · TikTok LIVE Studio Stage `http://lvh.me:4012/?view=stage` (`1080 × 1920`)
 
 ---
 
@@ -57,23 +57,26 @@ Trò chơi được chia sẻ miễn phí cho cộng đồng nhà sáng tạo n�
 2. Nhấp đúp mở `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`:
    - Nếu Windows hiện bảng xanh *Windows protected your PC (SmartScreen)*: bấm vào chữ **More info** (*Thông tin thêm*) ➔ bấm **Run anyway** (*Vẫn chạy*).
 3. Bấm nút **`🚀 CÀI ĐẶT NGAY (1-CLICK)`**:
-   - Bộ cài đặt đã tích hợp sẵn Node.js Runtime và toàn bộ dữ liệu bản đồ 34 tỉnh thành, sẽ tự động giải nén, **tạo biểu tượng `Việt Nam Đất Nước Ta Ơi - TikTok LIVE` ngoài màn hình Desktop** và mở ngay trang điều khiển tại `http://localhost:3000`!
+   - Bộ cài đặt đã tích hợp sẵn Node.js Runtime và toàn bộ dữ liệu bản đồ 34 tỉnh thành, sẽ tự động giải nén, **tạo biểu tượng `Việt Nam Đất Nước Ta Ơi - TikTok LIVE` ngoài màn hình Desktop**, hiển thị biểu tượng **System Tray Guardian** ở góc đồng hồ Windows và mở ngay trang điều khiển ở chế độ Desktop App tại `http://localhost:4012`!
 4. Những lần sử dụng sau, bạn chỉ cần nhấp đúp vào biểu tượng **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** ngoài Desktop (hoặc chạy `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`).
+5. **Cách thu gọn xuống Khay hệ thống & Thoát hẳn:**
+   - Khi bạn bấm dấu `X` đóng cửa sổ điều khiển, phần mềm tự động thu gọn xuống **Khay Hệ Thống (góc đồng hồ Windows)** và hiện thông báo Balloon nhắc bạn rằng sân khấu TikTok LIVE vẫn đang chạy bình thường.
+   - Muốn mở lại hoặc tắt hẳn: Click chuột trái hoặc phải vào biểu tượng **`VN34`** ở góc đồng hồ Windows ➔ chọn **`🗺️ Mở Bàn Điều Khiển (Port 4012)`** hoặc chọn dòng chữ đỏ **`🔌 Thoát Hẳn & Tắt Server (Port 4012)`** (hoặc bấm nút đỏ **`🔌 Tắt Server (Port 4012)`** ngay góc trên bên phải trang điều khiển).
 
 ### 💻 Cách B — Chạy từ thư mục mã nguồn bằng `BAT-LIVE.bat` trên Windows 10 / 11
 1. Nếu chưa cài **Node.js**, truy cập [https://nodejs.org](https://nodejs.org), tải bản **LTS** và bấm *Next ➔ Install* (cài 1 lần duy nhất).
 2. Tải mã nguồn dự án về máy và **giải nén hoàn toàn** ra thư mục (ví dụ: `D:\Game\LIVE-BANDO`).
 3. Nhấp đúp vào file **[`BAT-LIVE.bat`](../BAT-LIVE.bat)**:
    - Lần đầu tiên chạy, game tự động cài đặt thư viện (`npm install`) trong khoảng 1–2 phút.
-   - Sau đó trình duyệt tự động mở **Trang điều khiển Admin** tại `http://localhost:3000`.
-   - **Lưu ý:** Giữ cửa sổ đen mở trong suốt buổi live (hoặc dùng `Viet-Nam-Dat-Nuoc-Ta-Oi.exe` nếu muốn chạy ngầm không hiện cửa sổ đen). Khi muốn tắt hẳn server để giải phóng cổng `3000`, nhấp đúp vào file **[`TAT-LIVE.bat`](../TAT-LIVE.bat)**.
+   - Sau đó hệ thống tự động chạy ngầm Server trên cổng `4012` và mở **Trang điều khiển Admin** ở chế độ cửa sổ ứng dụng (`http://localhost:4012`).
+   - Khi muốn tắt hẳn server để giải phóng cổng `4012`, bấm nút đỏ **`🔌 Tắt Server (Port 4012)`** trên trang điều khiển hoặc nhấp đúp vào file **[`TAT-LIVE.bat`](../TAT-LIVE.bat)**.
 
 ### 🍎🐧 Cách C — Chạy trên macOS / Linux qua Terminal
 ```bash
 # Cài đặt thư viện (chỉ cần chạy lần đầu)
 npm install
 
-# Khởi chạy ở chế độ LIVE_MODE (tắt tự động tải lại HMR để sân khấu luôn ổn định)
+# Khởi chạy ở chế độ LIVE_MODE trên cổng 4012 (tắt tự động tải lại HMR để sân khấu luôn ổn định)
 LIVE_MODE=1 npm run dev
 ```
 
@@ -84,18 +87,20 @@ LIVE_MODE=1 npm run dev
 ![Giao diện Trang điều khiển Admin và Khung xem trước Sân khấu 9:16](./screenshots/01-admin-dashboard.png)
 
 ### 🎬 A. Đưa màn hình Sân khấu vào TikTok LIVE Studio (hoặc OBS Studio)
-1. Mở phần mềm **TikTok LIVE Studio** (chọn bố cục màn hình dọc `9:16`).
-2. Bấm **Thêm nguồn (Add Source)** ➔ chọn **Liên kết (Link / Browser Source)**.
-3. Dán đường dẫn hiển thị trong khung *Kết nối TikTok LIVE*:
+1. Trên thanh đầu trang điều khiển (`http://localhost:4012`), bấm nút **`📋 Copy link LIVE Studio`** để sao chép nhanh đường dẫn sân khấu.
+2. Mở phần mềm **TikTok LIVE Studio** (chọn bố cục màn hình dọc `9:16`).
+3. Bấm **Thêm nguồn (Add Source)** ➔ chọn **Liên kết (Link / Browser Source)**.
+4. Dán đường dẫn:
    ```text
-   http://lvh.me:3000/?view=stage
+   http://lvh.me:4012/?view=stage
    ```
-   *(Lưu ý: Nếu cổng `3000` trên máy đang bận bởi ứng dụng khác, server sẽ tự động chuyển sang cổng `3001`, `3002`... — bạn chỉ cần lấy đúng đường dẫn in ngay dưới khung Kết nối TikTok LIVE trên trang điều khiển).*
-4. Đặt kích thước nguồn hình: Chiều rộng **`1080`** × Chiều cao **`1920`**.
+   *(Lưu ý: Nếu cổng `4012` trên máy đang bận bởi ứng dụng khác, server sẽ tự động chuyển sang cổng `4013`, `4014`... — bạn chỉ cần bấm nút `📋 Copy link LIVE Studio` trên trang điều khiển để luôn lấy đúng cổng đang chạy).*
+5. Đặt kích thước nguồn hình: Chiều rộng **`1080`** × Chiều cao **`1920`**.
+6. **Chế độ Tiết kiệm GPU tự động (`⚡ GPU Saver`):** Ngay khi bạn gắn link vào TikTok LIVE Studio, trang điều khiển Admin sẽ tự động tạm ẩn khung xem trước phụ để dành 100% hiệu năng đồ họa cho buổi Live (bạn vẫn có thể bấm nút **`👁️ Vẫn bật xem Sân khấu trực tiếp tại đây`** nếu muốn nhìn trực tiếp trên trang Admin).
 
 ### 🔗 B. Kết nối với phòng TikTok LIVE đang phát sóng
 1. Bấm nút **Phát trực tiếp (Go LIVE)** trên TikTok LIVE Studio trước.
-2. Tại **Trang điều khiển** (`http://localhost:3000`), trong khung **Kết nối TikTok LIVE** ở trên cùng:
+2. Tại **Trang điều khiển** (`http://localhost:4012`), trong khung **Kết nối TikTok LIVE** ở trên cùng:
    - Nhập `username` TikTok của kênh đang live (không cần gõ dấu `@`).
    - Bấm nút màu vàng **Kết nối**.
 3. Khi dòng trạng thái hiện chữ xanh **`Đang live @username · X người xem · Y tim`**, mọi bình luận gọi tên tỉnh/thành/đảo, lượt thả tim và quà tặng của khán giả sẽ tự động bay thẳng vào bản đồ!
@@ -162,7 +167,7 @@ Ngay cả khi chưa mở TikTok LIVE, bạn có thể kiểm tra toàn bộ hi�
    - Thử các tình huống đặc biệt: **📍 1 người gọi tên tỉnh**, **🗺️ Gõ tên tỉnh cũ (Kiên Giang)**, **🏝️ Gõ Hoàng Sa**, **👥 60 người gọi liền**, **🎁 Gọi Đắk Lắk rồi tặng 199 xu**, **🍦 Tặng quà khi chưa chọn quê**, **⏭️ Qua giai đoạn kế** (để xem nhanh màn hình Tổng kết vòng).
 3. **Trong khung Giả lập — Mục Live tự động:**
    - Bấm **`▶ 10 người`**, **`▶ 50 người`** hoặc **`▶ 100 người`** để hệ thống tự động nhảy về đầu vòng và mô phỏng một buổi live sôi động trọn vòng `2:45` với đầy đủ người vào, bình luận tên tỉnh, thả tim, tặng quà và follow!
-   - *(Mẹo: Nếu muốn nghe tiếng khi thử trên trình duyệt mà chưa mở LIVE Studio, hãy mở tab `http://localhost:3000/?view=stage` và nhấp chuột 1 lần vào trang để trình duyệt mở khóa âm thanh; thử xong nhớ đóng tab đó trước khi live thật).*
+   - *(Mẹo: Nếu muốn nghe tiếng khi thử trên trình duyệt mà chưa mở LIVE Studio, hãy mở tab `http://localhost:4012/?view=stage` và nhấp chuột 1 lần vào trang để trình duyệt mở khóa âm thanh; thử xong nhớ đóng tab đó trước khi live thật).*
 
 ---
 
@@ -185,14 +190,14 @@ Ngay cả khi chưa mở TikTok LIVE, bạn có thể kiểm tra toàn bộ hi�
 - **Option A — 1-Click Windows Standalone Installer (Recommended, No Node.js Required):**
   1. Download **[`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)** from **[GitHub Releases](https://github.com/duongbirken2510/LIVE-Bando/releases/latest)**.
   2. Double-click the installer (if Windows SmartScreen appears, click **More info** ➔ **Run anyway**) and click **`🚀 CÀI ĐẶT NGAY (1-CLICK)`**.
-  3. The installer automatically extracts the bundled Node.js runtime and 34-province GIS map, creates the **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** shortcut on your Desktop, and opens the Admin Dashboard at `http://localhost:3000`.
+  3. The installer automatically extracts the bundled Node.js runtime and 34-province GIS map, creates the **`Việt Nam Đất Nước Ta Ơi - TikTok LIVE`** shortcut on your Desktop, starts **System Tray Guardian v2** near the Windows clock, and opens the Admin Dashboard in App Mode at `http://localhost:4012`.
 - **Option B — Source Folder Launch (`BAT-LIVE.bat` / Terminal):**
-  - On Windows: Double-click [`BAT-LIVE.bat`](../BAT-LIVE.bat) to start (and [`TAT-LIVE.bat`](../TAT-LIVE.bat) to stop and free port `3000`).
+  - On Windows: Double-click [`BAT-LIVE.bat`](../BAT-LIVE.bat) to start (and click **`🔌 Tắt Server (Port 4012)`** or double-click [`TAT-LIVE.bat`](../TAT-LIVE.bat) to stop and free port `4012`).
   - On macOS / Linux: Run `npm install && LIVE_MODE=1 npm run dev`.
 
 ## Step 2: Adding the 1080×1920 Stage to TikTok LIVE Studio / OBS
 1. In **TikTok LIVE Studio** or **OBS Studio**, add a **Link (Browser Source)**.
-2. Paste the Stage URL shown on your Admin Dashboard: **`http://lvh.me:3000/?view=stage`** and set the resolution to **`1080 × 1920`** (vertical 9:16).
+2. Click **`📋 Copy link LIVE Studio`** in the Admin Dashboard header to copy **`http://lvh.me:4012/?view=stage`**, paste it into TikTok LIVE Studio, and set the resolution to **`1080 × 1920`** (vertical 9:16).
 3. Start your TikTok LIVE broadcast first, then enter your TikTok `username` (without `@`) in the **Kết nối TikTok LIVE** card on the Admin Dashboard and click **Kết nối**.
 
 ## Step 3: Customizing 20 Cultural Themes, Labels, Audio & AI MC Voice
