@@ -15,6 +15,7 @@
 > **Tác giả & Website chính thức:** **Duong Birken** — [https://duongbirken.deta.vn](https://duongbirken.deta.vn)  
 > **Kho mã nguồn & Tải về:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
 > **Bộ cài đặt Windows 1-Click (`.EXE`):** [`Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe) · [`../DOWNLOAD_APP.md`](../DOWNLOAD_APP.md)  
+> **Video Bản Ghi Phòng LIVE Thực Tế (`1080 × 1920` · `60s`):** [`../live-bando.mp4`](../live-bando.mp4)  
 > **Cẩm nang Hướng dẫn Sử dụng A–Z (VI/EN):** [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md)
 
 ---
@@ -146,10 +147,25 @@ flowchart LR
     D --> E["✨ Camera Zoom + Đốm Sáng Vòng Cung<br/>+ MC AI Kể Đặc Sản & Nhạc Ngũ Cung"]
 ```
 
-### 8.1. Toàn Cảnh Trang Điều Khiển Quản Trị Admin & Khung Xem Trước Sân Khấu (`http://localhost:4012`)
+### 8.1. Video Quay Trực Tiếp Phiên Livestream Thực Tế (`live-bando.mp4` — `1080 × 1920` @ `30fps`)
+
+<div align="center">
+  <a href="../live-bando.mp4">
+    <img src="../docs/media/live_bando_demo_preview.gif" alt="Video Demo Thực Tế Việt Nam Đất Nước Ta Ơi" width="360" />
+  </a>
+  <p>
+    <i>▶️ Bấm vào ảnh GIF hoặc mở file <a href="../live-bando.mp4"><b><code>../live-bando.mp4</code></b></a> để xem bản ghi thực tế 60 giây phiên livestream có âm thanh giọng MC AI &amp; khán giả gọi tên tỉnh quê hương.</i>
+  </p>
+</div>
+
+| 📍 Khán Giả Gọi Tên **Thanh Hóa** Trên Sóng LIVE | 🏔️ Camera Bay Tới **Cao Bằng** & Đốm Sáng Chạm Tỉnh | 🌴 Ghim Avatar Thực Tế Tại **Tây Ninh** & Đua Top Bục Quê Nhà |
+| :---: | :---: | :---: |
+| ![Phòng Live Thực Tế 1 - Thanh Hóa](../docs/screenshots/06-live-video-frame1.png) | ![Phòng Live Thực Tế 2 - Cao Bằng](../docs/screenshots/07-live-video-frame2.png) | ![Phòng Live Thực Tế 3 - Tây Ninh](../docs/screenshots/08-live-video-frame3.png) |
+
+### 8.2. Toàn Cảnh Trang Điều Khiển Quản Trị Admin & Khung Xem Trước Sân Khấu (`http://localhost:4012`)
 ![Trang điều khiển Admin Việt Nam Đất Nước Ta Ơi](../docs/screenshots/01-admin-dashboard.png)
 
-### 8.2. Thư Viện Hình Ảnh Sân Khấu `1080 × 1920` Thực Tế Trên TikTok LIVE Studio
+### 8.3. Thư Viện Hình Ảnh Sân Khấu `1080 × 1920` Thực Tế Trên TikTok LIVE Studio
 
 | 🗺️ **Giao Diện Sơn Mài Toàn Cảnh 34 Tỉnh & Biển Đảo** | 📍 **Camera Zoom Cận Cảnh, Đốm Sáng & Ghim Quê Hương** |
 | :---: | :---: |

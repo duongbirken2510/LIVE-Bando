@@ -5,6 +5,8 @@
   <br /><br />
   <h3>
     💿 👉 <a href="https://github.com/duongbirken2510/LIVE-Bando/releases/latest/download/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe"><b>[TẢI NGAY BỘ CÀI ĐẶT WINDOWS 1-CLICK: Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe]</b></a> 👈
+    &nbsp;·&nbsp;
+    🎬 👉 <a href="./live-bando.mp4"><b>[XEM VIDEO QUAY PHÒNG LIVE THỰC TẾ (live-bando.mp4)]</b></a> 👈
   </h3>
   <p><i>(Đã nhúng sẵn Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành &amp; Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp là tự tạo icon Desktop và chạy ngay trên cổng 4012, KHÔNG cần cài đặt Node.js!)</i></p>
 </div>
@@ -14,7 +16,25 @@
 > **Tác giả:** **Duong Birken** — [https://duongbirken.deta.vn](https://duongbirken.deta.vn)  
 > **Kho mã nguồn:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
 > **Tải bộ cài đặt `.EXE` 1-Click:** [GitHub Releases v1.0.0](https://github.com/duongbirken2510/LIVE-Bando/releases/latest) · [`DOWNLOAD_APP.md`](./DOWNLOAD_APP.md)  
+> **Video Demo Phòng LIVE Thực Tế (`1080 × 1920` · `60s` · Có Âm Thanh):** [`live-bando.mp4`](./live-bando.mp4)  
 > **Cổng vận hành mặc định:** `http://localhost:4012` (Admin) · `http://lvh.me:4012/?view=stage` (Sân khấu TikTok LIVE Studio `1080 × 1920`)
+
+---
+
+## 🎬 Video Quay Trực Tiếp Phiên Livestream Thực Tế (`live-bando.mp4`)
+
+<div align="center">
+  <a href="./live-bando.mp4">
+    <img src="./docs/media/live_bando_demo_preview.gif" alt="Video Demo Thực Tế Việt Nam Đất Nước Ta Ơi TikTok LIVE" width="360" />
+  </a>
+  <p>
+    <i>▶️ Bấm vào ảnh động GIF phía trên hoặc mở trực tiếp file <a href="./live-bando.mp4"><b><code>live-bando.mp4</code></b></a> để xem video quay thực tế phiên livestream Việt Nam Đất Nước Ta Ơi (<code>1080 × 1920</code> · <code>30fps</code> · <code>60 giây</code> · Đầy đủ giọng MC AI kể đặc sản, danh thắng &amp; khán giả thật gọi tên quê hương).</i>
+  </p>
+</div>
+
+| 📍 Khán Giả Gọi Tên **Thanh Hóa** Trên Sóng LIVE | 🏔️ Camera Bay Tới **Cao Bằng** & Đốm Sáng Chạm Tỉnh | 🌴 Ghim Avatar Thực Tế Tại **Tây Ninh** & Đua Top Bục Quê Nhà |
+| :---: | :---: | :---: |
+| ![Phòng Live Thực Tế 1 - Thanh Hóa](./docs/screenshots/06-live-video-frame1.png) | ![Phòng Live Thực Tế 2 - Cao Bằng](./docs/screenshots/07-live-video-frame2.png) | ![Phòng Live Thực Tế 3 - Tây Ninh](./docs/screenshots/08-live-video-frame3.png) |
 
 ---
 
@@ -54,6 +74,7 @@ Game chia sẻ miễn phí, ai cũng lấy về dùng được. Trước khi dù
 | 💿 **Tải Bộ Cài Đặt Windows 1-Click (`.EXE`)** | [**`DOWNLOAD_APP.md`**](./DOWNLOAD_APP.md) | Link tải trực tiếp `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (tích hợp sẵn Node.js, System Tray Guardian v2, tự tạo biểu tượng Desktop) và `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`. |
 | 🗺️ **Hồ Sơ Giới Thiệu Sản Phẩm & Công Nghệ (10 Chương)** | [**`info/Introduce_VietNamDatNuocTaOi.md`**](./info/Introduce_VietNamDatNuocTaOi.md) | Định nghĩa sản phẩm, ma trận 8 nhóm tính năng, thuật toán nhận diện 34 tỉnh + tỉnh cũ + 125 đảo, kiến trúc D3-Geo & WebAudio chuyên sâu. |
 | 📖 **Cẩm Nang Hướng Dẫn Sử Dụng Toàn Tập (A–Z · VI/EN)** | [**`docs/USER_GUIDE.md`**](./docs/USER_GUIDE.md) | Hướng dẫn cài đặt `.exe` 1-Click, chạy `.bat`, nhúng Browser Source `1080 × 1920` vào TikTok LIVE Studio, đổi 20 giao diện sơn mài và xử lý sự cố. |
+| 🎬 **Video Bản Ghi Phòng LIVE Thực Tế (`.MP4`)** | [**`live-bando.mp4`**](./live-bando.mp4) | Video quay trực tiếp phiên LIVE thực tế (`1080 × 1920`, `60 giây`, đầy đủ giọng đọc MC AI kể đặc sản, danh thắng & khán giả TikTok bình luận gọi tên quê hương). |
 
 ---
 

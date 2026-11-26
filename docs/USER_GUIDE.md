@@ -14,7 +14,23 @@
 > **Kho mã nguồn chính thức / Official GitHub Repository:** [https://github.com/duongbirken2510/LIVE-Bando](https://github.com/duongbirken2510/LIVE-Bando)  
 > **Tải bộ cài đặt `.EXE` 1-Click / 1-Click Installer:** [GitHub Releases v1.0.0](https://github.com/duongbirken2510/LIVE-Bando/releases/latest) · [`../DOWNLOAD_APP.md`](../DOWNLOAD_APP.md)  
 > **Hồ sơ Giới thiệu Sản phẩm & Công nghệ (10 Chương):** [`../info/Introduce_VietNamDatNuocTaOi.md`](../info/Introduce_VietNamDatNuocTaOi.md)  
+> **Video Bản Ghi Phòng LIVE Thực Tế (`1080 × 1920` · `60s`):** [`../live-bando.mp4`](../live-bando.mp4)  
 > **Cổng vận hành mặc định / Default Ports:** Admin `http://localhost:4012` · TikTok LIVE Studio Stage `http://lvh.me:4012/?view=stage` (`1080 × 1920`)
+
+---
+
+## 🎬 Video Minh Họa Phiên Livestream Thực Tế (`live-bando.mp4`)
+
+<div align="center">
+  <a href="../live-bando.mp4">
+    <img src="./media/live_bando_demo_preview.gif" alt="Video Demo Thực Tế Việt Nam Đất Nước Ta Ơi" width="340" />
+  </a>
+  <p><i>▶️ Nhấp vào ảnh GIF hoặc mở <a href="../live-bando.mp4"><b><code>../live-bando.mp4</code></b></a> để xem video 60 giây quay trực tiếp phiên livestream thực tế trên TikTok LIVE.</i></p>
+</div>
+
+| 📍 Khán Giả Gọi Tên **Thanh Hóa** | 🏔️ Camera Bay Tới **Cao Bằng** | 🌴 Ghim Avatar Thực Tế Tại **Tây Ninh** |
+| :---: | :---: | :---: |
+| ![Thanh Hóa](./screenshots/06-live-video-frame1.png) | ![Cao Bằng](./screenshots/07-live-video-frame2.png) | ![Tây Ninh](./screenshots/08-live-video-frame3.png) |
 
 ---
 

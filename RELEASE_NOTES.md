@@ -10,6 +10,13 @@
 
 - 👉 **[Tải ngay `Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe` (1-Click Windows Setup)](https://github.com/duongbirken2510/LIVE-Bando/releases/download/v1.0.0/Viet-Nam-Dat-Nuoc-Ta-Oi-Setup-v1.0.exe)** *(Đã tích hợp sẵn toàn bộ Node.js Runtime + System Tray Guardian v2 + Bản đồ 34 Tỉnh Thành & Hoàng Sa - Trường Sa + 20 Giao Diện Sơn Mài + Giọng MC AI — Tải về nhấp đúp cài đặt là chạy ngay trên cổng `4012`, không cần cài Node.js!)*
 - 👉 **[Tải Launcher rời `Viet-Nam-Dat-Nuoc-Ta-Oi.exe`](https://github.com/duongbirken2510/LIVE-Bando/releases/download/v1.0.0/Viet-Nam-Dat-Nuoc-Ta-Oi.exe)** *(File chạy trực tiếp từ thư mục mã nguồn ở chế độ Desktop App `--app` kèm biểu tượng Khay hệ thống góc đồng hồ Windows).*
+- 🎬 **[Xem Video Quay Phòng LIVE Thực Tế (`live-bando.mp4` — `1080 × 1920` · `60s`)](https://github.com/duongbirken2510/LIVE-Bando/blob/master/live-bando.mp4)**
+
+<div align="center">
+  <a href="https://github.com/duongbirken2510/LIVE-Bando/blob/master/live-bando.mp4">
+    <img src="https://raw.githubusercontent.com/duongbirken2510/LIVE-Bando/master/docs/media/live_bando_demo_preview.gif" alt="Video Demo Thực Tế Việt Nam Đất Nước Ta Ơi" width="340" />
+  </a>
+</div>
 
 ---
 
